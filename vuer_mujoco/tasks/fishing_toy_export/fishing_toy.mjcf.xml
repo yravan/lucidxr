@@ -1,0 +1,197 @@
+<?xml version="1.0" ?>
+<mujoco>
+  <compiler angle="radian" autolimits="true" assetdir="assets" meshdir="assets" texturedir="assets"/>
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="150" elevation="-20" offwidth="1280" offheight="1024"/>
+  </visual>
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.9 0.7 0.9" rgb2="0.94 0.97 0.97" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <material name="table-concrete" rgba="0.8 0 0 0.9" shininess="0.5"/>
+    <texture type="2d" name="abc-box-texture" file="fishing_toy/abc_box/light_wood_texture.png"/>
+    <material name="abc-box-material" texture="abc-box-texture" specular="0.2" shininess="0.2"/>
+    <mesh name="abc-box-model" file="fishing_toy/abc_box/model_small.obj" scale="1.5 1.9 1.5">
+      <plugin instance="fishing_toy/abc_box-sdf"/>
+    </mesh>
+    <texture type="2d" name="fish-1-texture" file="fishing_toy/red_fish/red_fish.png"/>
+    <material name="fish-1-material" texture="fish-1-texture" specular="0.2" shininess="0.2"/>
+    <mesh name="fish-1-model" file="fishing_toy/red_fish/model.obj" scale="1.5 1.5 1.5">
+      <plugin instance="fishing_toy/red_fish-sdf"/>
+    </mesh>
+    <texture type="2d" name="fish-2-texture" file="fishing_toy/red_fish/teal_fish.png"/>
+    <material name="fish-2-material" texture="fish-2-texture" specular="0.2" shininess="0.2"/>
+    <mesh name="fish-2-model" file="fishing_toy/red_fish/model.obj" scale="1.5 1.5 1.5">
+      <plugin instance="fishing_toy/red_fish-sdf"/>
+    </mesh>
+    <texture type="2d" name="fish-3-texture" file="fishing_toy/red_fish/orange_fish.png"/>
+    <material name="fish-3-material" texture="fish-3-texture" specular="0.2" shininess="0.2"/>
+    <mesh name="fish-3-model" file="fishing_toy/red_fish/model.obj" scale="1.5 1.5 1.5">
+      <plugin instance="fishing_toy/red_fish-sdf"/>
+    </mesh>
+    <!--Materials ported from MTL file-->
+    <material name="table_optical-mat_1" rgba="0.501961 0.517647 0.501961 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_2" rgba="1 1 1 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_3" rgba="0.752941 0.752941 0.752941 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_4" rgba="0.647059 0.619608 0.588235 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <!--Good wood-like color for tabletop-->
+    <material name="table_optical-mat_5" rgba="0.101961 0.101961 0.101961 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <!--Dark color for legs/structure-->
+    <material name="table_optical-mat_6" rgba="0.109804 0.109804 0.109804 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_7" rgba="0.792157 0.819608 0.933333 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_8" rgba="0.529412 0.549020 0.549020 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_9" rgba="0.098039 0.098039 0.098039 1.0" shininess=""/>
+    <material name="table_optical-mat_10" rgba="0 0 0 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_11" rgba="0.294118 0.294118 0.294118 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_12" rgba="0.250980 0.250980 0.250980 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_13" rgba="0.698039 0.698039 0.698039 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_14" rgba="0.956863 0.956863 0.956863 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <mesh name="optical_table-model_0" file="model/model_0.obj"/>
+    <mesh name="optical_table-model_1" file="model/model_1.obj"/>
+    <mesh name="optical_table-model_2" file="model/model_2.obj"/>
+    <mesh name="optical_table-model_3" file="model/model_3.obj"/>
+    <mesh name="optical_table-model_4" file="model/model_4.obj"/>
+    <mesh name="optical_table-model_5" file="model/model_5.obj"/>
+    <mesh name="optical_table-model_6" file="model/model_6.obj"/>
+    <mesh name="optical_table-model_7" file="model/model_7.obj"/>
+    <mesh name="optical_table-model_8" file="model/model_8.obj"/>
+    <mesh name="optical_table-model_9" file="model/model_9.obj"/>
+    <mesh name="optical_table-model_10" file="model/model_10.obj"/>
+    <mesh name="optical_table-model_11" file="model/model_11.obj"/>
+    <mesh name="optical_table-model_12" file="model/model_12.obj"/>
+    <mesh name="optical_table-model_13" file="model/model_13.obj"/>
+  </asset>
+  <extension>
+    <plugin plugin="mujoco.elasticity.cable"/>
+    <plugin plugin="mujoco.sdf.sdflib">
+      <instance name="fishing_toy/abc_box-sdf">
+        <config key="aabb" value="0"/>
+      </instance>
+      <instance name="fishing_toy/red_fish-sdf">
+        <config key="aabb" value="0"/>
+      </instance>
+    </plugin>
+  </extension>
+  <option timestep="0.002" integrator="implicitfast" sdf_iterations="20" sdf_initpoints="40"/>
+  <default>
+    <default class="optical_table-visual">
+      <geom group="2" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default class="optical_table-collision">
+      <geom group="3" type="mesh"/>
+    </default>
+  </default>
+  <worldbody>
+    <light name="key" pos="1 0.5 1.302" dir="-1 -0.5 -0.5" cutoff="45" diffuse="0.3 0.3 0.3" directional="true"/>
+    <light name="back" pos="-0.8 0 2.002" dir="-1 0 1" cutoff="50" diffuse="0.5 0.5 0.5" directional="true"/>
+    <light name="fill" pos="0.8 -0.7 1.202" dir="-0.8 0.5 -0.6" cutoff="60" diffuse="0.18 0.18 0.18" directional="true"/>
+    <camera name="top" pos="0.517 0 1.4020000000000001" xyaxes="0 -1 0 1 0 0" fovy="77.55214222201174"/>
+    <camera name="left_l" pos="0.617 0.46 1.102" fovy="77.55214222201174" xyaxes="-1.0 0.0 0.0 0.0 -0.39872611141445014 0.917070056253235"/>
+    <camera name="left" pos="0.41700000000000004 0.46 1.102" fovy="77.55214222201174" xyaxes="-1.0 0.0 0.0 0.0 -0.39872611141445014 0.917070056253235"/>
+    <camera name="right" pos="0.41700000000000004 -0.46 1.102" fovy="77.55214222201174" xyaxes="1.0 0.0 0.0 -0.0 0.39872611141445014 0.917070056253235"/>
+    <camera name="right_r" pos="0.617 -0.46 1.102" fovy="77.55214222201174" xyaxes="1.0 0.0 0.0 -0.0 0.39872611141445014 0.917070056253235"/>
+    <camera name="front" pos="0.1 0 1.102" fovy="77.55214222201174" xyaxes="-0.0 -1.0 0.0 0.447213595499958 0.0 0.8944271909999157"/>
+    <camera name="front_r" pos="0.1 -0.1 1.102" fovy="77.55214222201174" xyaxes="-0.0 -1.0 0.0 0.447213595499958 0.0 0.8944271909999157"/>
+    <camera name="back" pos="0.8 0 1.102" fovy="77.55214222201174" xyaxes="-0.0 1.0 0.0 -0.5547001962252291 -0.0 0.8320502943378436"/>
+    <body name="table" pos="0 0 0.777">
+      <geom name="table-concrete" type="box" group="4" material="table-concrete" size="0.7 0.7 0.05" pos="0 0 -0.05"/>
+    </body>
+    <composite prefix="rope_" type="cable" curve="s" count="25 1 1" size="0.24" initial="free" offset="0 0 1.1">
+      <plugin plugin="mujoco.elasticity.cable">
+        <!--Units are in Pa (SI)-->
+        <config key="twist" value="1e5"/>
+        <config key="bend" value="3e3"/>
+        <config key="vmax" value="0.001"/>
+      </plugin>
+      <joint kind="main" damping="0.0001"/>
+      <geom type="capsule" size=".003" rgba="0.6 0.6 0.6 1.0" condim="1" mass="0.001"/>
+    </composite>
+    <body name="mocap-handle" mocap="true" pos="-0.15 0 1.1">
+      <site name="mocap-site" size="0.002"/>
+      <body name="slider-anchor" pos="0.15 0 0">
+        <geom type="capsule" pos="-0.075 0 0" size=".002 0.075 0.002" rgba="1 0 0 1" quat="1 0 1 0"/>
+      </body>
+      <body name="slider-anchor-2" pos="0.165 0 0">
+        <site name="slider_body_2-site" size="0.002"/>
+      </body>
+    </body>
+    <body name="hook-sphere" pos="0.24 0 1.1">
+      <joint type="free"/>
+      <geom type="sphere" size=".01" rgba="1 0 0 1" margin=".001" gap=".001" mass="0.020"/>
+    </body>
+    <body name="abc-box" pos="0.2 0.07 0.8">
+      <joint type="free"/>
+      <geom type="sdf" name="abc-box-sdf" mesh="abc-box-model" quat="0 0 1 1" mass="0.200" material="abc-box-material" contype="1" conaffinity="1">
+        <plugin instance="fishing_toy/abc_box-sdf"/>
+      </geom>
+    </body>
+    <body name="fish-1" pos="0.15 -0.1 0.8">
+      <joint type="free"/>
+      <geom type="sdf" name="fish-1-sdf" mesh="fish-1-model" quat="0 0 1 1" mass="0.010" material="fish-1-material" contype="1" conaffinity="1">
+        <plugin instance="fishing_toy/red_fish-sdf"/>
+      </geom>
+      <body name="fish-1-magnet" pos="0 0 0.042">
+        <geom type="sphere" pos="0 0 0" size="0.002" rgba="0.6 0.7 0.5 1" quat="1 0 0 0" mass="0.001"/>
+      </body>
+    </body>
+    <body name="fish-2" pos="0.2 -0.1 0.8">
+      <joint type="free"/>
+      <geom type="sdf" name="fish-2-sdf" mesh="fish-2-model" quat="0 0 1 1" mass="0.010" material="fish-2-material" contype="1" conaffinity="1">
+        <plugin instance="fishing_toy/red_fish-sdf"/>
+      </geom>
+      <body name="fish-2-magnet" pos="0 0 0.042">
+        <geom type="sphere" pos="0 0 0" size="0.002" rgba="0.6 0.7 0.5 1" quat="1 0 0 0" mass="0.001"/>
+      </body>
+    </body>
+    <body name="fish-3" pos="0.25 -0.1 0.8">
+      <joint type="free"/>
+      <geom type="sdf" name="fish-3-sdf" mesh="fish-3-model" quat="0 0 1 1" mass="0.010" material="fish-3-material" contype="1" conaffinity="1">
+        <plugin instance="fishing_toy/red_fish-sdf"/>
+      </geom>
+      <body name="fish-3-magnet" pos="0 0 0.042">
+        <geom type="sphere" pos="0 0 0" size="0.002" rgba="0.6 0.7 0.5 1" quat="1 0 0 0" mass="0.001"/>
+      </body>
+    </body>
+    <body name="table_optical" pos="-0.2 0 0.79">
+      <!--<freejoint/>-->
+      <geom mesh="optical_table-model_0" class="optical_table-visual" material="table_optical-mat_1"/>
+      <geom mesh="optical_table-model_1" class="optical_table-visual" material="table_optical-mat_2"/>
+      <geom mesh="optical_table-model_2" class="optical_table-visual" material="table_optical-mat_3"/>
+      <geom mesh="optical_table-model_3" class="optical_table-visual" material="table_optical-mat_4"/>
+      <geom mesh="optical_table-model_4" class="optical_table-visual" material="table_optical-mat_5"/>
+      <geom mesh="optical_table-model_5" class="optical_table-visual" material="table_optical-mat_6"/>
+      <geom mesh="optical_table-model_6" class="optical_table-visual" material="table_optical-mat_7"/>
+      <geom mesh="optical_table-model_7" class="optical_table-visual" material="table_optical-mat_8"/>
+      <geom mesh="optical_table-model_8" class="optical_table-visual" material="table_optical-mat_9"/>
+      <geom mesh="optical_table-model_9" class="optical_table-visual" material="table_optical-mat_10"/>
+      <geom mesh="optical_table-model_10" class="optical_table-visual" material="table_optical-mat_11"/>
+      <geom mesh="optical_table-model_11" class="optical_table-visual" material="table_optical-mat_12"/>
+      <geom mesh="optical_table-model_12" class="optical_table-visual" material="table_optical-mat_13"/>
+      <geom mesh="optical_table-model_13" class="optical_table-visual" material="table_optical-mat_14"/>
+    </body>
+  </worldbody>
+  <equality>
+    <connect name="anchor" body1="rope_B_first" body2="slider-anchor" anchor="0.0 0 0" solref="0.02 1" solimp="0.95 0.95 0.001"/>
+    <connect name="anchor-2" body1="rope_B_3" body2="slider-anchor-2" anchor="0 0 0" solref="0.02 1" solimp="0.95 0.95 0.001"/>
+    <connect name="hook" body1="rope_B_last" body2="hook-sphere" anchor="0 0 0" solref="0.02 1" solimp="0.95 0.95 0.001"/>
+  </equality>
+  <contact>
+    <exclude body1="rope_B_first" body2="mocap-handle"/>
+    <exclude body1="rope_B_first" body2="slider-anchor"/>
+    <exclude body1="rope_B_1" body2="mocap-handle"/>
+    <exclude body1="rope_B_1" body2="slider-anchor"/>
+    <exclude body1="rope_B_3" body2="slider-anchor-2"/>
+    <exclude body1="rope_B_4" body2="slider-anchor-2"/>
+    <exclude body1="hook-sphere" body2="rope_B_last"/>
+    <exclude body1="hook-sphere" body2="rope_B_22"/>
+    <exclude body1="hook-sphere" body2="rope_B_21"/>
+  </contact>
+  <actuator>
+    <!--<adhesion name="magnetic-hook" body="hook-sphere" ctrlrange="0.4 0.41" gain="1"/>-->
+    <adhesion name="fish-1-mag" body="fish-1-magnet" ctrlrange="0.15 0.16" gain="1"/>
+    <adhesion name="fish-2-mag" body="fish-2-magnet" ctrlrange="0.15 0.16" gain="1"/>
+    <adhesion name="fish-3-mag" body="fish-3-magnet" ctrlrange="0.15 0.16" gain="1"/>
+  </actuator>
+</mujoco>

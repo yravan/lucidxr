@@ -1,0 +1,769 @@
+<?xml version="1.0" ?>
+<mujoco model="shadow hand setup">
+  <compiler angle="radian" autolimits="true" assetdir="assets" meshdir="assets" texturedir="assets"/>
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="150" elevation="-20" offwidth="1280" offheight="1024"/>
+  </visual>
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.9 0.7 0.9" rgb2="0.94 0.97 0.97" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <!--Materials ported from MTL file-->
+    <material name="table_optical-mat_1" rgba="0.501961 0.517647 0.501961 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_2" rgba="1 1 1 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_3" rgba="0.752941 0.752941 0.752941 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_4" rgba="0.647059 0.619608 0.588235 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <!--Good wood-like color for tabletop-->
+    <material name="table_optical-mat_5" rgba="0.101961 0.101961 0.101961 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <!--Dark color for legs/structure-->
+    <material name="table_optical-mat_6" rgba="0.109804 0.109804 0.109804 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_7" rgba="0.792157 0.819608 0.933333 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_8" rgba="0.529412 0.549020 0.549020 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_9" rgba="0.098039 0.098039 0.098039 1.0" shininess=""/>
+    <material name="table_optical-mat_10" rgba="0 0 0 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_11" rgba="0.294118 0.294118 0.294118 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_12" rgba="0.250980 0.250980 0.250980 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_13" rgba="0.698039 0.698039 0.698039 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_14" rgba="0.956863 0.956863 0.956863 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <mesh name="optical_table-model_0" file="model/model_0.obj"/>
+    <mesh name="optical_table-model_1" file="model/model_1.obj"/>
+    <mesh name="optical_table-model_2" file="model/model_2.obj"/>
+    <mesh name="optical_table-model_3" file="model/model_3.obj"/>
+    <mesh name="optical_table-model_4" file="model/model_4.obj"/>
+    <mesh name="optical_table-model_5" file="model/model_5.obj"/>
+    <mesh name="optical_table-model_6" file="model/model_6.obj"/>
+    <mesh name="optical_table-model_7" file="model/model_7.obj"/>
+    <mesh name="optical_table-model_8" file="model/model_8.obj"/>
+    <mesh name="optical_table-model_9" file="model/model_9.obj"/>
+    <mesh name="optical_table-model_10" file="model/model_10.obj"/>
+    <mesh name="optical_table-model_11" file="model/model_11.obj"/>
+    <mesh name="optical_table-model_12" file="model/model_12.obj"/>
+    <mesh name="optical_table-model_13" file="model/model_13.obj"/>
+    <material name="table-concrete" rgba="0.8 0 0 0.9" shininess="0.5"/>
+    <texture type="2d" name="basketball_hoop_tex_0" file="basketball_hoop/DefaultMaterial_baseColor.png"/>
+    <material name="basketball_hoop_mat_0" texture="basketball_hoop_tex_0" specular="0.5" shininess="0.25"/>
+    <mesh name="basketball_hoop_vis_0" file="basketball_hoop/basketball_hoop_0.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_0" file="basketball_hoop/basketball_hoop_collision_0.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_1" file="basketball_hoop/basketball_hoop_collision_1.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_2" file="basketball_hoop/basketball_hoop_collision_2.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_3" file="basketball_hoop/basketball_hoop_collision_3.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_4" file="basketball_hoop/basketball_hoop_collision_4.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_5" file="basketball_hoop/basketball_hoop_collision_5.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_6" file="basketball_hoop/basketball_hoop_collision_6.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_7" file="basketball_hoop/basketball_hoop_collision_7.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_8" file="basketball_hoop/basketball_hoop_collision_8.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_9" file="basketball_hoop/basketball_hoop_collision_9.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_10" file="basketball_hoop/basketball_hoop_collision_10.obj" scale="0.5 0.5 0.5"/>
+    <mesh name="basketball_hoop_coll_11" file="basketball_hoop/basketball_hoop_collision_11.obj" scale="0.5 0.5 0.5"/>
+    <texture type="2d" name="basketball_tex_0" file="basketball/Basketball_size6_baseColor.png"/>
+    <material name="basketball_mat_0" texture="basketball_tex_0" specular="0.5" shininess="0.25"/>
+    <mesh name="basketball_vis_0" file="basketball/basketball_0.obj" scale="0.0215 0.0215 0.0215"/>
+    <mesh name="basketball_coll_0" file="basketball/basketball_collision_0.obj" scale="0.0215 0.0215 0.0215"/>
+    <material name="shadow_hand-black" specular="0.5" shininess="0.25" rgba="0.16355 0.16355 0.16355 1"/>
+    <material name="shadow_hand-gray" specular="0.0" shininess="0.25" rgba="0.80848 0.80848 0.80848 1"/>
+    <material name="shadow_hand-metallic" specular="0" shininess="0.25" rgba="0.9 0.9 0.9 1"/>
+    <mesh class="right_hand" file="shadow_hand/forearm_0.obj" name="forearm_0_right"/>
+    <mesh class="right_hand" file="shadow_hand/forearm_1.obj" name="forearm_1_right"/>
+    <mesh class="right_hand" file="shadow_hand/forearm_collision.obj" name="forearm_collision_right"/>
+    <mesh class="right_hand" file="shadow_hand/wrist.obj" name="wrist_right"/>
+    <mesh class="right_hand" file="shadow_hand/palm.obj" name="palm_right"/>
+    <mesh class="right_hand" file="shadow_hand/f_knuckle.obj" name="f_knuckle_right"/>
+    <mesh class="right_hand" file="shadow_hand/f_proximal.obj" name="f_proximal_right"/>
+    <mesh class="right_hand" file="shadow_hand/f_middle.obj" name="f_middle_right"/>
+    <mesh class="right_hand" file="shadow_hand/f_distal_pst.obj" name="f_distal_pst_right"/>
+    <mesh class="right_hand" file="shadow_hand/lf_metacarpal.obj" name="lf_metacarpal_right"/>
+    <mesh class="right_hand" file="shadow_hand/th_proximal.obj" name="th_proximal_right"/>
+    <mesh class="right_hand" file="shadow_hand/th_middle.obj" name="th_middle_right"/>
+    <mesh class="right_hand" file="shadow_hand/th_distal_pst.obj" name="th_distal_pst_right"/>
+    <material name="shadow_hand-black_left" specular="0.5" shininess="0.25" rgba="0.16355 0.16355 0.16355 1"/>
+    <material name="shadow_hand-gray_left" specular="0.0" shininess="0.25" rgba="0.80848 0.80848 0.80848 1"/>
+    <material name="shadow_hand-metallic_left" specular="0" shininess="0.25" rgba="0.9 0.9 0.9 1"/>
+    <mesh class="left_hand" file="shadow_hand/forearm_0.obj" name="forearm_0_left"/>
+    <mesh class="left_hand" file="shadow_hand/forearm_1.obj" name="forearm_1_left"/>
+    <mesh class="left_hand" file="shadow_hand/forearm_collision.obj" name="forearm_collision_left"/>
+    <mesh class="left_hand" file="shadow_hand/wrist.obj" scale="-0.001 0.001 0.001" name="wrist_left"/>
+    <mesh class="left_hand" file="shadow_hand/palm.obj" scale="-0.001 0.001 0.001" name="palm_left"/>
+    <mesh class="left_hand" file="shadow_hand/f_knuckle.obj" name="f_knuckle_left"/>
+    <mesh class="left_hand" file="shadow_hand/f_proximal.obj" name="f_proximal_left"/>
+    <mesh class="left_hand" file="shadow_hand/f_middle.obj" name="f_middle_left"/>
+    <mesh class="left_hand" file="shadow_hand/f_distal_pst.obj" name="f_distal_pst_left"/>
+    <mesh class="left_hand" file="shadow_hand/lf_metacarpal.obj" scale="-0.001 0.001 0.001" name="lf_metacarpal_left"/>
+    <mesh class="left_hand" file="shadow_hand/th_proximal.obj" name="th_proximal_left"/>
+    <mesh class="left_hand" file="shadow_hand/th_middle.obj" name="th_middle_left"/>
+    <mesh class="left_hand" file="shadow_hand/th_distal_pst.obj" name="th_distal_pst_left"/>
+  </asset>
+  <default>
+    <default class="optical_table-visual">
+      <geom group="2" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default class="optical_table-collision">
+      <geom group="3" type="mesh"/>
+    </default>
+    <default class="basketball_hoop_visual">
+      <geom type="mesh" contype="0" conaffinity="0" group="2" density="100" friction="0.95 0.3 0.1" solref="0.001 1" solimp="0.998 0.998 0.001"/>
+    </default>
+    <default class="basketball_hoop_collision">
+      <geom type="mesh" group="3" density="100" friction="0.95 0.3 0.1" solref="0.001 1" solimp="0.998 0.998 0.001"/>
+    </default>
+    <default class="basketball_visual">
+      <geom type="mesh" contype="0" conaffinity="0" group="2" density="100" friction="0.95 0.3 0.1" solref="0.001 1" solimp="0.998 0.998 0.001"/>
+    </default>
+    <default class="basketball_collision">
+      <geom type="mesh" group="3" density="100" friction="0.95 0.3 0.1" solref="0.001 1" solimp="0.998 0.998 0.001"/>
+    </default>
+    <default class="right_hand">
+      <mesh scale="0.001 0.001 0.001"/>
+      <joint axis="1 0 0" damping="0.05" armature="0.0002" frictionloss="0.01"/>
+      <position forcerange="-1 1"/>
+      <default class="wrist">
+        <joint damping="0.5"/>
+        <default class="wrist_y">
+          <joint axis="0 1 0" range="-0.523599 0.174533"/>
+          <position kp="10" ctrlrange="-0.523599 0.174533" forcerange="-10 10"/>
+        </default>
+        <default class="wrist_x">
+          <joint range="-0.698132 0.488692"/>
+          <position kp="8" ctrlrange="-0.698132 0.488692" forcerange="-5 5"/>
+        </default>
+      </default>
+      <default class="thumb">
+        <default class="thbase">
+          <joint axis="0 0 -1" range="-1.0472 1.0472"/>
+          <position kp="0.4" ctrlrange="-1.0472 1.0472" forcerange="-3 3"/>
+        </default>
+        <default class="thproximal">
+          <joint range="0 1.22173"/>
+          <position ctrlrange="0 1.22173" forcerange="-2 2"/>
+        </default>
+        <default class="thhub">
+          <joint range="-0.20944 0.20944"/>
+          <position kp="0.5" ctrlrange="-0.20944 0.20944"/>
+        </default>
+        <default class="thmiddle">
+          <joint axis="0 -1 0" range="-0.698132 0.698132"/>
+          <position kp="1.5" ctrlrange="-0.698132 0.698132"/>
+        </default>
+        <default class="thdistal">
+          <joint range="-0.261799 1.5708"/>
+          <position ctrlrange="-0.261799 1.5708"/>
+        </default>
+      </default>
+      <default class="metacarpal">
+        <joint axis="0.573576 0 0.819152" range="0 0.785398"/>
+        <position ctrlrange="0 0.785398"/>
+      </default>
+      <default class="knuckle">
+        <joint axis="0 -1 0" range="-0.349066 0.349066"/>
+        <position ctrlrange="-0.349066 0.349066"/>
+      </default>
+      <default class="proximal">
+        <joint range="-0.261799 1.5708"/>
+        <position ctrlrange="-0.261799 1.5708"/>
+      </default>
+      <default class="middle_distal">
+        <joint range="0 1.5708"/>
+        <position kp="0.5" ctrlrange="0 3.1415"/>
+      </default>
+      <default class="plastic">
+        <geom solimp="0.5 0.99 0.0001" solref="0.005 1"/>
+        <default class="plastic_visual">
+          <geom type="mesh" material="shadow_hand-black" contype="0" conaffinity="0" group="2"/>
+        </default>
+        <default class="plastic_collision">
+          <geom group="3"/>
+        </default>
+      </default>
+    </default>
+    <default class="left_hand">
+      <mesh scale="0.001 0.001 0.001"/>
+      <joint axis="1 0 0" damping="0.05" armature="0.0002" frictionloss="0.01"/>
+      <position forcerange="-1 1"/>
+      <default class="wrist_left">
+        <joint damping="0.5"/>
+        <default class="wrist_left_y">
+          <joint axis="0 -1 0" range="-0.523599 0.174533"/>
+          <position kp="10" ctrlrange="-0.523599 0.174533" forcerange="-10 10"/>
+        </default>
+        <default class="wrist_left_x">
+          <joint range="-0.698132 0.488692"/>
+          <position kp="8" ctrlrange="-0.698132 0.488692" forcerange="-5 5"/>
+        </default>
+      </default>
+      <default class="thumb_left">
+        <default class="thbase_left">
+          <joint axis="0 0 1" range="-1.0472 1.0472"/>
+          <position kp="0.4" ctrlrange="-1.0472 1.0472" forcerange="-3 3"/>
+        </default>
+        <default class="thproximal_left">
+          <joint axis="-1 0 0" range="0 1.22173"/>
+          <position ctrlrange="0 1.22173" forcerange="-2 2"/>
+        </default>
+        <default class="thhub_left">
+          <joint axis="-1 0 0" range="-0.20944 0.20944"/>
+          <position kp="0.5" ctrlrange="-0.20944 0.20944"/>
+        </default>
+        <default class="thmiddle_left">
+          <joint axis="0 -1 0" range="-0.698132 0.698132"/>
+          <position kp="1.5" ctrlrange="-0.698132 0.698132"/>
+        </default>
+        <default class="thdistal_left">
+          <joint range="-0.261799 1.5708"/>
+          <position ctrlrange="-0.261799 1.5708"/>
+        </default>
+      </default>
+      <default class="metacarpal_left">
+        <joint axis="0.573576 0 0.819152" range="0 0.785398"/>
+        <position ctrlrange="0 0.785398"/>
+      </default>
+      <default class="knuckle_left">
+        <joint axis="0 -1 0" range="-0.349066 0.349066"/>
+        <position ctrlrange="-0.349066 0.349066"/>
+      </default>
+      <default class="proximal_left">
+        <joint range="-0.261799 1.5708"/>
+        <position ctrlrange="-0.261799 1.5708"/>
+      </default>
+      <default class="middle_distal_left">
+        <joint range="0 1.5708"/>
+        <position kp="0.5" ctrlrange="0 3.1415"/>
+      </default>
+      <default class="plastic_left">
+        <geom solimp="0.5 0.99 0.0001" solref="0.005 1"/>
+        <default class="plastic_left_visual">
+          <geom type="mesh" material="shadow_hand-black_left" contype="0" conaffinity="0" group="2"/>
+        </default>
+        <default class="plastic_left_collision">
+          <geom group="3"/>
+        </default>
+      </default>
+    </default>
+  </default>
+  <option cone="elliptic" impratio="10"/>
+  <worldbody>
+    <light name="key" pos="1 0.5 1.3" dir="-1 -0.5 -0.5" cutoff="45" diffuse="0.3 0.3 0.3" directional="true"/>
+    <light name="fill" pos="0.8 -0.7 1.2000000000000002" dir="-0.8 0.5 -0.6" cutoff="60" diffuse="0.18 0.18 0.18" directional="true"/>
+    <light name="back" pos="-0.8 0 2.0" dir="-1 0 1" cutoff="50" diffuse="0.5 0.5 0.5" directional="true"/>
+    <body name="table_optical" pos="-0.2 0 0.79">
+      <!--<freejoint/>-->
+      <geom mesh="optical_table-model_0" class="optical_table-visual" material="table_optical-mat_1"/>
+      <geom mesh="optical_table-model_1" class="optical_table-visual" material="table_optical-mat_2"/>
+      <geom mesh="optical_table-model_2" class="optical_table-visual" material="table_optical-mat_3"/>
+      <geom mesh="optical_table-model_3" class="optical_table-visual" material="table_optical-mat_4"/>
+      <geom mesh="optical_table-model_4" class="optical_table-visual" material="table_optical-mat_5"/>
+      <geom mesh="optical_table-model_5" class="optical_table-visual" material="table_optical-mat_6"/>
+      <geom mesh="optical_table-model_6" class="optical_table-visual" material="table_optical-mat_7"/>
+      <geom mesh="optical_table-model_7" class="optical_table-visual" material="table_optical-mat_8"/>
+      <geom mesh="optical_table-model_8" class="optical_table-visual" material="table_optical-mat_9"/>
+      <geom mesh="optical_table-model_9" class="optical_table-visual" material="table_optical-mat_10"/>
+      <geom mesh="optical_table-model_10" class="optical_table-visual" material="table_optical-mat_11"/>
+      <geom mesh="optical_table-model_11" class="optical_table-visual" material="table_optical-mat_12"/>
+      <geom mesh="optical_table-model_12" class="optical_table-visual" material="table_optical-mat_13"/>
+      <geom mesh="optical_table-model_13" class="optical_table-visual" material="table_optical-mat_14"/>
+    </body>
+    <body name="table" pos="0 0 0.777">
+      <geom name="table-concrete" type="box" group="4" material="table-concrete" size="0.7 0.7 0.05" pos="0 0 -0.05"/>
+    </body>
+    <camera name="top" pos="0.517 0 1.4020000000000001" xyaxes="0 -1 0 1 0 0" fovy="77.55214222201174"/>
+    <camera name="left" pos="0.41700000000000004 0.6 1.102" fovy="77.55214222201174" xyaxes="-1.0 0.0 0.0 0.0 -0.31622776601683805 0.9486832980505138"/>
+    <camera name="left_r" pos="0.617 0.6 1.102" fovy="77.55214222201174" xyaxes="-1.0 0.0 0.0 0.0 -0.31622776601683805 0.9486832980505138"/>
+    <camera name="right" pos="0.41700000000000004 -0.6 1.102" fovy="77.55214222201174" xyaxes="1.0 0.0 0.0 -0.0 0.31622776601683805 0.9486832980505138"/>
+    <camera name="right_r" pos="0.617 -0.6 1.102" fovy="77.55214222201174" xyaxes="1.0 0.0 0.0 -0.0 0.31622776601683805 0.9486832980505138"/>
+    <camera name="front" pos="-0.1 0 1.102" fovy="77.55214222201174" xyaxes="-0.0 -1.0 0.0 0.31622776601683805 0.0 0.9486832980505138"/>
+    <camera name="back" pos="1.0 0 1.602" fovy="77.55214222201174" xyaxes="-0.0 1.0 0.0 -0.5144957554275266 -0.0 0.8574929257125441"/>
+    <body pos="-0.7 0 0.85" quat="0.7071068 0.7071068 0 0" name="basketball_hoop">
+      <geom mesh="basketball_hoop_vis_0" material="basketball_hoop_mat_0" class="basketball_hoop_visual"/>
+      <geom mesh="basketball_hoop_coll_0" rgba="0.32852636540023705 0.4709088034038542 0.3506842599197362 1" class="basketball_hoop_collision"/>
+      <geom mesh="basketball_hoop_coll_1" rgba="0.9169391875823963 0.3232246849343199 0.7940774373065997 1" class="basketball_hoop_collision"/>
+      <geom mesh="basketball_hoop_coll_2" rgba="0.4132748386052215 0.10039851011212542 0.8338056749338607 1" class="basketball_hoop_collision"/>
+      <geom mesh="basketball_hoop_coll_3" rgba="0.4962961518796569 0.35201292212493884 0.9888851111517519 1" class="basketball_hoop_collision"/>
+      <geom mesh="basketball_hoop_coll_4" rgba="0.49954063519815994 0.2532625546024795 0.28551154588305405 1" class="basketball_hoop_collision"/>
+      <geom mesh="basketball_hoop_coll_5" rgba="0.5982601955245912 0.519059921282364 0.2704775663873663 1" class="basketball_hoop_collision"/>
+      <geom mesh="basketball_hoop_coll_6" rgba="0.9782579816609535 0.6370566614945731 0.19692235342562547 1" class="basketball_hoop_collision"/>
+      <geom mesh="basketball_hoop_coll_7" rgba="0.6808223947765486 0.3193216122373651 0.9269929241042563 1" class="basketball_hoop_collision"/>
+      <geom mesh="basketball_hoop_coll_8" rgba="0.9608584204609537 0.6055838217677714 0.09103731638045265 1" class="basketball_hoop_collision"/>
+      <geom mesh="basketball_hoop_coll_9" rgba="0.2220832436109006 0.8675605578999949 0.20856616745977308 1" class="basketball_hoop_collision"/>
+      <geom mesh="basketball_hoop_coll_10" rgba="0.4731560097978468 0.9249624131848564 0.5241214511731486 1" class="basketball_hoop_collision"/>
+      <geom mesh="basketball_hoop_coll_11" rgba="0.3982443944186357 0.47660127631309257 0.7946139433767468 1" class="basketball_hoop_collision"/>
+      <site name="hoop_corner1" pos="0.425 0.45 -0.09" size="0.01" rgba="1 1 0 0"/>
+      <site name="hoop_corner2" pos="0.605 0.45 -0.09" size="0.01" rgba="1 1 0 0"/>
+      <site name="hoop_corner3" pos="0.605 0.45  0.09" size="0.01" rgba="1 1 0 0"/>
+      <site name="hoop_corner4" pos="0.425 0.45  0.09" size="0.01" rgba="1 1 0 0"/>
+    </body>
+    <body pos="0 0 0.85" name="basketball">
+      <joint name="basketball_joint" type="free"/>
+      <geom mesh="basketball_vis_0" material="basketball_mat_0" class="basketball_visual"/>
+      <geom mesh="basketball_coll_0" rgba="0.9362683312618195 0.49848078129771567 0.6338119717744038 1" class="basketball_collision"/>
+      <site name="basketball" pos="0 0.07 0" size="0.0215" rgba="1 1 0 0"/>
+    </body>
+    <body name="shadow_hand_right" pos="0 0.15 1.1" quat="0 1 0 1">
+      <joint name="rh_forearm_free" type="free"/>
+      <body name="rh_wrist" pos="0.01 0 0.21301" quat="1 0 0 1">
+        <camera name="wrist" pos="-0.1 0 0.0" quat="-0.15 0.7 0.7 -0.15" fovy="77.55214222201174"/>
+        <site name="rh_wrist_site" pos="0 0 0.04" quat="0 0 0.7071 0.7071" group="4" size="0.002 0.002 0.002"/>
+        <inertial mass="0.1" pos="0 0 0.029" quat="0.5 0.5 0.5 0.5" diaginertia="6.4e-05 4.38e-05 3.5e-05"/>
+        <geom class="plastic_visual" mesh="wrist_right" material="shadow_hand-metallic"/>
+        <geom size="0.0135 0.015" quat="0.499998 0.5 0.5 -0.500002" type="cylinder" class="plastic_collision"/>
+        <geom size="0.011 0.005" pos="-0.026 0 0.034" quat="1 0 1 0" type="cylinder" class="plastic_collision"/>
+        <geom size="0.011 0.005" pos="0.031 0 0.034" quat="1 0 1 0" type="cylinder" class="plastic_collision"/>
+        <geom size="0.0135 0.009 0.005" pos="-0.021 0 0.011" quat="0.923879 0 0.382684 0" type="box" class="plastic_collision"/>
+        <geom size="0.0135 0.009 0.005" pos="0.026 0 0.01" quat="0.923879 0 -0.382684 0" type="box" class="plastic_collision"/>
+        <body name="rh_palm" pos="0 0 0.034">
+          <inertial mass="0.3" pos="0 0 0.035" quat="1 0 0 1" diaginertia="0.0005287 0.0003581 0.000191"/>
+          <joint class="wrist_x" name="rh_WRJ1"/>
+          <!--          <site name="grasp_site" pos="0 -.035 0.09" group="4"/>-->
+          <geom class="plastic_visual" mesh="palm_right"/>
+          <geom size="0.031 0.0035 0.049" pos="0.011 0.0085 0.038" type="box" class="plastic_collision"/>
+          <geom size="0.018 0.0085 0.049" pos="-0.002 -0.0035 0.038" type="box" class="plastic_collision"/>
+          <geom size="0.013 0.0085 0.005" pos="0.029 -0.0035 0.082" type="box" class="plastic_collision"/>
+          <geom size="0.013 0.007 0.009" pos="0.0265 -0.001 0.07" quat="0.987241 0.0990545 0.0124467 0.124052" type="box" class="plastic_collision"/>
+          <geom size="0.0105 0.0135 0.012" pos="0.0315 -0.0085 0.001" type="box" class="plastic_collision"/>
+          <geom size="0.011 0.0025 0.015" pos="0.0125 -0.015 0.004" quat="0.971338 0 0 -0.237703" type="box" class="plastic_collision"/>
+          <geom size="0.009 0.012 0.002" pos="0.011 0 0.089" type="box" class="plastic_collision"/>
+          <geom size="0.01 0.012 0.02" pos="-0.03 0 0.009" type="box" class="plastic_collision"/>
+          <body name="rh_ffknuckle" pos="0.033 0 0.095">
+            <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+            <joint name="rh_FFJ4" class="knuckle"/>
+            <geom pos="0 0 0.0005" class="plastic_visual" mesh="f_knuckle_right" material="shadow_hand-metallic"/>
+            <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_collision"/>
+            <body name="rh_ffproximal">
+              <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+              <joint name="rh_FFJ3" class="proximal"/>
+              <geom class="plastic_visual" mesh="f_proximal_right"/>
+              <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_collision"/>
+              <!-- <site name="rh_ffproximal_site" pos="0 0 0" group="4" quat="0 0 0.7071 0.7071"/> -->
+              <body name="rh_ffmiddle" pos="0 0 0.045">
+                <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+                <joint name="rh_FFJ2" class="middle_distal"/>
+                <geom class="plastic_visual" mesh="f_middle_right"/>
+                <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_collision"/>
+                <body name="rh_ffdistal" pos="0 0 0.025">
+                  <!-- <site name="rh_ffdistal_site" pos="0 0 0" group="4" quat="0 0 0.7071 0.7071"/> -->
+                  <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1" diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                  <joint name="rh_FFJ1" class="middle_distal"/>
+                  <geom class="plastic_visual" mesh="f_distal_pst_right"/>
+                  <geom class="plastic_collision" type="mesh" mesh="f_distal_pst_right"/>
+                  <site name="rh_fftip_site" pos="0 0 0.035" quat="0 0 0.7071 0.7071" group="4" size="0.002 0.002 0.002"/>
+                </body>
+              </body>
+            </body>
+          </body>
+          <body name="rh_mfknuckle" pos="0.011 0 0.099">
+            <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+            <joint name="rh_MFJ4" class="knuckle"/>
+            <geom pos="0 0 0.0005" class="plastic_visual" mesh="f_knuckle_right" material="shadow_hand-metallic"/>
+            <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_collision"/>
+            <body name="rh_mfproximal">
+              <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+              <joint name="rh_MFJ3" class="proximal"/>
+              <geom class="plastic_visual" mesh="f_proximal_right"/>
+              <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_collision"/>
+              <!-- <site name="rh_mfproximal_site" pos="0 0 0" group="4" quat="0 0 0.7071 0.7071"/> -->
+              <body name="rh_mfmiddle" pos="0 0 0.045">
+                <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+                <joint name="rh_MFJ2" class="middle_distal"/>
+                <geom class="plastic_visual" mesh="f_middle_right"/>
+                <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_collision"/>
+                <body name="rh_mfdistal" pos="0 0 0.025">
+                  <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1" diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                  <joint name="rh_MFJ1" class="middle_distal"/>
+                  <geom class="plastic_visual" mesh="f_distal_pst_right"/>
+                  <geom class="plastic_collision" type="mesh" mesh="f_distal_pst_right"/>
+                  <site name="rh_mftip_site" pos="0 0 0.035" group="4" quat="0 0 0.7071 0.7071" size="0.002 0.002 0.002"/>
+                </body>
+              </body>
+            </body>
+          </body>
+          <body name="rh_rfknuckle" pos="-0.011 0 0.095">
+            <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+            <joint name="rh_RFJ4" class="knuckle" axis="0 1 0"/>
+            <geom pos="0 0 0.0005" class="plastic_visual" mesh="f_knuckle_right" material="shadow_hand-metallic"/>
+            <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_collision"/>
+            <body name="rh_rfproximal">
+              <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+              <joint name="rh_RFJ3" class="proximal"/>
+              <geom class="plastic_visual" mesh="f_proximal_right"/>
+              <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_collision"/>
+              <!-- <site name="rh_rfproximal_site" pos="0 0 0" group="4" quat="0 0 0.7071 0.7071"/> -->
+              <body name="rh_rfmiddle" pos="0 0 0.045">
+                <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+                <joint name="rh_RFJ2" class="middle_distal"/>
+                <geom class="plastic_visual" mesh="f_middle_right"/>
+                <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_collision"/>
+                <body name="rh_rfdistal" pos="0 0 0.025">
+                  <!-- <site name="rh_rfdistal_site" pos="0 0 0" group="4"/> -->
+                  <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1" diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                  <joint name="rh_RFJ1" class="middle_distal"/>
+                  <geom class="plastic_visual" mesh="f_distal_pst_right"/>
+                  <geom class="plastic_collision" type="mesh" mesh="f_distal_pst_right"/>
+                  <site name="rh_rftip_site" pos="0 0 0.035" group="4" quat="0 0 0.7071 0.7071" size="0.002 0.002 0.002"/>
+                </body>
+              </body>
+            </body>
+          </body>
+          <body name="rh_lfmetacarpal" pos="-0.033 0 0.02071">
+            <inertial mass="0.03" pos="0 0 0.04" quat="1 0 0 1" diaginertia="1.638e-05 1.45e-05 4.272e-06"/>
+            <joint name="rh_LFJ5" class="metacarpal"/>
+            <geom class="plastic_visual" mesh="lf_metacarpal_right"/>
+            <geom size="0.011 0.012 0.025" pos="0.002 0 0.033" type="box" class="plastic_collision"/>
+            <body name="rh_lfknuckle" pos="0 0 0.06579">
+              <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+              <joint name="rh_LFJ4" class="knuckle" axis="0 1 0"/>
+              <geom pos="0 0 0.0005" class="plastic_visual" mesh="f_knuckle_right" material="shadow_hand-metallic"/>
+              <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_collision"/>
+              <!-- <site name="rh_lfknuckle_site" pos="0 0 0" group="4"/> -->
+              <body name="rh_lfproximal">
+                <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+                <joint name="rh_LFJ3" class="proximal"/>
+                <geom class="plastic_visual" mesh="f_proximal_right"/>
+                <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_collision"/>
+                <body name="rh_lfmiddle" pos="0 0 0.045">
+                  <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+                  <joint name="rh_LFJ2" class="middle_distal"/>
+                  <geom class="plastic_visual" mesh="f_middle_right"/>
+                  <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_collision"/>
+                  <body name="rh_lfdistal" pos="0 0 0.025">
+                    <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1" diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                    <joint name="rh_LFJ1" class="middle_distal"/>
+                    <geom class="plastic_visual" mesh="f_distal_pst_right"/>
+                    <geom class="plastic_collision" type="mesh" mesh="f_distal_pst_right"/>
+                    <site name="rh_lftip_site" pos="0 0 0.035" quat="0 0 0.7071 0.7071" group="4" size="0.002 0.002 0.002"/>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+          <body name="rh_thbase" pos="0.034 -0.00858 0.029" quat="0.92388 0 0.382683 0">
+            <inertial mass="0.01" pos="0 0 0" diaginertia="1.6e-07 1.6e-07 1.6e-07"/>
+            <joint name="rh_THJ5" class="thbase"/>
+            <geom class="plastic_collision" size="0.013"/>
+            <body name="rh_thproximal">
+              <inertial mass="0.04" pos="0 0 0.019" diaginertia="1.36e-05 1.36e-05 3.13e-06"/>
+              <joint name="rh_THJ4" class="thproximal"/>
+              <geom class="plastic_visual" mesh="th_proximal_right"/>
+              <geom class="plastic_collision" size="0.0105 0.009" pos="0 0 0.02" type="capsule"/>
+              <body name="rh_thhub" pos="0 0 0.038">
+                <inertial mass="0.005" pos="0 0 0" diaginertia="1e-06 1e-06 3e-07"/>
+                <joint name="rh_THJ3" class="thhub" range="0 0.001"/>
+                <geom size="0.011" class="plastic_collision"/>
+                <!-- <site name="rh_thproximal_site" pos="0 0 0" group="4"/> -->
+                <body name="rh_thmiddle">
+                  <inertial mass="0.02" pos="0 0 0.016" diaginertia="5.1e-06 5.1e-06 1.21e-06"/>
+                  <joint name="rh_THJ2" class="thmiddle"/>
+                  <geom class="plastic_visual" mesh="th_middle_right"/>
+                  <geom size="0.009 0.009" pos="0 0 0.012" type="capsule" class="plastic_collision"/>
+                  <geom size="0.01" pos="0 0 0.03" class="plastic_collision"/>
+                  <body name="rh_thdistal" pos="0 0 0.032">
+                    <!-- <site name="rh_thdistal_site" pos="0 0 0" group="4"/> -->
+                    <inertial mass="0.017" pos="0 0 0.0145588" quat="1 0 0 1" diaginertia="2.37794e-06 2.27794e-06 1e-06"/>
+                    <joint name="rh_THJ1" class="thdistal" axis="0 -1 0"/>
+                    <geom class="plastic_visual" mesh="th_distal_pst_right" quat="1 0 0 -1"/>
+                    <geom class="plastic_collision" type="mesh" mesh="th_distal_pst_right" quat="1 0 0 -1"/>
+                    <site name="rh_thtip_site" group="4" quat="0.5 0.5 0.5 0.5" pos="0 0 0.036" size="0.002 0.002 0.002"/>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="shadow_hand_left" pos="0 -0.15 1.1" quat="0 1 0 1">
+      <joint name="lh_forearm_free" type="free"/>
+      <body name="lh_wrist" pos="0.01 0 0.21301" quat="1 0 0 1">
+        <site name="lh_wrist_site" pos="0 0 0.04" quat="0 0 0.7071 0.7071" group="4" size="0.002 0.002 0.002"/>
+        <inertial mass="0.1" pos="0 0 0.029" quat="0.5 0.5 0.5 0.5" diaginertia="6.4e-05 4.38e-05 3.5e-05"/>
+        <!--        <joint class="wrist_left_y" name="lh_WRJ2"/>-->
+        <geom class="plastic_left_visual" mesh="wrist_left" material="shadow_hand-metallic_left"/>
+        <geom size="0.0135 0.015" quat="0.499998 0.5 0.5 -0.500002" type="cylinder" class="plastic_left_collision"/>
+        <geom size="0.011 0.005" pos="0.026 0 0.034" quat="1 0 1 0" type="cylinder" class="plastic_left_collision"/>
+        <geom size="0.011 0.005" pos="-0.031 0 0.034" quat="1 0 1 0" type="cylinder" class="plastic_left_collision"/>
+        <geom size="0.0135 0.009 0.005" pos="0.021 0 0.011" quat="-0.923879 0 0.382684 0" type="box" class="plastic_left_collision"/>
+        <geom size="0.0135 0.009 0.005" pos="-0.026 0 0.01" quat="-0.923879 0 -0.382684 0" type="box" class="plastic_left_collision"/>
+        <body name="lh_palm" pos="0 0 0.034">
+          <inertial mass="0.3" pos="0 0 0.035" quat="1 0 0 1" diaginertia="0.0005287 0.0003581 0.000191"/>
+          <joint class="wrist_left_x" name="lh_WRJ1"/>
+          <geom class="plastic_left_visual" mesh="palm_left"/>
+          <geom size="0.031 0.0035 0.049" pos="-0.011 0.0085 0.038" type="box" class="plastic_left_collision"/>
+          <geom size="0.018 0.0085 0.049" pos="0.002 -0.0035 0.038" type="box" class="plastic_left_collision"/>
+          <geom size="0.013 0.0085 0.005" pos="-0.029 -0.0035 0.082" type="box" class="plastic_left_collision"/>
+          <geom size="0.013 0.007 0.009" pos="-0.0265 -0.001 0.07" quat="0.987241 0.0990545 0.0124467 -0.124052" type="box" class="plastic_left_collision"/>
+          <geom size="0.0105 0.0135 0.0112" pos="-0.0315 -0.0085 0.001" type="box" class="plastic_left_collision"/>
+          <geom size="0.011 0.0025 0.015" pos="-0.0125 -0.015 0.004" quat="-0.971338 0 0 -0.237703" type="box" class="plastic_left_collision"/>
+          <geom size="0.009 0.012 0.002" pos="-0.011 0 0.089" type="box" class="plastic_left_collision"/>
+          <geom size="0.01 0.012 0.02" pos="0.03 0 0.009" type="box" class="plastic_left_collision"/>
+          <body name="lh_ffknuckle" pos="-0.033 0 0.095">
+            <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+            <joint name="lh_FFJ4" class="knuckle_left" axis="0 1 0"/>
+            <geom pos="0 0 0.0005" class="plastic_left_visual" mesh="f_knuckle_left" material="shadow_hand-metallic_left"/>
+            <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_left_collision"/>
+            <body name="lh_ffproximal">
+              <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+              <joint name="lh_FFJ3" class="proximal_left"/>
+              <geom class="plastic_left_visual" mesh="f_proximal_left"/>
+              <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_left_collision"/>
+              <body name="lh_ffmiddle" pos="0 0 0.045">
+                <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+                <joint name="lh_FFJ2" class="middle_distal_left"/>
+                <geom class="plastic_left_visual" mesh="f_middle_left"/>
+                <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_left_collision"/>
+                <body name="lh_ffdistal" pos="0 0 0.025">
+                  <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1" diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                  <joint name="lh_FFJ1" class="middle_distal_left"/>
+                  <geom class="plastic_left_visual" mesh="f_distal_pst_left"/>
+                  <geom class="plastic_left_collision" type="mesh" mesh="f_distal_pst_left"/>
+                  <site name="lh_fftip_site" pos="0 0 0.035" quat="0 0 0.7071 0.7071" group="4" size="0.002 0.002 0.002"/>
+                </body>
+              </body>
+            </body>
+          </body>
+          <body name="lh_mfknuckle" pos="-0.011 0 0.099">
+            <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+            <joint name="lh_MFJ4" class="knuckle_left" axis="0 1 0"/>
+            <geom pos="0 0 0.0005" class="plastic_left_visual" mesh="f_knuckle_left" material="shadow_hand-metallic_left"/>
+            <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_left_collision"/>
+            <body name="lh_mfproximal">
+              <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+              <joint name="lh_MFJ3" class="proximal_left"/>
+              <geom class="plastic_left_visual" mesh="f_proximal_left"/>
+              <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_left_collision"/>
+              <body name="lh_mfmiddle" pos="0 0 0.045">
+                <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+                <joint name="lh_MFJ2" class="middle_distal_left"/>
+                <geom class="plastic_left_visual" mesh="f_middle_left"/>
+                <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_left_collision"/>
+                <body name="lh_mfdistal" pos="0 0 0.025">
+                  <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1" diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                  <joint name="lh_MFJ1" class="middle_distal_left"/>
+                  <geom class="plastic_left_visual" mesh="f_distal_pst_left"/>
+                  <geom class="plastic_left_collision" type="mesh" mesh="f_distal_pst_left"/>
+                  <site name="lh_mftip_site" pos="0 0 0.035" group="4" quat="0 0 0.7071 0.7071" size="0.002 0.002 0.002"/>
+                </body>
+              </body>
+            </body>
+          </body>
+          <body name="lh_rfknuckle" pos="0.011 0 0.095">
+            <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+            <joint name="lh_RFJ4" class="knuckle_left"/>
+            <geom pos="0 0 0.0005" class="plastic_left_visual" mesh="f_knuckle_left" material="shadow_hand-metallic_left"/>
+            <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_left_collision"/>
+            <body name="lh_rfproximal">
+              <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+              <joint name="lh_RFJ3" class="proximal_left"/>
+              <geom class="plastic_left_visual" mesh="f_proximal_left"/>
+              <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_left_collision"/>
+              <body name="lh_rfmiddle" pos="0 0 0.045">
+                <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+                <joint name="lh_RFJ2" class="middle_distal_left"/>
+                <geom class="plastic_left_visual" mesh="f_middle_left"/>
+                <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_left_collision"/>
+                <body name="lh_rfdistal" pos="0 0 0.025">
+                  <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1" diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                  <joint name="lh_RFJ1" class="middle_distal_left"/>
+                  <geom class="plastic_left_visual" mesh="f_distal_pst_left"/>
+                  <geom class="plastic_left_collision" type="mesh" mesh="f_distal_pst_left"/>
+                  <site name="lh_rftip_site" pos="0 0 0.035" group="4" quat="0 0 0.7071 0.7071" size="0.002 0.002 0.002"/>
+                </body>
+              </body>
+            </body>
+          </body>
+          <body name="lh_lfmetacarpal" pos="0.033 0 0.02071">
+            <inertial mass="0.03" pos="0 0 0.04" quat="1 0 0 1" diaginertia="1.638e-05 1.45e-05 4.272e-06"/>
+            <joint name="lh_LFJ5" class="metacarpal_left" axis="0.573576 0 -0.819152"/>
+            <geom class="plastic_left_visual" mesh="lf_metacarpal_left"/>
+            <geom size="0.011 0.012 0.025" pos="-0.002 0 0.033" type="box" class="plastic_left_collision"/>
+            <body name="lh_lfknuckle" pos="0 0 0.06579">
+              <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
+              <joint name="lh_LFJ4" class="knuckle_left"/>
+              <geom pos="0 0 0.0005" class="plastic_left_visual" mesh="f_knuckle_left" material="shadow_hand-metallic_left"/>
+              <geom size="0.009 0.009" quat="1 0 1 0" type="cylinder" class="plastic_left_collision"/>
+              <body name="lh_lfproximal">
+                <inertial mass="0.03" pos="0 0 0.0225" quat="1 0 0 1" diaginertia="1e-05 9.8e-06 1.8e-06"/>
+                <joint name="lh_LFJ3" class="proximal_left"/>
+                <geom class="plastic_left_visual" mesh="f_proximal_left"/>
+                <geom size="0.009 0.02" pos="0 0 0.025" type="capsule" class="plastic_left_collision"/>
+                <body name="lh_lfmiddle" pos="0 0 0.045">
+                  <inertial mass="0.017" pos="0 0 0.0125" quat="1 0 0 1" diaginertia="2.7e-06 2.6e-06 8.7e-07"/>
+                  <joint name="lh_LFJ2" class="middle_distal_left"/>
+                  <geom class="plastic_left_visual" mesh="f_middle_left"/>
+                  <geom size="0.009 0.0125" pos="0 0 0.0125" type="capsule" class="plastic_left_collision"/>
+                  <body name="lh_lfdistal" pos="0 0 0.025">
+                    <inertial mass="0.013" pos="0 0 0.0130769" quat="1 0 0 1" diaginertia="1.28092e-06 1.12092e-06 5.3e-07"/>
+                    <joint name="lh_LFJ1" class="middle_distal_left"/>
+                    <geom class="plastic_left_visual" mesh="f_distal_pst_left"/>
+                    <geom class="plastic_left_collision" type="mesh" mesh="f_distal_pst_left"/>
+                    <site name="lh_lftip_site" pos="0 0 0.035" group="4" quat="0 0 0.7071 0.7071" size="0.002 0.002 0.002"/>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+          <body name="lh_thbase" pos="-0.034 -0.00858 0.029" quat="0 -0.382683 0 0.92388">
+            <inertial mass="0.01" pos="0 0 0" diaginertia="1.6e-07 1.6e-07 1.6e-07"/>
+            <joint name="lh_THJ5" class="thbase_left"/>
+            <geom class="plastic_left_collision" size="0.013"/>
+            <body name="lh_thproximal">
+              <inertial mass="0.04" pos="0 0 0.019" diaginertia="1.36e-05 1.36e-05 3.13e-06"/>
+              <joint name="lh_THJ4" class="thproximal_left"/>
+              <geom class="plastic_left_visual" mesh="th_proximal_left"/>
+              <geom class="plastic_left_collision" size="0.0105 0.009" pos="0 0 0.02" type="capsule"/>
+              <body name="lh_thhub" pos="0 0 0.038">
+                <inertial mass="0.005" pos="0 0 0" diaginertia="1e-06 1e-06 3e-07"/>
+                <joint name="lh_THJ3" class="thhub_left"/>
+                <geom size="0.011" class="plastic_left_collision"/>
+                <body name="lh_thmiddle">
+                  <inertial mass="0.02" pos="0 0 0.016" diaginertia="5.1e-06 5.1e-06 1.21e-06"/>
+                  <joint name="lh_THJ2" class="thmiddle_left"/>
+                  <geom class="plastic_left_visual" mesh="th_middle_left"/>
+                  <geom size="0.009 0.009" pos="0 0 0.012" type="capsule" class="plastic_left_collision"/>
+                  <geom size="0.01" pos="0 0 0.03" class="plastic_left_collision"/>
+                  <body name="lh_thdistal" pos="0 0 0.032" quat="1 0 0 -1">
+                    <inertial mass="0.017" pos="0 0 0.0145588" quat="1 0 0 1" diaginertia="2.37794e-06 2.27794e-06 1e-06"/>
+                    <joint name="lh_THJ1" class="thdistal_left"/>
+                    <geom class="plastic_left_visual" mesh="th_distal_pst_left"/>
+                    <geom class="plastic_left_collision" type="mesh" mesh="th_distal_pst_left"/>
+                    <site name="lh_thtip_site" group="4" quat="0 0 0.707107 0.707107" pos="0 0 0.036" size="0.002 0.002 0.002"/>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body mocap="true" name="right-wrist" pos="0.253 0.15 1.11" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0" name="right-wrist-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002" group="5"/>
+    </body>
+    <body mocap="true" name="right-index-finger-tip" pos="0.4475 0.11649999999999999 1.11" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0" name="right-index-finger-tip-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002" group="5"/>
+    </body>
+    <body mocap="true" name="right-middle-finger-tip" pos="0.451 0.13899999999999998 1.11" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0" name="right-middle-finger-tip-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002" group="5"/>
+    </body>
+    <body mocap="true" name="right-ring-finger-tip" pos="0.447 0.161 1.11" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0" name="right-ring-finger-tip-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002" group="5"/>
+    </body>
+    <body mocap="true" name="right-pinky-finger-tip" pos="0.4385 0.183 1.11" quat="0 -0.7071 -0.7071 0">
+      <site name="right-pinky-finger-tip-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002" group="5"/>
+    </body>
+    <body mocap="true" name="right-thumb-tip" pos="0.35 0.039999999999999994 1.12" quat="0.2706 0.6533 0.2706 -0.6533">
+      <site name="right-thumb-tip-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002" group="5"/>
+    </body>
+    <body mocap="true" name="left-wrist" pos="0.253 -0.15 1.11" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0" name="left-wrist-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002"/>
+    </body>
+    <body mocap="true" name="left-index-finger-tip" pos="0.4475 -0.1175 1.11" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0" name="left-index-finger-tip-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002"/>
+    </body>
+    <body mocap="true" name="left-middle-finger-tip" pos="0.451 -0.13899999999999998 1.11" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0" name="left-middle-finger-tip-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002"/>
+    </body>
+    <body mocap="true" name="left-ring-finger-tip" pos="0.447 -0.161 1.11" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0" name="left-ring-finger-tip-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002"/>
+    </body>
+    <body mocap="true" name="left-pinky-finger-tip" pos="0.4385 -0.183 1.11" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0" name="left-pinky-finger-tip-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002"/>
+    </body>
+    <body mocap="true" name="left-thumb-tip" pos="0.351 -0.039999999999999994 1.12" quat="0.6533 -0.2706 -0.6533 -0.2706">
+      <site name="left-thumb-tip-site-mocap" rgba="0.658 0.411 0.75 1" size="0.002 0.002 0.002"/>
+    </body>
+  </worldbody>
+  <equality>
+    <weld site1="right-wrist-site-mocap" site2="rh_wrist_site"/>
+    <weld site1="right-index-finger-tip-site-mocap" site2="rh_fftip_site"/>
+    <weld site1="right-middle-finger-tip-site-mocap" site2="rh_mftip_site"/>
+    <weld site1="right-ring-finger-tip-site-mocap" site2="rh_rftip_site"/>
+    <weld site1="right-pinky-finger-tip-site-mocap" site2="rh_lftip_site"/>
+    <weld site1="right-thumb-tip-site-mocap" site2="rh_thtip_site"/>
+    <weld site1="left-wrist-site-mocap" site2="lh_wrist_site"/>
+    <weld site1="left-index-finger-tip-site-mocap" site2="lh_fftip_site"/>
+    <weld site1="left-middle-finger-tip-site-mocap" site2="lh_mftip_site"/>
+    <weld site1="left-ring-finger-tip-site-mocap" site2="lh_rftip_site"/>
+    <weld site1="left-pinky-finger-tip-site-mocap" site2="lh_lftip_site"/>
+    <weld site1="left-thumb-tip-site-mocap" site2="lh_thtip_site"/>
+    /
+  </equality>
+  <contact>
+    <exclude body1="rh_wrist" body2="shadow_hand_right"/>
+    <exclude body1="rh_thproximal" body2="rh_thmiddle"/>
+    <exclude body1="lh_wrist" body2="shadow_hand_left"/>
+    <exclude body1="lh_thproximal" body2="lh_thmiddle"/>
+  </contact>
+  <tendon>
+    <fixed name="rh_FFJ0">
+      <joint joint="rh_FFJ2" coef="1"/>
+      <joint joint="rh_FFJ1" coef="1"/>
+    </fixed>
+    <fixed name="rh_MFJ0">
+      <joint joint="rh_MFJ2" coef="1"/>
+      <joint joint="rh_MFJ1" coef="1"/>
+    </fixed>
+    <fixed name="rh_RFJ0">
+      <joint joint="rh_RFJ2" coef="1"/>
+      <joint joint="rh_RFJ1" coef="1"/>
+    </fixed>
+    <fixed name="rh_LFJ0">
+      <joint joint="rh_LFJ2" coef="1"/>
+      <joint joint="rh_LFJ1" coef="1"/>
+    </fixed>
+    <fixed name="lh_FFJ0">
+      <joint joint="lh_FFJ2" coef="1"/>
+      <joint joint="lh_FFJ1" coef="1"/>
+    </fixed>
+    <fixed name="lh_MFJ0">
+      <joint joint="lh_MFJ2" coef="1"/>
+      <joint joint="lh_MFJ1" coef="1"/>
+    </fixed>
+    <fixed name="lh_RFJ0">
+      <joint joint="lh_RFJ2" coef="1"/>
+      <joint joint="lh_RFJ1" coef="1"/>
+    </fixed>
+    <fixed name="lh_LFJ0">
+      <joint joint="lh_LFJ2" coef="1"/>
+      <joint joint="lh_LFJ1" coef="1"/>
+    </fixed>
+  </tendon>
+  <actuator>
+    <!--<position name="rh_A_WRJ2" joint="rh_WRJ2" class="wrist_y"/>-->
+    <position name="rh_A_WRJ1" joint="rh_WRJ1" class="wrist_x"/>
+    <position name="rh_A_THJ5" joint="rh_THJ5" class="thbase"/>
+    <position name="rh_A_THJ4" joint="rh_THJ4" class="thproximal"/>
+    <position name="rh_A_THJ3" joint="rh_THJ3" class="thhub"/>
+    <position name="rh_A_THJ2" joint="rh_THJ2" class="thmiddle"/>
+    <position name="rh_A_THJ1" joint="rh_THJ1" class="thdistal"/>
+    <position name="rh_A_FFJ4" joint="rh_FFJ4" class="knuckle"/>
+    <position name="rh_A_FFJ3" joint="rh_FFJ3" class="proximal"/>
+    <position name="rh_A_FFJ0" tendon="rh_FFJ0" class="middle_distal"/>
+    <position name="rh_A_MFJ4" joint="rh_MFJ4" class="knuckle"/>
+    <position name="rh_A_MFJ3" joint="rh_MFJ3" class="proximal"/>
+    <position name="rh_A_MFJ0" tendon="rh_MFJ0" class="middle_distal"/>
+    <position name="rh_A_RFJ4" joint="rh_RFJ4" class="knuckle"/>
+    <position name="rh_A_RFJ3" joint="rh_RFJ3" class="proximal"/>
+    <position name="rh_A_RFJ0" tendon="rh_RFJ0" class="middle_distal"/>
+    <position name="rh_A_LFJ5" joint="rh_LFJ5" class="metacarpal"/>
+    <position name="rh_A_LFJ4" joint="rh_LFJ4" class="knuckle"/>
+    <position name="rh_A_LFJ3" joint="rh_LFJ3" class="proximal"/>
+    <position name="rh_A_LFJ0" tendon="rh_LFJ0" class="middle_distal"/>
+    <!--<position name="lh_A_WRJ2" joint="lh_WRJ2" class="wrist_left_y"/>-->
+    <position name="lh_A_WRJ1" joint="lh_WRJ1" class="wrist_left_x"/>
+    <position name="lh_A_THJ5" joint="lh_THJ5" class="thbase_left"/>
+    <position name="lh_A_THJ4" joint="lh_THJ4" class="thproximal_left"/>
+    <position name="lh_A_THJ3" joint="lh_THJ3" class="thhub_left"/>
+    <position name="lh_A_THJ2" joint="lh_THJ2" class="thmiddle_left"/>
+    <position name="lh_A_THJ1" joint="lh_THJ1" class="thdistal_left"/>
+    <position name="lh_A_FFJ4" joint="lh_FFJ4" class="knuckle_left"/>
+    <position name="lh_A_FFJ3" joint="lh_FFJ3" class="proximal_left"/>
+    <position name="lh_A_FFJ0" tendon="lh_FFJ0" class="middle_distal_left"/>
+    <position name="lh_A_MFJ4" joint="lh_MFJ4" class="knuckle_left"/>
+    <position name="lh_A_MFJ3" joint="lh_MFJ3" class="proximal_left"/>
+    <position name="lh_A_MFJ0" tendon="lh_MFJ0" class="middle_distal_left"/>
+    <position name="lh_A_RFJ4" joint="lh_RFJ4" class="knuckle_left"/>
+    <position name="lh_A_RFJ3" joint="lh_RFJ3" class="proximal_left"/>
+    <position name="lh_A_RFJ0" tendon="lh_RFJ0" class="middle_distal_left"/>
+    <position name="lh_A_LFJ5" joint="lh_LFJ5" class="metacarpal_left"/>
+    <position name="lh_A_LFJ4" joint="lh_LFJ4" class="knuckle_left"/>
+    <position name="lh_A_LFJ3" joint="lh_LFJ3" class="proximal_left"/>
+    <position name="lh_A_LFJ0" tendon="lh_LFJ0" class="middle_distal_left"/>
+  </actuator>
+</mujoco>

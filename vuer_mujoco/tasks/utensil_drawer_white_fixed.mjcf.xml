@@ -1,0 +1,707 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mujoco model="dual UR5e setup"><compiler angle="radian" autolimits="true" assetdir="assets" meshdir="assets" texturedir="assets" />
+  
+  <option sdf_iterations="10" sdf_initpoints="20" />
+  <default>
+    <default class="dw">
+      <default class="dw-visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="0" mass="0" />
+      </default>
+      <default class="dw-collision">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1" />
+      </default>
+      <default class="dw-collision_basket">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1" />
+      </default>
+      <default class="dw-collision_holder">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1" />
+      </default>
+    </default>
+    <default class="dw2">
+      <default class="dw2-visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="0" mass="0" />
+      </default>
+      <default class="dw2-collision">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1" />
+      </default>
+      <default class="dw2-collision_basket">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1" />
+      </default>
+      <default class="dw2-collision_holder">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1" />
+      </default>
+    </default>
+    <default class="cup_visual">
+      <geom type="mesh" contype="0" conaffinity="0" density="100" friction="2.0 0.3 0.1" solref="0.001 1" solimp="0.998 0.998 0.001" />
+    </default>
+    <default class="cup_collision">
+      <geom type="mesh" group="3" density="100" friction="2.0 0.3 0.1" solref="0.001 1" solimp="0.998 0.998 0.001" />
+    </default>
+    <default class="spoon_visual">
+      <geom type="mesh" contype="0" conaffinity="0" density="100" friction="0.95 0.3 0.1" solimp="0.998 0.998 0.001" solref="0.001 1" />
+    </default>
+    <default class="spoon_collision">
+      <geom type="mesh" group="3" density="100" friction="0.95 0.3 0.1" solimp="0.998 0.998 0.001" solref="0.001 1" />
+    </default>
+    <default class="bagel">
+      <default class="bagel-visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2" />
+      </default>
+      <default class="bagel-collision">
+        <geom type="box" group="3" contype="1" conaffinity="1" />
+      </default>
+    </default>
+    <default class="bowl_visual">
+      <geom type="mesh" contype="0" conaffinity="0" friction="0.95 0.3 0.1" density="100" solimp="0.998 0.998 0.001" solref="0.001 1" />
+    </default>
+    <default class="bowl_collision">
+      <geom type="mesh" group="3" friction="0.95 0.3 0.1" density="100" solimp="0.998 0.998 0.001" solref="0.001 1" />
+    </default>
+    <default class="2f85">
+      <mesh scale="0.001 0.001 0.001" />
+      <general biastype="affine" />
+      <joint axis="1 0 0" />
+      <default class="2f85-driver">
+        <joint range="0 0.8" armature="0.005" damping="0.1" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1" />
+      </default>
+      <default class="2f85-follower">
+        <joint range="-0.872664 0.872664" armature="0.001" pos="0 -0.018 0.0065" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1" />
+      </default>
+      <default class="2f85-spring_link">
+        <joint range="-0.29670597283 0.8" armature="0.001" stiffness="0.05" springref="2.62" damping="0.00125" />
+      </default>
+      <default class="2f85-coupler">
+        <joint range="-1.57 0" armature="0.001" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1" />
+      </default>
+      <default class="2f85-visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="0" />
+      </default>
+      <default class="2f85-collision">
+        <geom type="mesh" group="3" />
+        <default class="2f85-pad_box1">
+          <geom mass="0" type="box" pos="0 -0.0026 0.028125" size="0.011 0.004 0.009375" friction="4" solimp="0.95 0.99 0.001" solref="0.004 1" priority="1" rgba="0.55 0.55 0.55 1" />
+        </default>
+        <default class="2f85-pad_box2">
+          <geom mass="0" type="box" pos="0 -0.0026 0.009375" size="0.011 0.004 0.009375" friction="3" solimp="0.95 0.99 0.001" solref="0.004 1" priority="1" rgba="0.45 0.45 0.45 1" />
+        </default>
+      </default>
+    </default>
+  </default>
+  <asset>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300" />
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2" />
+    <texture type="2d" name="wall_tex_paint" file="kitchen/wall/paint.png" />
+    <material name="wall_paint_mat" texture="wall_tex_paint" shininess="0.15" />
+    <texture type="2d" name="gr-countertop-marble" file="kitchen/counter/marble.png" />
+    <material name="gr-countertop-granite" texture="gr-countertop-marble" texuniform="true" texrepeat="3 3" shininess="0.1" reflectance="0.1" />
+    <texture type="2d" name="stack_D_drawer_tex_lam" file="kitchen/drawer/laminate.png" />
+    <texture type="2d" name="stack_D_drawer_tex_metal" file="kitchen/drawer/metal.png" />
+    <material name="stack_D_drawer_lam_mat" texture="stack_D_drawer_tex_lam" shininess="0.1" reflectance="0.1" />
+    <material name="stack_D_drawer_face_mat" texture="stack_D_drawer_tex_lam" shininess="0.1" reflectance="0.1" />
+    <material name="stack_D_drawer_handle_mat" texture="stack_D_drawer_tex_metal" shininess="0.8" reflectance="0.8" />
+    <texture type="2d" name="single-cabinet_tex_body" file="kitchen/cabinet/laminate.png" />
+    <texture type="2d" name="single-cabinet_tex_metal" file="kitchen/cabinet/metal.png" />
+    <material name="single-cabinet_body_mat" texture="single-cabinet_tex_body" shininess="0.1" reflectance="0.1" />
+    <material name="single-cabinet_door_mat" texture="single-cabinet_tex_body" shininess="0.1" reflectance="0.1" />
+    <material name="single-cabinet_handle_mat" texture="single-cabinet_tex_metal" shininess="0.8" reflectance="0.8" />
+    <texture type="2d" name="stack_E_drawer_tex_lam" file="kitchen/drawer/laminate.png" />
+    <texture type="2d" name="stack_E_drawer_tex_metal" file="kitchen/drawer/metal.png" />
+    <material name="stack_E_drawer_lam_mat" texture="stack_E_drawer_tex_lam" shininess="0.1" reflectance="0.1" />
+    <material name="stack_E_drawer_face_mat" texture="stack_E_drawer_tex_lam" shininess="0.1" reflectance="0.1" />
+    <material name="stack_E_drawer_handle_mat" texture="stack_E_drawer_tex_metal" shininess="0.8" reflectance="0.8" />
+    <texture type="2d" name="mw_tex_0" file="microwave/tex_2.png" />
+    <texture type="2d" name="mw_tex_1" file="microwave/tex_0.png" />
+    <texture type="2d" name="mw_tex_2" file="microwave/tex_1.png" />
+    <material name="mw_mat_0" texture="mw_tex_0" shininess="0.25" />
+    <material name="mw_mat_1" texture="mw_tex_1" shininess="0.25" />
+    <material name="mw_mat_2" texture="mw_tex_2" shininess="0.25" />
+    
+    <mesh name="mw_vis0" file="microwave/model_0.obj" scale="0.5542271 0.3608248 0.5542271" />
+    <mesh name="mw_vis1" file="microwave/model_1.obj" scale="0.5542271 0.3608248 0.5542271" />
+    <mesh name="mw_vis2" file="microwave/model_2.obj" scale="0.5542271 0.3608248 0.5542271" />
+    
+    <mesh name="mw_door0" file="microwave/door_0.obj" scale="0.5542271 0.3608248 0.5542271" />
+    <mesh name="mw_door1" file="microwave/door_1.obj" scale="0.5542271 0.3608248 0.5542271" />
+    <mesh name="mw_door2" file="microwave/door_2.obj" scale="0.5542271 0.3608248 0.5542271" />
+    
+    <texture type="2d" name="dw-basket" file="kitchen/dishwasher/basket.png" />
+    <texture type="2d" name="dw-body" file="kitchen/dishwasher/body.png" />
+    <texture type="2d" name="dw-bottom" file="kitchen/dishwasher/bottom.png" />
+    <texture type="2d" name="dw-door" file="kitchen/dishwasher/door.png" />
+    <texture type="2d" name="dw-middle" file="kitchen/dishwasher/middle.png" />
+    
+    <material name="dw-dishwasher" rgba="0.3 0.3 0.3 1" />
+    <material name="dw-basket" texture="dw-basket" rgba="0.3 0.3 0.3 1" />
+    <material name="dw-body" texture="dw-body" />
+    <material name="dw-bottom" texture="dw-bottom" />
+    <material name="dw-door" texture="dw-door" />
+    <material name="dw-middle" texture="dw-middle" />
+    
+    <mesh name="dw-dish_washer_body_001" file="kitchen/dishwasher/visual/dish_washer_body_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-dish_washer_door_001" file="kitchen/dishwasher/visual/dish_washer_door_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-dish_washer_mid_001" file="kitchen/dishwasher/visual/dish_washer_mid_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-dish_washer_mid_sprinkle" file="kitchen/dishwasher/visual/dish_washer_mid_sprinkle.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-dish_washer_bottom_001" file="kitchen/dishwasher/visual/dish_washer_bottom_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-dish_washer_bottom_wheel" file="kitchen/dishwasher/visual/dish_washer_bottom_wheel.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-dish_washer_bottom_plates_holder_001" file="kitchen/dishwasher/visual/dish_washer_bottom_plates_holder_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-dish_washer_bottom_cuttlery_basket_001" file="kitchen/dishwasher/visual/dish_washer_bottom_cuttlery_basket_001.obj" scale="1.0 1.0 1.0" />
+    
+    <mesh name="dw-collision_door_001" file="kitchen/dishwasher/collision/collision_door_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_door_003" file="kitchen/dishwasher/collision/collision_door_003.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_door_004" file="kitchen/dishwasher/collision/collision_door_004.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_door_006" file="kitchen/dishwasher/collision/collision_door_006.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_door_007" file="kitchen/dishwasher/collision/collision_door_007.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_door_008" file="kitchen/dishwasher/collision/collision_door_008.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_door_009" file="kitchen/dishwasher/collision/collision_door_009.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_001" file="kitchen/dishwasher/collision/collision_tray_mid_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_002" file="kitchen/dishwasher/collision/collision_tray_mid_002.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_003" file="kitchen/dishwasher/collision/collision_tray_mid_003.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_004" file="kitchen/dishwasher/collision/collision_tray_mid_004.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_005" file="kitchen/dishwasher/collision/collision_tray_mid_005.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_006" file="kitchen/dishwasher/collision/collision_tray_mid_006.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_007" file="kitchen/dishwasher/collision/collision_tray_mid_007.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_008" file="kitchen/dishwasher/collision/collision_tray_mid_008.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_009" file="kitchen/dishwasher/collision/collision_tray_mid_009.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_010" file="kitchen/dishwasher/collision/collision_tray_mid_010.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_011" file="kitchen/dishwasher/collision/collision_tray_mid_011.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_012" file="kitchen/dishwasher/collision/collision_tray_mid_012.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_013" file="kitchen/dishwasher/collision/collision_tray_mid_013.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_014" file="kitchen/dishwasher/collision/collision_tray_mid_014.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_015" file="kitchen/dishwasher/collision/collision_tray_mid_015.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_016" file="kitchen/dishwasher/collision/collision_tray_mid_016.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_017" file="kitchen/dishwasher/collision/collision_tray_mid_017.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_018" file="kitchen/dishwasher/collision/collision_tray_mid_018.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_019" file="kitchen/dishwasher/collision/collision_tray_mid_019.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_020" file="kitchen/dishwasher/collision/collision_tray_mid_020.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_021" file="kitchen/dishwasher/collision/collision_tray_mid_021.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_022" file="kitchen/dishwasher/collision/collision_tray_mid_022.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_023" file="kitchen/dishwasher/collision/collision_tray_mid_023.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_024" file="kitchen/dishwasher/collision/collision_tray_mid_024.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_025" file="kitchen/dishwasher/collision/collision_tray_mid_025.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_026" file="kitchen/dishwasher/collision/collision_tray_mid_026.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_mid_027" file="kitchen/dishwasher/collision/collision_tray_mid_027.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_001" file="kitchen/dishwasher/collision/collision_tray_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_002" file="kitchen/dishwasher/collision/collision_tray_002.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_003" file="kitchen/dishwasher/collision/collision_tray_003.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_004" file="kitchen/dishwasher/collision/collision_tray_004.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_005" file="kitchen/dishwasher/collision/collision_tray_005.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_006" file="kitchen/dishwasher/collision/collision_tray_006.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_007" file="kitchen/dishwasher/collision/collision_tray_007.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_008" file="kitchen/dishwasher/collision/collision_tray_008.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_009" file="kitchen/dishwasher/collision/collision_tray_009.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_010" file="kitchen/dishwasher/collision/collision_tray_010.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_011" file="kitchen/dishwasher/collision/collision_tray_011.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_012" file="kitchen/dishwasher/collision/collision_tray_012.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_013" file="kitchen/dishwasher/collision/collision_tray_013.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_014" file="kitchen/dishwasher/collision/collision_tray_014.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_015" file="kitchen/dishwasher/collision/collision_tray_015.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_016" file="kitchen/dishwasher/collision/collision_tray_016.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_017" file="kitchen/dishwasher/collision/collision_tray_017.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_018" file="kitchen/dishwasher/collision/collision_tray_018.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_019" file="kitchen/dishwasher/collision/collision_tray_019.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_020" file="kitchen/dishwasher/collision/collision_tray_020.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_021" file="kitchen/dishwasher/collision/collision_tray_021.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_022" file="kitchen/dishwasher/collision/collision_tray_022.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_023" file="kitchen/dishwasher/collision/collision_tray_023.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_024" file="kitchen/dishwasher/collision/collision_tray_024.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_025" file="kitchen/dishwasher/collision/collision_tray_025.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_026" file="kitchen/dishwasher/collision/collision_tray_026.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_027" file="kitchen/dishwasher/collision/collision_tray_027.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_028" file="kitchen/dishwasher/collision/collision_tray_028.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_029" file="kitchen/dishwasher/collision/collision_tray_029.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_030" file="kitchen/dishwasher/collision/collision_tray_030.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_031" file="kitchen/dishwasher/collision/collision_tray_031.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_032" file="kitchen/dishwasher/collision/collision_tray_032.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_tray_033" file="kitchen/dishwasher/collision/collision_tray_033.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_001" file="kitchen/dishwasher/collision/collision_holder_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_002" file="kitchen/dishwasher/collision/collision_holder_002.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_003" file="kitchen/dishwasher/collision/collision_holder_003.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_004" file="kitchen/dishwasher/collision/collision_holder_004.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_005" file="kitchen/dishwasher/collision/collision_holder_005.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_006" file="kitchen/dishwasher/collision/collision_holder_006.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_007" file="kitchen/dishwasher/collision/collision_holder_007.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_008" file="kitchen/dishwasher/collision/collision_holder_008.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_009" file="kitchen/dishwasher/collision/collision_holder_009.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_010" file="kitchen/dishwasher/collision/collision_holder_010.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_011" file="kitchen/dishwasher/collision/collision_holder_011.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_012" file="kitchen/dishwasher/collision/collision_holder_012.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_013" file="kitchen/dishwasher/collision/collision_holder_013.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_holder_014" file="kitchen/dishwasher/collision/collision_holder_014.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_mid_sprinkle" file="kitchen/dishwasher/collision/collision_dish_washer_mid_sprinkle.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_001" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_002" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_002.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_003" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_003.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_004" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_004.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_005" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_005.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_006" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_006.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_007" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_007.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_008" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_008.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_009" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_009.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_010" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_010.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_011" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_011.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_012" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_012.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_013" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_013.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_014" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_014.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw-collision_dish_washer_bottom_basket_015" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_015.obj" scale="1.0 1.0 1.0" />
+    <texture type="2d" name="dw2-basket" file="kitchen/dishwasher/basket.png" />
+    <texture type="2d" name="dw2-body" file="kitchen/dishwasher/body.png" />
+    <texture type="2d" name="dw2-bottom" file="kitchen/dishwasher/bottom.png" />
+    <texture type="2d" name="dw2-door" file="kitchen/dishwasher/door.png" />
+    <texture type="2d" name="dw2-middle" file="kitchen/dishwasher/middle.png" />
+    <material name="dw2-dishwasher" rgba="0.3 0.3 0.3 1" />
+    <material name="dw2-basket" texture="dw2-basket" rgba="0.3 0.3 0.3 1" />
+    <material name="dw2-body" texture="dw2-body" />
+    <material name="dw2-bottom" texture="dw2-bottom" />
+    <material name="dw2-door" texture="dw2-door" />
+    <material name="dw2-middle" texture="dw2-middle" />
+    <mesh name="dw2-dish_washer_body_001" file="kitchen/dishwasher/visual/dish_washer_body_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-dish_washer_door_001" file="kitchen/dishwasher/visual/dish_washer_door_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-dish_washer_mid_001" file="kitchen/dishwasher/visual/dish_washer_mid_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-dish_washer_mid_sprinkle" file="kitchen/dishwasher/visual/dish_washer_mid_sprinkle.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-dish_washer_bottom_001" file="kitchen/dishwasher/visual/dish_washer_bottom_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-dish_washer_bottom_wheel" file="kitchen/dishwasher/visual/dish_washer_bottom_wheel.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-dish_washer_bottom_plates_holder_001" file="kitchen/dishwasher/visual/dish_washer_bottom_plates_holder_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-dish_washer_bottom_cuttlery_basket_001" file="kitchen/dishwasher/visual/dish_washer_bottom_cuttlery_basket_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_door_001" file="kitchen/dishwasher/collision/collision_door_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_door_003" file="kitchen/dishwasher/collision/collision_door_003.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_door_004" file="kitchen/dishwasher/collision/collision_door_004.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_door_006" file="kitchen/dishwasher/collision/collision_door_006.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_door_007" file="kitchen/dishwasher/collision/collision_door_007.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_door_008" file="kitchen/dishwasher/collision/collision_door_008.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_door_009" file="kitchen/dishwasher/collision/collision_door_009.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_001" file="kitchen/dishwasher/collision/collision_tray_mid_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_002" file="kitchen/dishwasher/collision/collision_tray_mid_002.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_003" file="kitchen/dishwasher/collision/collision_tray_mid_003.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_004" file="kitchen/dishwasher/collision/collision_tray_mid_004.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_005" file="kitchen/dishwasher/collision/collision_tray_mid_005.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_006" file="kitchen/dishwasher/collision/collision_tray_mid_006.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_007" file="kitchen/dishwasher/collision/collision_tray_mid_007.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_008" file="kitchen/dishwasher/collision/collision_tray_mid_008.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_009" file="kitchen/dishwasher/collision/collision_tray_mid_009.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_010" file="kitchen/dishwasher/collision/collision_tray_mid_010.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_011" file="kitchen/dishwasher/collision/collision_tray_mid_011.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_012" file="kitchen/dishwasher/collision/collision_tray_mid_012.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_013" file="kitchen/dishwasher/collision/collision_tray_mid_013.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_014" file="kitchen/dishwasher/collision/collision_tray_mid_014.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_015" file="kitchen/dishwasher/collision/collision_tray_mid_015.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_016" file="kitchen/dishwasher/collision/collision_tray_mid_016.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_017" file="kitchen/dishwasher/collision/collision_tray_mid_017.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_018" file="kitchen/dishwasher/collision/collision_tray_mid_018.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_019" file="kitchen/dishwasher/collision/collision_tray_mid_019.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_020" file="kitchen/dishwasher/collision/collision_tray_mid_020.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_021" file="kitchen/dishwasher/collision/collision_tray_mid_021.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_022" file="kitchen/dishwasher/collision/collision_tray_mid_022.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_023" file="kitchen/dishwasher/collision/collision_tray_mid_023.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_024" file="kitchen/dishwasher/collision/collision_tray_mid_024.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_025" file="kitchen/dishwasher/collision/collision_tray_mid_025.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_026" file="kitchen/dishwasher/collision/collision_tray_mid_026.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_mid_027" file="kitchen/dishwasher/collision/collision_tray_mid_027.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_001" file="kitchen/dishwasher/collision/collision_tray_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_002" file="kitchen/dishwasher/collision/collision_tray_002.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_003" file="kitchen/dishwasher/collision/collision_tray_003.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_004" file="kitchen/dishwasher/collision/collision_tray_004.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_005" file="kitchen/dishwasher/collision/collision_tray_005.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_006" file="kitchen/dishwasher/collision/collision_tray_006.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_007" file="kitchen/dishwasher/collision/collision_tray_007.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_008" file="kitchen/dishwasher/collision/collision_tray_008.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_009" file="kitchen/dishwasher/collision/collision_tray_009.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_010" file="kitchen/dishwasher/collision/collision_tray_010.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_011" file="kitchen/dishwasher/collision/collision_tray_011.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_012" file="kitchen/dishwasher/collision/collision_tray_012.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_013" file="kitchen/dishwasher/collision/collision_tray_013.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_014" file="kitchen/dishwasher/collision/collision_tray_014.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_015" file="kitchen/dishwasher/collision/collision_tray_015.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_016" file="kitchen/dishwasher/collision/collision_tray_016.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_017" file="kitchen/dishwasher/collision/collision_tray_017.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_018" file="kitchen/dishwasher/collision/collision_tray_018.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_019" file="kitchen/dishwasher/collision/collision_tray_019.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_020" file="kitchen/dishwasher/collision/collision_tray_020.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_021" file="kitchen/dishwasher/collision/collision_tray_021.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_022" file="kitchen/dishwasher/collision/collision_tray_022.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_023" file="kitchen/dishwasher/collision/collision_tray_023.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_024" file="kitchen/dishwasher/collision/collision_tray_024.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_025" file="kitchen/dishwasher/collision/collision_tray_025.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_026" file="kitchen/dishwasher/collision/collision_tray_026.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_027" file="kitchen/dishwasher/collision/collision_tray_027.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_028" file="kitchen/dishwasher/collision/collision_tray_028.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_029" file="kitchen/dishwasher/collision/collision_tray_029.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_030" file="kitchen/dishwasher/collision/collision_tray_030.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_031" file="kitchen/dishwasher/collision/collision_tray_031.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_032" file="kitchen/dishwasher/collision/collision_tray_032.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_tray_033" file="kitchen/dishwasher/collision/collision_tray_033.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_001" file="kitchen/dishwasher/collision/collision_holder_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_002" file="kitchen/dishwasher/collision/collision_holder_002.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_003" file="kitchen/dishwasher/collision/collision_holder_003.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_004" file="kitchen/dishwasher/collision/collision_holder_004.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_005" file="kitchen/dishwasher/collision/collision_holder_005.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_006" file="kitchen/dishwasher/collision/collision_holder_006.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_007" file="kitchen/dishwasher/collision/collision_holder_007.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_008" file="kitchen/dishwasher/collision/collision_holder_008.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_009" file="kitchen/dishwasher/collision/collision_holder_009.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_010" file="kitchen/dishwasher/collision/collision_holder_010.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_011" file="kitchen/dishwasher/collision/collision_holder_011.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_012" file="kitchen/dishwasher/collision/collision_holder_012.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_013" file="kitchen/dishwasher/collision/collision_holder_013.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_holder_014" file="kitchen/dishwasher/collision/collision_holder_014.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_mid_sprinkle" file="kitchen/dishwasher/collision/collision_dish_washer_mid_sprinkle.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_001" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_001.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_002" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_002.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_003" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_003.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_004" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_004.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_005" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_005.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_006" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_006.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_007" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_007.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_008" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_008.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_009" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_009.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_010" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_010.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_011" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_011.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_012" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_012.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_013" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_013.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_014" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_014.obj" scale="1.0 1.0 1.0" />
+    <mesh name="dw2-collision_dish_washer_bottom_basket_015" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_015.obj" scale="1.0 1.0 1.0" />
+    
+    <texture type="2d" name="cab_tex_body" file="kitchen/cabinet/laminate.png" />
+    <texture type="2d" name="cab_tex_metal" file="kitchen/cabinet/metal.png" />
+    <material name="cab_body_mat" texture="cab_tex_body" shininess="0.1" reflectance="0.1" />
+    <material name="cab_door_mat" texture="cab_tex_body" shininess="0.1" reflectance="0.1" />
+    <material name="cab_handle_mat" texture="cab_tex_metal" shininess="0.8" reflectance="0.8" />
+    <mesh name="cup_vis_0" file="kitchen/cup_4/visual/model_normalized_0.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_0" file="kitchen/cup_4/collision/model_normalized_collision_0.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_1" file="kitchen/cup_4/collision/model_normalized_collision_1.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_2" file="kitchen/cup_4/collision/model_normalized_collision_2.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_3" file="kitchen/cup_4/collision/model_normalized_collision_3.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_4" file="kitchen/cup_4/collision/model_normalized_collision_4.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_5" file="kitchen/cup_4/collision/model_normalized_collision_5.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_6" file="kitchen/cup_4/collision/model_normalized_collision_6.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_7" file="kitchen/cup_4/collision/model_normalized_collision_7.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_8" file="kitchen/cup_4/collision/model_normalized_collision_8.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_9" file="kitchen/cup_4/collision/model_normalized_collision_9.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_10" file="kitchen/cup_4/collision/model_normalized_collision_10.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_11" file="kitchen/cup_4/collision/model_normalized_collision_11.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_12" file="kitchen/cup_4/collision/model_normalized_collision_12.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_13" file="kitchen/cup_4/collision/model_normalized_collision_13.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_14" file="kitchen/cup_4/collision/model_normalized_collision_14.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_15" file="kitchen/cup_4/collision/model_normalized_collision_15.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_16" file="kitchen/cup_4/collision/model_normalized_collision_16.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_17" file="kitchen/cup_4/collision/model_normalized_collision_17.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_18" file="kitchen/cup_4/collision/model_normalized_collision_18.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_19" file="kitchen/cup_4/collision/model_normalized_collision_19.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_20" file="kitchen/cup_4/collision/model_normalized_collision_20.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_21" file="kitchen/cup_4/collision/model_normalized_collision_21.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_22" file="kitchen/cup_4/collision/model_normalized_collision_22.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_23" file="kitchen/cup_4/collision/model_normalized_collision_23.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_24" file="kitchen/cup_4/collision/model_normalized_collision_24.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_25" file="kitchen/cup_4/collision/model_normalized_collision_25.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_26" file="kitchen/cup_4/collision/model_normalized_collision_26.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_27" file="kitchen/cup_4/collision/model_normalized_collision_27.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_28" file="kitchen/cup_4/collision/model_normalized_collision_28.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_29" file="kitchen/cup_4/collision/model_normalized_collision_29.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_30" file="kitchen/cup_4/collision/model_normalized_collision_30.obj" scale="0.105 0.105 0.105" />
+    <mesh name="cup_coll_31" file="kitchen/cup_4/collision/model_normalized_collision_31.obj" scale="0.105 0.105 0.105" />
+    <material name="cup_mat" specular="0.5" shininess="0.0" rgba="0.1 0.3 0.2 1.0" />
+    <mesh name="spoon_vis_0" file="kitchen/spoon/visual/model_normalized_0.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_vis_1" file="kitchen/spoon/visual/model_normalized_1.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_0" file="kitchen/spoon/collision/model_normalized_collision_0.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_1" file="kitchen/spoon/collision/model_normalized_collision_1.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_2" file="kitchen/spoon/collision/model_normalized_collision_2.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_3" file="kitchen/spoon/collision/model_normalized_collision_3.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_4" file="kitchen/spoon/collision/model_normalized_collision_4.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_5" file="kitchen/spoon/collision/model_normalized_collision_5.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_6" file="kitchen/spoon/collision/model_normalized_collision_6.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_7" file="kitchen/spoon/collision/model_normalized_collision_7.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_8" file="kitchen/spoon/collision/model_normalized_collision_8.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_9" file="kitchen/spoon/collision/model_normalized_collision_9.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_10" file="kitchen/spoon/collision/model_normalized_collision_10.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_11" file="kitchen/spoon/collision/model_normalized_collision_11.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_12" file="kitchen/spoon/collision/model_normalized_collision_12.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_13" file="kitchen/spoon/collision/model_normalized_collision_13.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_14" file="kitchen/spoon/collision/model_normalized_collision_14.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_15" file="kitchen/spoon/collision/model_normalized_collision_15.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_16" file="kitchen/spoon/collision/model_normalized_collision_16.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_17" file="kitchen/spoon/collision/model_normalized_collision_17.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_18" file="kitchen/spoon/collision/model_normalized_collision_18.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_19" file="kitchen/spoon/collision/model_normalized_collision_19.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_20" file="kitchen/spoon/collision/model_normalized_collision_20.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_21" file="kitchen/spoon/collision/model_normalized_collision_21.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_22" file="kitchen/spoon/collision/model_normalized_collision_22.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_23" file="kitchen/spoon/collision/model_normalized_collision_23.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_24" file="kitchen/spoon/collision/model_normalized_collision_24.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_25" file="kitchen/spoon/collision/model_normalized_collision_25.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_26" file="kitchen/spoon/collision/model_normalized_collision_26.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_27" file="kitchen/spoon/collision/model_normalized_collision_27.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_28" file="kitchen/spoon/collision/model_normalized_collision_28.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_29" file="kitchen/spoon/collision/model_normalized_collision_29.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_30" file="kitchen/spoon/collision/model_normalized_collision_30.obj" scale="0.18 0.18 0.18" />
+    <mesh name="spoon_coll_31" file="kitchen/spoon/collision/model_normalized_collision_31.obj" scale="0.18 0.18 0.18" />
+    
+    <texture type="2d" name="spoon_tex0" file="kitchen/spoon/visual/image1.png" />
+    <texture type="2d" name="spoon_tex1" file="kitchen/spoon/visual/image3.png" />
+    <material name="spoon_mat_bowl" texture="spoon_tex0" shininess="0.25" />
+    <material name="spoon_mat_handle" texture="spoon_tex1" shininess="0.25" />
+    <mesh file="bagel/bagel_0.obj" scale="0.05 0.05 0.05" />
+    <mesh file="bagel/bagel_1.obj" scale="0.05 0.05 0.05" />
+    <texture name="texspot" type="2d" file="vuer-mug/vuer.png" />
+    <material name="matspot" texture="texspot" />
+    <mesh name="spot" file="vuer-mug/mug.obj" scale="0.00933 0.0142 0.00933">
+      <plugin instance="v-mug-sdf" />
+    </mesh>
+    <mesh file="kitchen/cupcake_11/visual/model_normalized_0.obj" name="cupcake_model_normalized_0_vis" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_22.obj" name="cupcake_model_normalized_collision_22._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_23.obj" name="cupcake_model_normalized_collision_23._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_21.obj" name="cupcake_model_normalized_collision_21._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_20.obj" name="cupcake_model_normalized_collision_20._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_24.obj" name="cupcake_model_normalized_collision_24._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_30.obj" name="cupcake_model_normalized_collision_30._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_18.obj" name="cupcake_model_normalized_collision_18._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_19.obj" name="cupcake_model_normalized_collision_19._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_31.obj" name="cupcake_model_normalized_collision_31._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_25.obj" name="cupcake_model_normalized_collision_25._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_27.obj" name="cupcake_model_normalized_collision_27._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_26.obj" name="cupcake_model_normalized_collision_26._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_9.obj" name="cupcake_model_normalized_collision_9._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_8.obj" name="cupcake_model_normalized_collision_8._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_6.obj" name="cupcake_model_normalized_collision_6._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_7.obj" name="cupcake_model_normalized_collision_7._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_5.obj" name="cupcake_model_normalized_collision_5._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_4.obj" name="cupcake_model_normalized_collision_4._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_0.obj" name="cupcake_model_normalized_collision_0._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_1.obj" name="cupcake_model_normalized_collision_1._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_3.obj" name="cupcake_model_normalized_collision_3._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_2.obj" name="cupcake_model_normalized_collision_2._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_17.obj" name="cupcake_model_normalized_collision_17._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_16.obj" name="cupcake_model_normalized_collision_16._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_28.obj" name="cupcake_model_normalized_collision_28._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_14.obj" name="cupcake_model_normalized_collision_14._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_15.obj" name="cupcake_model_normalized_collision_15._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_29.obj" name="cupcake_model_normalized_collision_29._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_11.obj" name="cupcake_model_normalized_collision_11._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_10.obj" name="cupcake_model_normalized_collision_10._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_12.obj" name="cupcake_model_normalized_collision_12._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_13.obj" name="cupcake_model_normalized_collision_13._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0" />
+    <texture type="2d" name="cupcake_image0" file="kitchen/cupcake_11/visual/image0.png" />
+    <material name="cupcake_CupCake_PBR" texture="cupcake_image0" specular="0.5" shininess="0.25" />
+    <mesh name="bowl_vis_0" file="kitchen/bowl/visual/model_normalized_0.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_0" file="kitchen/bowl/collision/model_normalized_collision_0.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_1" file="kitchen/bowl/collision/model_normalized_collision_1.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_2" file="kitchen/bowl/collision/model_normalized_collision_2.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_3" file="kitchen/bowl/collision/model_normalized_collision_3.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_4" file="kitchen/bowl/collision/model_normalized_collision_4.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_5" file="kitchen/bowl/collision/model_normalized_collision_5.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_6" file="kitchen/bowl/collision/model_normalized_collision_6.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_7" file="kitchen/bowl/collision/model_normalized_collision_7.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_8" file="kitchen/bowl/collision/model_normalized_collision_8.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_9" file="kitchen/bowl/collision/model_normalized_collision_9.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_10" file="kitchen/bowl/collision/model_normalized_collision_10.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_11" file="kitchen/bowl/collision/model_normalized_collision_11.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_12" file="kitchen/bowl/collision/model_normalized_collision_12.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_13" file="kitchen/bowl/collision/model_normalized_collision_13.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_14" file="kitchen/bowl/collision/model_normalized_collision_14.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_15" file="kitchen/bowl/collision/model_normalized_collision_15.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_16" file="kitchen/bowl/collision/model_normalized_collision_16.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_17" file="kitchen/bowl/collision/model_normalized_collision_17.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_18" file="kitchen/bowl/collision/model_normalized_collision_18.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_19" file="kitchen/bowl/collision/model_normalized_collision_19.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_20" file="kitchen/bowl/collision/model_normalized_collision_20.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_21" file="kitchen/bowl/collision/model_normalized_collision_21.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_22" file="kitchen/bowl/collision/model_normalized_collision_22.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_23" file="kitchen/bowl/collision/model_normalized_collision_23.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_24" file="kitchen/bowl/collision/model_normalized_collision_24.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_25" file="kitchen/bowl/collision/model_normalized_collision_25.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_26" file="kitchen/bowl/collision/model_normalized_collision_26.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_27" file="kitchen/bowl/collision/model_normalized_collision_27.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_28" file="kitchen/bowl/collision/model_normalized_collision_28.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_29" file="kitchen/bowl/collision/model_normalized_collision_29.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_30" file="kitchen/bowl/collision/model_normalized_collision_30.obj" scale="0.2 0.2 0.2" />
+    <mesh name="bowl_coll_31" file="kitchen/bowl/collision/model_normalized_collision_31.obj" scale="0.2 0.2 0.2" />
+    <texture type="2d" name="bowl_tex" file="kitchen/bowl/visual/image0.png" />
+    <material name="bowl_mat" texture="bowl_tex" shininess="0.25" />
+    <material class="2f85" name="2f85-metal" rgba="0.58 0.58 0.58 1" />
+    <material class="2f85" name="2f85-silicone" rgba="0.1882 0.1882 0.1882 1" />
+    <material class="2f85" name="2f85-gray" rgba="0.4627 0.4627 0.4627 1" />
+    <material class="2f85" name="2f85-black" rgba="0.149 0.149 0.149 1" />
+    <mesh class="2f85" file="robotiq_2f85/base_mount.stl" />
+    <mesh class="2f85" file="robotiq_2f85/base.stl" />
+    <mesh class="2f85" file="robotiq_2f85/driver.stl" />
+    <mesh class="2f85" file="robotiq_2f85/coupler.stl" />
+    <mesh class="2f85" file="robotiq_2f85/follower.stl" />
+    <mesh class="2f85" file="robotiq_2f85/pad.stl" />
+    <mesh class="2f85" file="robotiq_2f85/silicone_pad.stl" />
+    <mesh class="2f85" file="robotiq_2f85/spring_link.stl" />
+  <texture name="white_sky" type="skybox" builtin="gradient" rgb1="1 1 1" rgb2="1 1 1" width="16" height="16" /></asset>
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0" />
+    <rgba haze="0.15 0.25 0.35 1" />
+    <global azimuth="150" elevation="-20" offwidth="1280" offheight="1024" />
+  </visual>
+  <worldbody><body name="stack_D_drawer" pos="0 0 0.78" quat="1 0 0 0">
+          
+          <body name="stack_D_drawer_frame">
+            
+            <geom name="stack_D_drawer_top_col" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" group="3" mass="0.2" />
+            <geom name="stack_D_drawer_bottom_col" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" group="3" mass="0.2" />
+            <geom name="stack_D_drawer_back_col" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" group="3" mass="0.2" />
+            <geom name="stack_D_drawer_right_col" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" group="3" mass="0.2" />
+            <geom name="stack_D_drawer_left_col" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" group="3" mass="0.2" />
+            
+            <geom name="stack_D_drawer_top_v" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat" />
+            <geom name="stack_D_drawer_bottom_v" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat" />
+            <geom name="stack_D_drawer_back_v" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat" />
+            <geom name="stack_D_drawer_right_v" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat" />
+            <geom name="stack_D_drawer_left_v" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat" />
+            
+            <body name="stack_D_drawer_box">
+              <site name="stack_D_drawer_site" pos="0 0 0" size="0.02" />
+              <geom name="stack_D_drawer_ibox_col" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" group="3" mass="0.2" />
+              <geom name="stack_D_drawer_iback_col" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" group="3" mass="0.2" />
+              <geom name="stack_D_drawer_iright_col" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" group="3" mass="0.2" />
+              <geom name="stack_D_drawer_ileft_col" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" group="3" mass="0.2" />
+              
+              <geom name="stack_D_drawer_ibox_v" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat" />
+              <geom name="stack_D_drawer_iback_v" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat" />
+              <geom name="stack_D_drawer_iright_v" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat" />
+              <geom name="stack_D_drawer_ileft_v" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat" />
+              
+              <body name="stack_D_drawer_face" pos="0 -0.285 0">
+                <geom name="stack_D_drawer_face_col" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10" />
+                <geom name="stack_D_drawer_face_v" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_face_mat" />
+                
+                <geom name="stack_D_drawer_trim_t_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_face_mat" />
+                <geom name="stack_D_drawer_trim_b_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 -0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_face_mat" />
+                
+                <geom name="stack_D_drawer_trim_l_v" size="0.04 0.1035 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_face_mat" />
+                <geom name="stack_D_drawer_trim_r_v" size="0.04 0.1035 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_face_mat" />
+                
+                <body name="stack_D_drawer_handle">
+                  <geom name="stack_D_drawer_bar_col" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" group="3" density="10" />
+                  <geom name="stack_D_drawer_bar_v" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_handle_mat" />
+                  <geom name="stack_D_drawer_pin_t_v" type="cylinder" size="0.008 0.025" pos="0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_handle_mat" />
+                  <geom name="stack_D_drawer_pin_b_v" type="cylinder" size="0.008 0.025" pos="-0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_handle_mat" />
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <body name="stack_E_drawer" pos="0 0 0.78" quat="1 0 0 0">
+          
+          <body name="stack_E_drawer_frame">
+            
+            <geom name="stack_E_drawer_top_col" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" group="3" mass="0.2" />
+            <geom name="stack_E_drawer_bottom_col" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" group="3" mass="0.2" />
+            <geom name="stack_E_drawer_back_col" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" group="3" mass="0.2" />
+            <geom name="stack_E_drawer_right_col" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" group="3" mass="0.2" />
+            <geom name="stack_E_drawer_left_col" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" group="3" mass="0.2" />
+            
+            <geom name="stack_E_drawer_top_v" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat" />
+            <geom name="stack_E_drawer_bottom_v" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat" />
+            <geom name="stack_E_drawer_back_v" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat" />
+            <geom name="stack_E_drawer_right_v" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat" />
+            <geom name="stack_E_drawer_left_v" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat" />
+            
+            <body name="stack_E_drawer_box">
+              <site name="stack_E_drawer_site" pos="0 0 0" size="0.02" />
+              <geom name="stack_E_drawer_ibox_col" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" group="3" mass="0.2" />
+              <geom name="stack_E_drawer_iback_col" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" group="3" mass="0.2" />
+              <geom name="stack_E_drawer_iright_col" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" group="3" mass="0.2" />
+              <geom name="stack_E_drawer_ileft_col" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" group="3" mass="0.2" />
+              
+              <geom name="stack_E_drawer_ibox_v" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat" />
+              <geom name="stack_E_drawer_iback_v" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat" />
+              <geom name="stack_E_drawer_iright_v" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat" />
+              <geom name="stack_E_drawer_ileft_v" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat" />
+              
+              <body name="stack_E_drawer_face" pos="0 -0.285 0">
+                <geom name="stack_E_drawer_face_col" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10" />
+                <geom name="stack_E_drawer_face_v" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_face_mat" />
+                
+                <geom name="stack_E_drawer_trim_t_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_face_mat" />
+                <geom name="stack_E_drawer_trim_b_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 -0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_face_mat" />
+                
+                <geom name="stack_E_drawer_trim_l_v" size="0.04 0.1035 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_face_mat" />
+                <geom name="stack_E_drawer_trim_r_v" size="0.04 0.1035 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_face_mat" />
+                
+                <body name="stack_E_drawer_handle">
+                  <geom name="stack_E_drawer_bar_col" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" group="3" density="10" />
+                  <geom name="stack_E_drawer_bar_v" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_handle_mat" />
+                  <geom name="stack_E_drawer_pin_t_v" type="cylinder" size="0.008 0.025" pos="0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_handle_mat" />
+                  <geom name="stack_E_drawer_pin_b_v" type="cylinder" size="0.008 0.025" pos="-0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_handle_mat" />
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <body pos="0.3 0 1.0" name="cup">
+      <geom name="cup_vis_0_mesh" mesh="cup_vis_0" material="cup_mat" class="cup_visual" />
+      <geom name="cup_coll_0_mesh" mesh="cup_coll_0" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_1_mesh" mesh="cup_coll_1" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_2_mesh" mesh="cup_coll_2" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_3_mesh" mesh="cup_coll_3" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_4_mesh" mesh="cup_coll_4" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_5_mesh" mesh="cup_coll_5" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_6_mesh" mesh="cup_coll_6" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_7_mesh" mesh="cup_coll_7" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_8_mesh" mesh="cup_coll_8" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_9_mesh" mesh="cup_coll_9" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_10_mesh" mesh="cup_coll_10" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_11_mesh" mesh="cup_coll_11" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_12_mesh" mesh="cup_coll_12" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_13_mesh" mesh="cup_coll_13" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_14_mesh" mesh="cup_coll_14" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_15_mesh" mesh="cup_coll_15" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_16_mesh" mesh="cup_coll_16" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_17_mesh" mesh="cup_coll_17" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_18_mesh" mesh="cup_coll_18" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_19_mesh" mesh="cup_coll_19" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_20_mesh" mesh="cup_coll_20" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_21_mesh" mesh="cup_coll_21" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_22_mesh" mesh="cup_coll_22" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_23_mesh" mesh="cup_coll_23" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_24_mesh" mesh="cup_coll_24" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_25_mesh" mesh="cup_coll_25" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_26_mesh" mesh="cup_coll_26" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_27_mesh" mesh="cup_coll_27" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_28_mesh" mesh="cup_coll_28" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_29_mesh" mesh="cup_coll_29" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_30_mesh" mesh="cup_coll_30" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <geom name="cup_coll_31_mesh" mesh="cup_coll_31" rgba="0.8 0.8 0.8 1" class="cup_collision" />
+      <site name="cup" pos="0 0 0" size="0.01" rgba="1 1 1 0" />
+    </body>
+    <body pos="0.3 0 1.1" quat="0 1 0 0" name="spoon">
+      <site name="spoon_site" pos="0 0 0" size="0.02" />
+      <geom mesh="spoon_vis_0" material="spoon_mat_handle" class="spoon_visual" />
+      ', '
+      <geom mesh="spoon_vis_1" material="spoon_mat_bowl" class="spoon_visual" />
+      ']
+      <geom mesh="spoon_coll_0" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_1" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_2" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_3" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_4" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_5" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_6" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_7" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_8" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_9" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_10" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_11" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_12" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_13" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_14" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_15" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_16" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_17" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_18" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_19" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_20" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_21" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_22" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_23" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_24" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_25" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_26" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_27" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_28" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_29" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_30" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+      <geom mesh="spoon_coll_31" rgba="0.8 0.8 0.8 1" class="spoon_collision" />
+    </body>
+    </worldbody></mujoco>

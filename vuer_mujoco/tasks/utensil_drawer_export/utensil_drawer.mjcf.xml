@@ -1,0 +1,1318 @@
+<?xml version="1.0" ?>
+<mujoco model="dual UR5e setup">
+  <compiler angle="radian" autolimits="true" assetdir="assets" meshdir="assets" texturedir="assets"/>
+  <!--<statistic center="0.2 0 0.4" extent=".65"/>-->
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="150" elevation="-20" offwidth="1280" offheight="1024"/>
+  </visual>
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.9 0.7 0.9" rgb2="0.94 0.97 0.97" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <texture type="2d" name="wall_tex_paint" file="kitchen/wall/paint.png"/>
+    <material name="wall_paint_mat" texture="wall_tex_paint" shininess="0.15"/>
+    <texture type="2d" name="gr-countertop-marble" file="kitchen/counter/marble.png"/>
+    <material name="gr-countertop-granite" texture="gr-countertop-marble" texuniform="true" texrepeat="3 3" shininess="0.1" reflectance="0.1"/>
+    <texture type="2d" name="stack_D_drawer_tex_lam" file="kitchen/drawer/laminate.png"/>
+    <texture type="2d" name="stack_D_drawer_tex_metal" file="kitchen/drawer/metal.png"/>
+    <material name="stack_D_drawer_lam_mat" texture="stack_D_drawer_tex_lam" shininess="0.1" reflectance="0.1"/>
+    <material name="stack_D_drawer_face_mat" texture="stack_D_drawer_tex_lam" shininess="0.1" reflectance="0.1"/>
+    <material name="stack_D_drawer_handle_mat" texture="stack_D_drawer_tex_metal" shininess="0.8" reflectance="0.8"/>
+    <texture type="2d" name="single-cabinet_tex_body" file="kitchen/cabinet/laminate.png"/>
+    <texture type="2d" name="single-cabinet_tex_metal" file="kitchen/cabinet/metal.png"/>
+    <material name="single-cabinet_body_mat" texture="single-cabinet_tex_body" shininess="0.1" reflectance="0.1"/>
+    <material name="single-cabinet_door_mat" texture="single-cabinet_tex_body" shininess="0.1" reflectance="0.1"/>
+    <material name="single-cabinet_handle_mat" texture="single-cabinet_tex_metal" shininess="0.8" reflectance="0.8"/>
+    <texture type="2d" name="stack_E_drawer_tex_lam" file="kitchen/drawer/laminate.png"/>
+    <texture type="2d" name="stack_E_drawer_tex_metal" file="kitchen/drawer/metal.png"/>
+    <material name="stack_E_drawer_lam_mat" texture="stack_E_drawer_tex_lam" shininess="0.1" reflectance="0.1"/>
+    <material name="stack_E_drawer_face_mat" texture="stack_E_drawer_tex_lam" shininess="0.1" reflectance="0.1"/>
+    <material name="stack_E_drawer_handle_mat" texture="stack_E_drawer_tex_metal" shininess="0.8" reflectance="0.8"/>
+    <!--textures-->
+    <texture type="2d" name="dw-basket" file="kitchen/dishwasher/basket.png"/>
+    <texture type="2d" name="dw-body" file="kitchen/dishwasher/body.png"/>
+    <texture type="2d" name="dw-bottom" file="kitchen/dishwasher/bottom.png"/>
+    <texture type="2d" name="dw-door" file="kitchen/dishwasher/door.png"/>
+    <texture type="2d" name="dw-middle" file="kitchen/dishwasher/middle.png"/>
+    <!--materials-->
+    <material name="dw-dishwasher" rgba="0.3 0.3 0.3 1"/>
+    <material name="dw-basket" texture="dw-basket" rgba="0.3 0.3 0.3 1"/>
+    <material name="dw-body" texture="dw-body"/>
+    <material name="dw-bottom" texture="dw-bottom"/>
+    <material name="dw-door" texture="dw-door"/>
+    <material name="dw-middle" texture="dw-middle"/>
+    <!--meshes – visual-->
+    <mesh name="dw-dish_washer_body_001" file="kitchen/dishwasher/visual/dish_washer_body_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_door_001" file="kitchen/dishwasher/visual/dish_washer_door_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_mid_001" file="kitchen/dishwasher/visual/dish_washer_mid_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_mid_sprinkle" file="kitchen/dishwasher/visual/dish_washer_mid_sprinkle.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_bottom_001" file="kitchen/dishwasher/visual/dish_washer_bottom_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_bottom_wheel" file="kitchen/dishwasher/visual/dish_washer_bottom_wheel.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_bottom_plates_holder_001" file="kitchen/dishwasher/visual/dish_washer_bottom_plates_holder_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_bottom_cuttlery_basket_001" file="kitchen/dishwasher/visual/dish_washer_bottom_cuttlery_basket_001.obj" scale="1.0 1.0 1.0"/>
+    <!--meshes – collision (parameterised helper)-->
+    <mesh name="dw-collision_door_001" file="kitchen/dishwasher/collision/collision_door_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_003" file="kitchen/dishwasher/collision/collision_door_003.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_004" file="kitchen/dishwasher/collision/collision_door_004.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_006" file="kitchen/dishwasher/collision/collision_door_006.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_007" file="kitchen/dishwasher/collision/collision_door_007.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_008" file="kitchen/dishwasher/collision/collision_door_008.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_009" file="kitchen/dishwasher/collision/collision_door_009.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_001" file="kitchen/dishwasher/collision/collision_tray_mid_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_002" file="kitchen/dishwasher/collision/collision_tray_mid_002.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_003" file="kitchen/dishwasher/collision/collision_tray_mid_003.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_004" file="kitchen/dishwasher/collision/collision_tray_mid_004.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_005" file="kitchen/dishwasher/collision/collision_tray_mid_005.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_006" file="kitchen/dishwasher/collision/collision_tray_mid_006.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_007" file="kitchen/dishwasher/collision/collision_tray_mid_007.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_008" file="kitchen/dishwasher/collision/collision_tray_mid_008.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_009" file="kitchen/dishwasher/collision/collision_tray_mid_009.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_010" file="kitchen/dishwasher/collision/collision_tray_mid_010.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_011" file="kitchen/dishwasher/collision/collision_tray_mid_011.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_012" file="kitchen/dishwasher/collision/collision_tray_mid_012.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_013" file="kitchen/dishwasher/collision/collision_tray_mid_013.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_014" file="kitchen/dishwasher/collision/collision_tray_mid_014.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_015" file="kitchen/dishwasher/collision/collision_tray_mid_015.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_016" file="kitchen/dishwasher/collision/collision_tray_mid_016.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_017" file="kitchen/dishwasher/collision/collision_tray_mid_017.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_018" file="kitchen/dishwasher/collision/collision_tray_mid_018.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_019" file="kitchen/dishwasher/collision/collision_tray_mid_019.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_020" file="kitchen/dishwasher/collision/collision_tray_mid_020.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_021" file="kitchen/dishwasher/collision/collision_tray_mid_021.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_022" file="kitchen/dishwasher/collision/collision_tray_mid_022.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_023" file="kitchen/dishwasher/collision/collision_tray_mid_023.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_024" file="kitchen/dishwasher/collision/collision_tray_mid_024.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_025" file="kitchen/dishwasher/collision/collision_tray_mid_025.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_026" file="kitchen/dishwasher/collision/collision_tray_mid_026.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_027" file="kitchen/dishwasher/collision/collision_tray_mid_027.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_001" file="kitchen/dishwasher/collision/collision_tray_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_002" file="kitchen/dishwasher/collision/collision_tray_002.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_003" file="kitchen/dishwasher/collision/collision_tray_003.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_004" file="kitchen/dishwasher/collision/collision_tray_004.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_005" file="kitchen/dishwasher/collision/collision_tray_005.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_006" file="kitchen/dishwasher/collision/collision_tray_006.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_007" file="kitchen/dishwasher/collision/collision_tray_007.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_008" file="kitchen/dishwasher/collision/collision_tray_008.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_009" file="kitchen/dishwasher/collision/collision_tray_009.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_010" file="kitchen/dishwasher/collision/collision_tray_010.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_011" file="kitchen/dishwasher/collision/collision_tray_011.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_012" file="kitchen/dishwasher/collision/collision_tray_012.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_013" file="kitchen/dishwasher/collision/collision_tray_013.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_014" file="kitchen/dishwasher/collision/collision_tray_014.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_015" file="kitchen/dishwasher/collision/collision_tray_015.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_016" file="kitchen/dishwasher/collision/collision_tray_016.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_017" file="kitchen/dishwasher/collision/collision_tray_017.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_018" file="kitchen/dishwasher/collision/collision_tray_018.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_019" file="kitchen/dishwasher/collision/collision_tray_019.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_020" file="kitchen/dishwasher/collision/collision_tray_020.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_021" file="kitchen/dishwasher/collision/collision_tray_021.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_022" file="kitchen/dishwasher/collision/collision_tray_022.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_023" file="kitchen/dishwasher/collision/collision_tray_023.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_024" file="kitchen/dishwasher/collision/collision_tray_024.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_025" file="kitchen/dishwasher/collision/collision_tray_025.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_026" file="kitchen/dishwasher/collision/collision_tray_026.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_027" file="kitchen/dishwasher/collision/collision_tray_027.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_028" file="kitchen/dishwasher/collision/collision_tray_028.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_029" file="kitchen/dishwasher/collision/collision_tray_029.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_030" file="kitchen/dishwasher/collision/collision_tray_030.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_031" file="kitchen/dishwasher/collision/collision_tray_031.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_032" file="kitchen/dishwasher/collision/collision_tray_032.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_033" file="kitchen/dishwasher/collision/collision_tray_033.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_001" file="kitchen/dishwasher/collision/collision_holder_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_002" file="kitchen/dishwasher/collision/collision_holder_002.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_003" file="kitchen/dishwasher/collision/collision_holder_003.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_004" file="kitchen/dishwasher/collision/collision_holder_004.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_005" file="kitchen/dishwasher/collision/collision_holder_005.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_006" file="kitchen/dishwasher/collision/collision_holder_006.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_007" file="kitchen/dishwasher/collision/collision_holder_007.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_008" file="kitchen/dishwasher/collision/collision_holder_008.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_009" file="kitchen/dishwasher/collision/collision_holder_009.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_010" file="kitchen/dishwasher/collision/collision_holder_010.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_011" file="kitchen/dishwasher/collision/collision_holder_011.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_012" file="kitchen/dishwasher/collision/collision_holder_012.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_013" file="kitchen/dishwasher/collision/collision_holder_013.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_014" file="kitchen/dishwasher/collision/collision_holder_014.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_mid_sprinkle" file="kitchen/dishwasher/collision/collision_dish_washer_mid_sprinkle.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_001" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_002" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_002.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_003" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_003.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_004" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_004.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_005" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_005.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_006" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_006.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_007" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_007.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_008" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_008.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_009" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_009.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_010" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_010.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_011" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_011.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_012" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_012.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_013" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_013.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_014" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_014.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_015" file="kitchen/dishwasher/collision/collision_dish_washer_bottom_basket_015.obj" scale="1.0 1.0 1.0"/>
+    <!--flat-coloured laminate & bright metal-->
+    <texture type="2d" name="cab_tex_body" file="kitchen/cabinet/laminate.png"/>
+    <texture type="2d" name="cab_tex_metal" file="kitchen/cabinet/metal.png"/>
+    <material name="cab_body_mat" texture="cab_tex_body" shininess="0.1" reflectance="0.1"/>
+    <material name="cab_door_mat" texture="cab_tex_body" shininess="0.1" reflectance="0.1"/>
+    <material name="cab_handle_mat" texture="cab_tex_metal" shininess="0.8" reflectance="0.8"/>
+    <mesh name="cup_vis_0" file="kitchen/cup_4/visual/model_normalized_0.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_0" file="kitchen/cup_4/collision/model_normalized_collision_0.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_1" file="kitchen/cup_4/collision/model_normalized_collision_1.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_2" file="kitchen/cup_4/collision/model_normalized_collision_2.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_3" file="kitchen/cup_4/collision/model_normalized_collision_3.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_4" file="kitchen/cup_4/collision/model_normalized_collision_4.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_5" file="kitchen/cup_4/collision/model_normalized_collision_5.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_6" file="kitchen/cup_4/collision/model_normalized_collision_6.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_7" file="kitchen/cup_4/collision/model_normalized_collision_7.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_8" file="kitchen/cup_4/collision/model_normalized_collision_8.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_9" file="kitchen/cup_4/collision/model_normalized_collision_9.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_10" file="kitchen/cup_4/collision/model_normalized_collision_10.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_11" file="kitchen/cup_4/collision/model_normalized_collision_11.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_12" file="kitchen/cup_4/collision/model_normalized_collision_12.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_13" file="kitchen/cup_4/collision/model_normalized_collision_13.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_14" file="kitchen/cup_4/collision/model_normalized_collision_14.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_15" file="kitchen/cup_4/collision/model_normalized_collision_15.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_16" file="kitchen/cup_4/collision/model_normalized_collision_16.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_17" file="kitchen/cup_4/collision/model_normalized_collision_17.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_18" file="kitchen/cup_4/collision/model_normalized_collision_18.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_19" file="kitchen/cup_4/collision/model_normalized_collision_19.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_20" file="kitchen/cup_4/collision/model_normalized_collision_20.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_21" file="kitchen/cup_4/collision/model_normalized_collision_21.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_22" file="kitchen/cup_4/collision/model_normalized_collision_22.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_23" file="kitchen/cup_4/collision/model_normalized_collision_23.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_24" file="kitchen/cup_4/collision/model_normalized_collision_24.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_25" file="kitchen/cup_4/collision/model_normalized_collision_25.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_26" file="kitchen/cup_4/collision/model_normalized_collision_26.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_27" file="kitchen/cup_4/collision/model_normalized_collision_27.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_28" file="kitchen/cup_4/collision/model_normalized_collision_28.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_29" file="kitchen/cup_4/collision/model_normalized_collision_29.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_30" file="kitchen/cup_4/collision/model_normalized_collision_30.obj" scale="0.105 0.105 0.105"/>
+    <mesh name="cup_coll_31" file="kitchen/cup_4/collision/model_normalized_collision_31.obj" scale="0.105 0.105 0.105"/>
+    <material name="cup_mat" specular="0.5" shininess="0.0" rgba="0.1 0.3 0.2 1.0"/>
+    <mesh name="spoon_vis_0" file="kitchen/spoon/visual/model_normalized_0.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_vis_1" file="kitchen/spoon/visual/model_normalized_1.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_0" file="kitchen/spoon/collision/model_normalized_collision_0.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_1" file="kitchen/spoon/collision/model_normalized_collision_1.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_2" file="kitchen/spoon/collision/model_normalized_collision_2.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_3" file="kitchen/spoon/collision/model_normalized_collision_3.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_4" file="kitchen/spoon/collision/model_normalized_collision_4.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_5" file="kitchen/spoon/collision/model_normalized_collision_5.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_6" file="kitchen/spoon/collision/model_normalized_collision_6.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_7" file="kitchen/spoon/collision/model_normalized_collision_7.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_8" file="kitchen/spoon/collision/model_normalized_collision_8.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_9" file="kitchen/spoon/collision/model_normalized_collision_9.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_10" file="kitchen/spoon/collision/model_normalized_collision_10.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_11" file="kitchen/spoon/collision/model_normalized_collision_11.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_12" file="kitchen/spoon/collision/model_normalized_collision_12.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_13" file="kitchen/spoon/collision/model_normalized_collision_13.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_14" file="kitchen/spoon/collision/model_normalized_collision_14.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_15" file="kitchen/spoon/collision/model_normalized_collision_15.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_16" file="kitchen/spoon/collision/model_normalized_collision_16.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_17" file="kitchen/spoon/collision/model_normalized_collision_17.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_18" file="kitchen/spoon/collision/model_normalized_collision_18.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_19" file="kitchen/spoon/collision/model_normalized_collision_19.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_20" file="kitchen/spoon/collision/model_normalized_collision_20.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_21" file="kitchen/spoon/collision/model_normalized_collision_21.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_22" file="kitchen/spoon/collision/model_normalized_collision_22.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_23" file="kitchen/spoon/collision/model_normalized_collision_23.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_24" file="kitchen/spoon/collision/model_normalized_collision_24.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_25" file="kitchen/spoon/collision/model_normalized_collision_25.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_26" file="kitchen/spoon/collision/model_normalized_collision_26.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_27" file="kitchen/spoon/collision/model_normalized_collision_27.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_28" file="kitchen/spoon/collision/model_normalized_collision_28.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_29" file="kitchen/spoon/collision/model_normalized_collision_29.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_30" file="kitchen/spoon/collision/model_normalized_collision_30.obj" scale="0.18 0.18 0.18"/>
+    <mesh name="spoon_coll_31" file="kitchen/spoon/collision/model_normalized_collision_31.obj" scale="0.18 0.18 0.18"/>
+    <!--textures pulled straight from your MJCF-->
+    <texture type="2d" name="spoon_tex0" file="kitchen/spoon/visual/image1.png"/>
+    <texture type="2d" name="spoon_tex1" file="kitchen/spoon/visual/image3.png"/>
+    <material name="spoon_mat_bowl" texture="spoon_tex0" shininess="0.25"/>
+    <material name="spoon_mat_handle" texture="spoon_tex1" shininess="0.25"/>
+    <mesh file="bagel/bagel_0.obj" scale="0.05 0.05 0.05"/>
+    <mesh file="bagel/bagel_1.obj" scale="0.05 0.05 0.05"/>
+    <texture name="texspot" type="2d" file="vuer-mug/vuer.png"/>
+    <material name="matspot" texture="texspot"/>
+    <mesh name="spot" file="vuer-mug/mug.obj" scale="0.00933 0.0142 0.00933">
+      <plugin instance="v-mug-sdf"/>
+    </mesh>
+    <mesh file="kitchen/cupcake_11/visual/model_normalized_0.obj" name="cupcake_model_normalized_0_vis" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_22.obj" name="cupcake_model_normalized_collision_22._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_23.obj" name="cupcake_model_normalized_collision_23._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_21.obj" name="cupcake_model_normalized_collision_21._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_20.obj" name="cupcake_model_normalized_collision_20._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_24.obj" name="cupcake_model_normalized_collision_24._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_30.obj" name="cupcake_model_normalized_collision_30._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_18.obj" name="cupcake_model_normalized_collision_18._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_19.obj" name="cupcake_model_normalized_collision_19._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_31.obj" name="cupcake_model_normalized_collision_31._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_25.obj" name="cupcake_model_normalized_collision_25._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_27.obj" name="cupcake_model_normalized_collision_27._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_26.obj" name="cupcake_model_normalized_collision_26._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_9.obj" name="cupcake_model_normalized_collision_9._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_8.obj" name="cupcake_model_normalized_collision_8._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_6.obj" name="cupcake_model_normalized_collision_6._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_7.obj" name="cupcake_model_normalized_collision_7._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_5.obj" name="cupcake_model_normalized_collision_5._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_4.obj" name="cupcake_model_normalized_collision_4._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_0.obj" name="cupcake_model_normalized_collision_0._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_1.obj" name="cupcake_model_normalized_collision_1._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_3.obj" name="cupcake_model_normalized_collision_3._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_2.obj" name="cupcake_model_normalized_collision_2._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_17.obj" name="cupcake_model_normalized_collision_17._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_16.obj" name="cupcake_model_normalized_collision_16._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_28.obj" name="cupcake_model_normalized_collision_28._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_14.obj" name="cupcake_model_normalized_collision_14._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_15.obj" name="cupcake_model_normalized_collision_15._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_29.obj" name="cupcake_model_normalized_collision_29._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_11.obj" name="cupcake_model_normalized_collision_11._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_10.obj" name="cupcake_model_normalized_collision_10._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_12.obj" name="cupcake_model_normalized_collision_12._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <mesh file="kitchen/cupcake_11/collision/model_normalized_collision_13.obj" name="cupcake_model_normalized_collision_13._coll" scale="0.05 0.05 0.05" refquat="1.0 0.0 0.0 0.0"/>
+    <texture type="2d" name="cupcake_image0" file="kitchen/cupcake_11/visual/image0.png"/>
+    <material name="cupcake_CupCake_PBR" texture="cupcake_image0" specular="0.5" shininess="0.25"/>
+    <mesh name="bowl_vis_0" file="kitchen/bowl/visual/model_normalized_0.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_0" file="kitchen/bowl/collision/model_normalized_collision_0.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_1" file="kitchen/bowl/collision/model_normalized_collision_1.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_2" file="kitchen/bowl/collision/model_normalized_collision_2.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_3" file="kitchen/bowl/collision/model_normalized_collision_3.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_4" file="kitchen/bowl/collision/model_normalized_collision_4.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_5" file="kitchen/bowl/collision/model_normalized_collision_5.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_6" file="kitchen/bowl/collision/model_normalized_collision_6.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_7" file="kitchen/bowl/collision/model_normalized_collision_7.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_8" file="kitchen/bowl/collision/model_normalized_collision_8.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_9" file="kitchen/bowl/collision/model_normalized_collision_9.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_10" file="kitchen/bowl/collision/model_normalized_collision_10.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_11" file="kitchen/bowl/collision/model_normalized_collision_11.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_12" file="kitchen/bowl/collision/model_normalized_collision_12.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_13" file="kitchen/bowl/collision/model_normalized_collision_13.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_14" file="kitchen/bowl/collision/model_normalized_collision_14.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_15" file="kitchen/bowl/collision/model_normalized_collision_15.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_16" file="kitchen/bowl/collision/model_normalized_collision_16.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_17" file="kitchen/bowl/collision/model_normalized_collision_17.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_18" file="kitchen/bowl/collision/model_normalized_collision_18.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_19" file="kitchen/bowl/collision/model_normalized_collision_19.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_20" file="kitchen/bowl/collision/model_normalized_collision_20.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_21" file="kitchen/bowl/collision/model_normalized_collision_21.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_22" file="kitchen/bowl/collision/model_normalized_collision_22.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_23" file="kitchen/bowl/collision/model_normalized_collision_23.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_24" file="kitchen/bowl/collision/model_normalized_collision_24.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_25" file="kitchen/bowl/collision/model_normalized_collision_25.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_26" file="kitchen/bowl/collision/model_normalized_collision_26.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_27" file="kitchen/bowl/collision/model_normalized_collision_27.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_28" file="kitchen/bowl/collision/model_normalized_collision_28.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_29" file="kitchen/bowl/collision/model_normalized_collision_29.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_30" file="kitchen/bowl/collision/model_normalized_collision_30.obj" scale="0.2 0.2 0.2"/>
+    <mesh name="bowl_coll_31" file="kitchen/bowl/collision/model_normalized_collision_31.obj" scale="0.2 0.2 0.2"/>
+    <texture type="2d" name="bowl_tex" file="kitchen/bowl/visual/image0.png"/>
+    <material name="bowl_mat" texture="bowl_tex" shininess="0.25"/>
+    <material class="2f85" name="2f85-metal" rgba="0.58 0.58 0.58 1"/>
+    <material class="2f85" name="2f85-silicone" rgba="0.1882 0.1882 0.1882 1"/>
+    <material class="2f85" name="2f85-gray" rgba="0.4627 0.4627 0.4627 1"/>
+    <material class="2f85" name="2f85-black" rgba="0.149 0.149 0.149 1"/>
+    <mesh class="2f85" file="robotiq_2f85/base_mount.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/base.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/driver.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/coupler.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/follower.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/pad.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/silicone_pad.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/spring_link.stl"/>
+  </asset>
+  <default>
+    <default class="dw">
+      <default class="dw-visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="0" mass="0"/>
+      </default>
+      <default class="dw-collision">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1"/>
+      </default>
+      <default class="dw-collision_basket">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1"/>
+      </default>
+      <default class="dw-collision_holder">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1"/>
+      </default>
+    </default>
+    <default class="cup_visual">
+      <geom type="mesh" contype="0" conaffinity="0" density="100" friction="2.0 0.3 0.1" solref="0.001 1" solimp="0.998 0.998 0.001"/>
+    </default>
+    <default class="cup_collision">
+      <geom type="mesh" group="3" density="100" friction="2.0 0.3 0.1" solref="0.001 1" solimp="0.998 0.998 0.001"/>
+    </default>
+    <default class="spoon_visual">
+      <geom type="mesh" contype="0" conaffinity="0" density="100" friction="0.95 0.3 0.1" solimp="0.998 0.998 0.001" solref="0.001 1"/>
+    </default>
+    <default class="spoon_collision">
+      <geom type="mesh" group="3" density="100" friction="0.95 0.3 0.1" solimp="0.998 0.998 0.001" solref="0.001 1"/>
+    </default>
+    <default class="bagel">
+      <default class="bagel-visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+      </default>
+      <default class="bagel-collision">
+        <geom type="box" group="3" contype="1" conaffinity="1"/>
+      </default>
+    </default>
+    <default class="bowl_visual">
+      <geom type="mesh" contype="0" conaffinity="0" friction="0.95 0.3 0.1" density="100" solimp="0.998 0.998 0.001" solref="0.001 1"/>
+    </default>
+    <default class="bowl_collision">
+      <geom type="mesh" group="3" friction="0.95 0.3 0.1" density="100" solimp="0.998 0.998 0.001" solref="0.001 1"/>
+    </default>
+    <default class="2f85">
+      <mesh scale="0.001 0.001 0.001"/>
+      <general biastype="affine"/>
+      <joint axis="1 0 0"/>
+      <default class="2f85-driver">
+        <joint range="0 0.8" armature="0.005" damping="0.1" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"/>
+      </default>
+      <default class="2f85-follower">
+        <joint range="-0.872664 0.872664" armature="0.001" pos="0 -0.018 0.0065" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"/>
+      </default>
+      <default class="2f85-spring_link">
+        <joint range="-0.29670597283 0.8" armature="0.001" stiffness="0.05" springref="2.62" damping="0.00125"/>
+      </default>
+      <default class="2f85-coupler">
+        <joint range="-1.57 0" armature="0.001" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"/>
+      </default>
+      <default class="2f85-visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="0"/>
+      </default>
+      <default class="2f85-collision">
+        <geom type="mesh" group="3"/>
+        <default class="2f85-pad_box1">
+          <geom mass="0" type="box" pos="0 -0.0026 0.028125" size="0.011 0.004 0.009375" friction="4" solimp="0.95 0.99 0.001" solref="0.004 1" priority="1" rgba="0.55 0.55 0.55 1"/>
+        </default>
+        <default class="2f85-pad_box2">
+          <geom mass="0" type="box" pos="0 -0.0026 0.009375" size="0.011 0.004 0.009375" friction="3" solimp="0.95 0.99 0.001" solref="0.004 1" priority="1" rgba="0.45 0.45 0.45 1"/>
+        </default>
+      </default>
+    </default>
+  </default>
+  <extension>
+    <plugin plugin="mujoco.sdf.sdflib">
+      <instance name="v-mug-sdf">
+        <config key="aabb" value="0"/>
+      </instance>
+    </plugin>
+  </extension>
+  <option sdf_iterations="10" sdf_initpoints="20"/>
+  <worldbody>
+    <light name="key" pos="0.7 0.5 1.45" dir="-1 -0.5 -0.5" cutoff="45" diffuse="0.3 0.3 0.3" directional="true"/>
+    <light name="fill" pos="0.5 -0.7 1.35" dir="-0.8 0.5 -0.6" cutoff="60" diffuse="0.18 0.18 0.18" directional="true"/>
+    <light name="back" pos="-1.1 0 2.15" dir="-1 0 1" cutoff="50" diffuse="0.5 0.5 0.5" directional="true"/>
+    <body name="room" pos="0.7 0.2 0" quat="0.7071068 0 0 -0.7071068">
+      <body name="wall_room" pos="0.035 0.02 0.89" quat="-0.707107 0.707107 0 0">
+        <geom name="wall_room_panel_col" size="2.1 1.6 0.02" type="box" group="3" rgba="0.5 0 0 1"/>
+        <geom name="wall_room_panel_vis" size="2.1 1.6 0.02" type="box" contype="0" conaffinity="0" group="0" mass="0" material="wall_paint_mat"/>
+      </body>
+      <body name="table_A" pos="0.075 -0.325 0.905">
+        <geom name="table_A_main_main_group_top_left_visual" size="2 0.325 0.015" type="box" contype="0" conaffinity="0" mass="0" material="gr-countertop-granite"/>
+        <geom name="table_A_main_main_group_top_left_0" size="2 0.325 0.015" type="box" density="10" group="3" rgba="0.5 0 0 1"/>
+      </body>
+      <body name="stack_D" pos="-0.2 -0.3 0.00" quat="1 0 0 0">
+        <body name="stack_D_drawer" pos="0 0 0.78" quat="1 0 0 0">
+          <!-- ========== OUTER FRAME ========== -->
+          <body name="stack_D_drawer_frame">
+            <!-- collisions -->
+            <geom name="stack_D_drawer_top_col" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_drawer_bottom_col" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_drawer_back_col" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_drawer_right_col" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_drawer_left_col" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+            <!-- visuals -->
+            <geom name="stack_D_drawer_top_v" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat"/>
+            <geom name="stack_D_drawer_bottom_v" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat"/>
+            <geom name="stack_D_drawer_back_v" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat"/>
+            <geom name="stack_D_drawer_right_v" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat"/>
+            <geom name="stack_D_drawer_left_v" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat"/>
+            <!-- ========== SLIDING BOX ========== -->
+            <body name="stack_D_drawer_box">
+              <site name="stack_D_drawer_site" pos="0 0 0" size="0.02"/>
+              <joint name="stack_D_drawer_slide" type="slide" axis="0 1 0" pos="0 -0.3 0" limited="true" range="-0.5 0" damping="10"/>
+              <!-- collisions -->
+              <geom name="stack_D_drawer_ibox_col" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" group="3" mass="0.2"/>
+              <geom name="stack_D_drawer_iback_col" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" group="3" mass="0.2"/>
+              <geom name="stack_D_drawer_iright_col" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" group="3" mass="0.2"/>
+              <geom name="stack_D_drawer_ileft_col" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" group="3" mass="0.2"/>
+              <!-- visuals -->
+              <geom name="stack_D_drawer_ibox_v" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat"/>
+              <geom name="stack_D_drawer_iback_v" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat"/>
+              <geom name="stack_D_drawer_iright_v" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat"/>
+              <geom name="stack_D_drawer_ileft_v" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_lam_mat"/>
+              <!-- ========== FACE PANEL ========== -->
+              <body name="stack_D_drawer_face" pos="0 -0.285 0">
+                <geom name="stack_D_drawer_face_col" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+                <geom name="stack_D_drawer_face_v" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_face_mat"/>
+                <!-- horizontal trims -->
+                <geom name="stack_D_drawer_trim_t_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_face_mat"/>
+                <geom name="stack_D_drawer_trim_b_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 -0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_face_mat"/>
+                <!-- vertical trims -->
+                <geom name="stack_D_drawer_trim_l_v" size="0.04 0.1035 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_face_mat"/>
+                <geom name="stack_D_drawer_trim_r_v" size="0.04 0.1035 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_face_mat"/>
+                <!-- handle -->
+                <body name="stack_D_drawer_handle">
+                  <geom name="stack_D_drawer_bar_col" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" group="3" density="10"/>
+                  <geom name="stack_D_drawer_bar_v" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_handle_mat"/>
+                  <geom name="stack_D_drawer_pin_t_v" type="cylinder" size="0.008 0.025" pos="0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_handle_mat"/>
+                  <geom name="stack_D_drawer_pin_b_v" type="cylinder" size="0.008 0.025" pos="-0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_D_drawer_handle_mat"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <body name="stack_D_cab" pos="0 0 0.362" quat="1 0 0 0">
+          <body name="stack_D_cab_main">
+            <!-- carcass collisions (group 3) -->
+            <geom name="stack_D_cab_top_col" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_cab_bottom_col" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_cab_back_col" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_cab_right_col" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_cab_left_col" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_cab_shelf_col" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+            <!-- carcass visuals (group 0) -->
+            <geom name="stack_D_cab_top_v" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <geom name="stack_D_cab_bottom_v" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <geom name="stack_D_cab_back_v" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <geom name="stack_D_cab_right_v" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <geom name="stack_D_cab_left_v" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <geom name="stack_D_cab_shelf_v" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <body name="stack_D_cab_hinge">
+              <joint name="stack_D_cab_door_hinge" pos="0.235 -0.3 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+              <body name="stack_D_cab_door" pos="0 -0.285 0">
+                <!-- door slab -->
+                <geom name="stack_D_cab_door_col" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+                <geom name="stack_D_cab_door_v" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+                <!-- decorative trims (visual only) -->
+                <geom name="stack_D_cab_trim_top_v" size="0.1685 0.04 0.01" pos="0 -0.0025 0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+                <geom name="stack_D_cab_trim_bottom_v" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+                <geom name="stack_D_cab_trim_left_v" size="0.04 0.3135 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+                <geom name="stack_D_cab_trim_right_v" size="0.04 0.3135 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+                <!-- handle -->
+                <body name="stack_D_cab_handle" pos="-0.1985 0 0.1135">
+                  <geom name="stack_D_cab_handle_bar_col" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                  <geom name="stack_D_cab_handle_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                  <geom name="stack_D_cab_pin_t_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                  <geom name="stack_D_cab_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                  <geom name="stack_D_cab_pin_b_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                  <geom name="stack_D_cab_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <body name="stack_D_bar" pos="0 0 0.025">
+          <geom name="stack_D_bar_bar_geom" type="box" size="0.25 0.25 0.025" density="1000" material="single-cabinet_body_mat"/>
+        </body>
+      </body>
+      <body name="stack_E" pos="0.31 -0.3 0.00" quat="1 0 0 0">
+        <body name="stack_E_drawer" pos="0 0 0.78" quat="1 0 0 0">
+          <!-- ========== OUTER FRAME ========== -->
+          <body name="stack_E_drawer_frame">
+            <!-- collisions -->
+            <geom name="stack_E_drawer_top_col" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_drawer_bottom_col" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_drawer_back_col" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_drawer_right_col" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_drawer_left_col" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+            <!-- visuals -->
+            <geom name="stack_E_drawer_top_v" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat"/>
+            <geom name="stack_E_drawer_bottom_v" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat"/>
+            <geom name="stack_E_drawer_back_v" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat"/>
+            <geom name="stack_E_drawer_right_v" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat"/>
+            <geom name="stack_E_drawer_left_v" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat"/>
+            <!-- ========== SLIDING BOX ========== -->
+            <body name="stack_E_drawer_box">
+              <site name="stack_E_drawer_site" pos="0 0 0" size="0.02"/>
+              <joint name="stack_E_drawer_slide" type="slide" axis="0 1 0" pos="0 -0.3 0" limited="true" range="-0.5 0" damping="10"/>
+              <!-- collisions -->
+              <geom name="stack_E_drawer_ibox_col" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" group="3" mass="0.2"/>
+              <geom name="stack_E_drawer_iback_col" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" group="3" mass="0.2"/>
+              <geom name="stack_E_drawer_iright_col" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" group="3" mass="0.2"/>
+              <geom name="stack_E_drawer_ileft_col" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" group="3" mass="0.2"/>
+              <!-- visuals -->
+              <geom name="stack_E_drawer_ibox_v" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat"/>
+              <geom name="stack_E_drawer_iback_v" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat"/>
+              <geom name="stack_E_drawer_iright_v" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat"/>
+              <geom name="stack_E_drawer_ileft_v" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_lam_mat"/>
+              <!-- ========== FACE PANEL ========== -->
+              <body name="stack_E_drawer_face" pos="0 -0.285 0">
+                <geom name="stack_E_drawer_face_col" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+                <geom name="stack_E_drawer_face_v" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_face_mat"/>
+                <!-- horizontal trims -->
+                <geom name="stack_E_drawer_trim_t_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_face_mat"/>
+                <geom name="stack_E_drawer_trim_b_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 -0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_face_mat"/>
+                <!-- vertical trims -->
+                <geom name="stack_E_drawer_trim_l_v" size="0.04 0.1035 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_face_mat"/>
+                <geom name="stack_E_drawer_trim_r_v" size="0.04 0.1035 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_face_mat"/>
+                <!-- handle -->
+                <body name="stack_E_drawer_handle">
+                  <geom name="stack_E_drawer_bar_col" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" group="3" density="10"/>
+                  <geom name="stack_E_drawer_bar_v" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_handle_mat"/>
+                  <geom name="stack_E_drawer_pin_t_v" type="cylinder" size="0.008 0.025" pos="0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_handle_mat"/>
+                  <geom name="stack_E_drawer_pin_b_v" type="cylinder" size="0.008 0.025" pos="-0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="stack_E_drawer_handle_mat"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <body name="stack_E_cab" pos="0 0 0.362" quat="1 0 0 0">
+          <body name="stack_E_cab_main">
+            <!-- carcass collisions (group 3) -->
+            <geom name="stack_E_cab_top_col" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_cab_bottom_col" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_cab_back_col" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_cab_right_col" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_cab_left_col" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_cab_shelf_col" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+            <!-- carcass visuals (group 0) -->
+            <geom name="stack_E_cab_top_v" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <geom name="stack_E_cab_bottom_v" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <geom name="stack_E_cab_back_v" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <geom name="stack_E_cab_right_v" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <geom name="stack_E_cab_left_v" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <geom name="stack_E_cab_shelf_v" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+            <body name="stack_E_cab_hinge">
+              <joint name="stack_E_cab_door_hinge" pos="0.235 -0.3 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+              <body name="stack_E_cab_door" pos="0 -0.285 0">
+                <!-- door slab -->
+                <geom name="stack_E_cab_door_col" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+                <geom name="stack_E_cab_door_v" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+                <!-- decorative trims (visual only) -->
+                <geom name="stack_E_cab_trim_top_v" size="0.1685 0.04 0.01" pos="0 -0.0025 0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+                <geom name="stack_E_cab_trim_bottom_v" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+                <geom name="stack_E_cab_trim_left_v" size="0.04 0.3135 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+                <geom name="stack_E_cab_trim_right_v" size="0.04 0.3135 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+                <!-- handle -->
+                <body name="stack_E_cab_handle" pos="-0.1985 0 0.1135">
+                  <geom name="stack_E_cab_handle_bar_col" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                  <geom name="stack_E_cab_handle_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                  <geom name="stack_E_cab_pin_t_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                  <geom name="stack_E_cab_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                  <geom name="stack_E_cab_pin_b_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                  <geom name="stack_E_cab_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <body name="stack_E_bar" pos="0 0 0.025">
+          <geom name="stack_E_bar_bar_geom" type="box" size="0.25 0.25 0.025" density="1000" material="single-cabinet_body_mat"/>
+        </body>
+      </body>
+      <body name="dishwasher" childclass="dw" pos="0.88 -0.075 0.00">
+        <geom material="dw-body" mesh="dw-dish_washer_body_001" class="dw-visual" euler="1.5708 0 0"/>
+        <geom pos="0 -0.258 0.129" size="0.3 0.258 0.129" type="box" class="dw-collision"/>
+        <geom pos="0 -0.278 0.269" size="0.3 0.278 0.011" type="box" class="dw-collision"/>
+        <geom pos="0.286 -0.278 0.531" size="0.014 0.278 0.274" type="box" class="dw-collision"/>
+        <geom pos="-0.286 -0.278 0.531" size="0.014 0.278 0.274" type="box" class="dw-collision"/>
+        <geom pos="0 -0.008 0.531" size="0.3 0.008 0.274" type="box" class="dw-collision"/>
+        <geom pos="0 -0.278 0.808" size="0.3 0.278 0.0128" type="box" class="dw-collision"/>
+        <body name="dwdoor" pos="0 -0.57 0.245" euler="1.5708 0 0">
+          <!-- <joint name="dwdoor_hinge" axis="1 0 0" range="0 1.5708" damping="0.01" solimplimit="0.998 0.998 0.001" solreflimit="0.004 1"/> -->
+          <inertial mass="0.01" pos="0 0 0" quat="1 0 0 0" diaginertia="0.0001 0.0001 0.0001"/>
+          <geom material="dw-door" mesh="dw-dish_washer_door_001" class="dw-visual"/>
+          <geom pos="0 0.517 0.086" size="0.019 0.28" type="cylinder" class="dw-collision" euler="0 1.5708 0"/>
+          <geom pos="0.238 0.517 0.06" size="0.031 0.025 0.014" type="box" class="dw-collision" euler="1.5708 0 0"/>
+          <geom pos="-0.238 0.517 0.06" size="0.031 0.025 0.014" type="box" class="dw-collision" euler="1.5708 0 0"/>
+          <geom pos="0 0.261 0.03" size="0.295 0.016 0.295" type="box" class="dw-collision" euler="1.5708 0 0"/>
+          <geom pos="0 0.546 0.0192" size="0.295 0.02603 0.019" type="box" class="dw-collision" euler="1.5708 0 0"/>
+          <geom pos="0 0.0148 0.0192" size="0.295 0.02603 0.0584" type="box" class="dw-collision" euler="1.5708 0 0"/>
+          <geom pos="0.275 0.2606 0.0192" size="0.0216 0.02603 0.295" type="box" class="dw-collision" euler="1.5708 0 0"/>
+          <geom pos="-0.275 0.2606 0.0192" size="0.0216 0.02603 0.295" type="box" class="dw-collision" euler="1.5708 0 0"/>
+          <geom mesh="dw-collision_door_001" class="dw-collision"/>
+          <geom mesh="dw-collision_door_003" class="dw-collision"/>
+          <geom mesh="dw-collision_door_004" class="dw-collision"/>
+          <geom mesh="dw-collision_door_006" class="dw-collision"/>
+          <geom mesh="dw-collision_door_007" class="dw-collision"/>
+          <geom mesh="dw-collision_door_008" class="dw-collision"/>
+          <geom mesh="dw-collision_door_009" class="dw-collision"/>
+        </body>
+        <body name="dwtray_mid" pos="0 -0.248 0.6" euler="1.5708 0 0">
+          <!-- <joint name="dwtray_mid_linear" type="slide" axis="0 0 1" range="0 0.45" damping="5" solimplimit="0.998 0.998 0.001" solreflimit="0.004 1"/> -->
+          <geom material="dw-middle" mesh="dw-dish_washer_mid_001" class="dw-visual"/>
+          <geom mesh="dw-collision_tray_mid_001" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_002" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_003" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_004" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_005" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_006" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_007" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_008" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_009" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_010" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_011" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_012" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_013" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_014" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_015" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_016" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_017" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_018" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_019" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_020" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_021" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_022" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_023" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_024" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_025" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_026" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_mid_027" class="dw-collision"/>
+          <!-- plates holders -->
+          <body name="dwdish_washer_mid_holder_1" pos="0.085 0.0025 0" euler="0 1.5708 0">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+            <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+          </body>
+          <body name="dwdish_washer_mid_holder_2" pos="-0.085 0.0025 0" euler="0 1.5708 0">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+            <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+          </body>
+          <!-- sprinkler -->
+          <body name="dwtray_mid_sprinkler" pos="0 -0.029338 0">
+            <!-- <joint name="dwtray_mid_sprinkler" axis="0 1 0" limited="false" damping="0.001"/> -->
+            <inertial mass="0.01" pos="0 0 0" quat="1 0 0 0" diaginertia="0.001 0.001 0.001"/>
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_mid_sprinkle" class="dw-visual"/>
+            <geom mesh="dw-collision_dish_washer_mid_sprinkle" class="dw-collision"/>
+          </body>
+        </body>
+        <body name="dwtray_bottom" pos="0 -0.309 0.35" euler="1.5708 0 0">
+          <!-- <joint name="dwtray_bottom_linear" type="slide" axis="0 0 1" range="0 0.5" damping="5" solimplimit="0.998 0.998 0.001" solreflimit="0.004 1"/> -->
+          <geom material="dw-bottom" mesh="dw-dish_washer_bottom_001" class="dw-visual"/>
+          <geom mesh="dw-collision_tray_001" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_002" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_003" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_004" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_005" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_006" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_007" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_008" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_009" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_010" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_011" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_012" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_013" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_014" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_015" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_016" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_017" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_018" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_019" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_020" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_021" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_022" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_023" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_024" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_025" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_026" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_027" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_028" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_029" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_030" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_031" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_032" class="dw-collision"/>
+          <geom mesh="dw-collision_tray_033" class="dw-collision"/>
+          <!-- plates holders -->
+          <body name="dwdish_washer_bottom_holder_1" pos="-0.047521 -0.048164 0.145" euler="0.523599 0 0">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+            <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+          </body>
+          <body name="dwdish_washer_bottom_holder_2" pos="-0.047521 -0.048164 0.088794" euler="-0.523599 0 0">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+            <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+          </body>
+          <body name="dwdish_washer_bottom_holder_3" pos="-0.047521 -0.048164 -0.1133" euler="0.523599 0 0">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+            <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+          </body>
+          <body name="dwdish_washer_bottom_holder_4" pos="-0.047521 -0.048164 -0.189036" euler="-0.523599 0 0">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+            <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+            <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+          </body>
+          <!-- wheels -->
+          <body name="dwdish_washer_bottom_wheel_1_l" pos="0.250505 -0.049095 0.139046">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+            <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+          </body>
+          <body name="dwdish_washer_bottom_wheel_2_l" pos="0.250505 -0.049095 0.040992">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+            <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+          </body>
+          <body name="dwdish_washer_bottom_wheel_3_l" pos="0.250505 -0.049095 -0.087648">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+            <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+          </body>
+          <body name="dwdish_washer_bottom_wheel_4_l" pos="0.250505 -0.049095 -0.190549">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+            <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+          </body>
+          <body name="dwdish_washer_bottom_wheel_1_r" pos="-0.250505 -0.049095 0.139046" euler="0 3.14159 0">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+            <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+          </body>
+          <body name="dwdish_washer_bottom_wheel_2_r" pos="-0.250505 -0.049095 0.040992" euler="0 3.14159 0">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+            <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+          </body>
+          <body name="dwdish_washer_bottom_wheel_3_r" pos="-0.250505 -0.049095 -0.087648" euler="0 3.14159 0">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+            <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+          </body>
+          <body name="dwdish_washer_bottom_wheel_4_r" pos="-0.250505 -0.049095 -0.190549" euler="0 3.14159 0">
+            <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+            <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+          </body>
+          <!-- basket -->
+          <body name="dw-cuttlery_basket" pos="0.218 0.030 -0.02">
+            <geom material="dw-basket" mesh="dw-dish_washer_bottom_cuttlery_basket_001" class="dw-visual"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_001" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_002" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_003" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_004" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_005" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_006" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_007" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_008" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_009" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_010" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_011" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_012" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_013" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_014" class="dw-collision_basket"/>
+            <geom mesh="dw-collision_dish_washer_bottom_basket_015" class="dw-collision_basket"/>
+          </body>
+        </body>
+      </body>
+      <body name="cabinet_A" pos="-0.77 -0.20 2.0" quat="1 0 0 0">
+        <body name="cabinet_A_main">
+          <!-- ========= cabinet carcass – collisions (group 3) ========= -->
+          <geom name="cabinet_A_top" size="0.5 0.185 0.015" pos="0 0.015 0.445" type="box" group="3" density="10"/>
+          <geom name="cabinet_A_bottom" size="0.5 0.185 0.015" pos="0 0.015 -0.445" type="box" group="3" density="10"/>
+          <geom name="cabinet_A_back" size="0.47 0.015 0.43" pos="0 0.185 0" type="box" group="3" density="10"/>
+          <geom name="cabinet_A_right" size="0.015 0.185 0.43" pos="0.485 0.015 0" type="box" group="3" density="10"/>
+          <geom name="cabinet_A_left" size="0.015 0.185 0.43" pos="-0.485 0.015 0" type="box" group="3" density="10"/>
+          <geom name="cabinet_A_shelf" size="0.47 0.15 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+          <!-- ========= cabinet carcass – visuals (group 0) ============ -->
+          <geom name="cabinet_A_top_v" size="0.5 0.185 0.015" pos="0 0.015 0.445" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <geom name="cabinet_A_bottom_v" size="0.5 0.185 0.015" pos="0 0.015 -0.445" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <geom name="cabinet_A_back_v" size="0.47 0.015 0.43" pos="0 0.185 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <geom name="cabinet_A_right_v" size="0.015 0.185 0.43" pos="0.485 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <geom name="cabinet_A_left_v" size="0.015 0.185 0.43" pos="-0.485 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <geom name="cabinet_A_shelf_v" size="0.47 0.15 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <!-- =========================================================== -->
+          <!--                     LEFT  DOOR                              -->
+          <!-- =========================================================== -->
+          <body name="cabinet_A_left_hinge">
+            <!-- <joint name="cabinet_A_leftdoor_hinge" pos="-0.485 -0.2 0"
+                   axis="0 0 1" limited="true" range="-3 0" damping="2"/> -->
+            <body name="cabinet_A_left_door" pos="-0.25 -0.185 0">
+              <!-- door slab – collision & visual  -->
+              <geom name="cabinet_A_left_door_col" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="cabinet_A_left_door_vis" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <!-- decorative trims (visual only) -->
+              <geom name="cabinet_A_lt_trim_top" size="0.1685 0.04 0.01" pos="0 -0.0025  0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_A_lt_trim_bottom" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_A_lt_trim_left" size="0.04 0.4585 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_A_lt_trim_right" size="0.04 0.4585 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <!-- handle -->
+              <body name="cabinet_A_left_handle" pos="0.1985 0 -0.2585">
+                <geom name="cabinet_A_lh_bar" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                <geom name="cabinet_A_lh_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+                <geom name="cabinet_A_lh_pin_t" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="cabinet_A_lh_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+                <geom name="cabinet_A_lh_pin_b" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="cabinet_A_lh_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              </body>
+            </body>
+          </body>
+          <!-- =========================================================== -->
+          <!--                     RIGHT DOOR                              -->
+          <!-- =========================================================== -->
+          <body name="cabinet_A_right_hinge">
+            <!-- <joint name="cabinet_A_rightdoor_hinge" pos="0.485 -0.2 0"
+                   axis="0 0 1" limited="true" range="0 3" damping="2"/> -->
+            <body name="cabinet_A_right_door" pos="0.25 -0.185 0">
+              <!-- collision & visual for slab -->
+              <geom name="cabinet_A_right_door_col" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="cabinet_A_right_door_vis" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <!-- same trims as left door -->
+              <geom name="cabinet_A_rt_trim_top" size="0.1685 0.04 0.01" pos="0 -0.0025 0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_A_rt_trim_bottom" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_A_rt_trim_left" size="0.04 0.4585 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_A_rt_trim_right" size="0.04 0.4585 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <!-- handle mirrored across X -->
+              <body name="cabinet_A_right_handle" pos="-0.1985 0 -0.2585">
+                <geom name="cabinet_A_rh_bar" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                <geom name="cabinet_A_rh_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+                <geom name="cabinet_A_rh_pin_t" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="cabinet_A_rh_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+                <geom name="cabinet_A_rh_pin_b" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="cabinet_A_rh_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="cabinet_B" pos="0.88 -0.20 2.0" quat="1 0 0 0">
+        <body name="cabinet_B_main">
+          <!-- ========= cabinet carcass – collisions (group 3) ========= -->
+          <geom name="cabinet_B_top" size="0.5 0.185 0.015" pos="0 0.015 0.445" type="box" group="3" density="10"/>
+          <geom name="cabinet_B_bottom" size="0.5 0.185 0.015" pos="0 0.015 -0.445" type="box" group="3" density="10"/>
+          <geom name="cabinet_B_back" size="0.47 0.015 0.43" pos="0 0.185 0" type="box" group="3" density="10"/>
+          <geom name="cabinet_B_right" size="0.015 0.185 0.43" pos="0.485 0.015 0" type="box" group="3" density="10"/>
+          <geom name="cabinet_B_left" size="0.015 0.185 0.43" pos="-0.485 0.015 0" type="box" group="3" density="10"/>
+          <geom name="cabinet_B_shelf" size="0.47 0.15 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+          <!-- ========= cabinet carcass – visuals (group 0) ============ -->
+          <geom name="cabinet_B_top_v" size="0.5 0.185 0.015" pos="0 0.015 0.445" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <geom name="cabinet_B_bottom_v" size="0.5 0.185 0.015" pos="0 0.015 -0.445" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <geom name="cabinet_B_back_v" size="0.47 0.015 0.43" pos="0 0.185 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <geom name="cabinet_B_right_v" size="0.015 0.185 0.43" pos="0.485 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <geom name="cabinet_B_left_v" size="0.015 0.185 0.43" pos="-0.485 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <geom name="cabinet_B_shelf_v" size="0.47 0.15 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+          <!-- =========================================================== -->
+          <!--                     LEFT  DOOR                              -->
+          <!-- =========================================================== -->
+          <body name="cabinet_B_left_hinge">
+            <!-- <joint name="cabinet_B_leftdoor_hinge" pos="-0.485 -0.2 0"
+                   axis="0 0 1" limited="true" range="-3 0" damping="2"/> -->
+            <body name="cabinet_B_left_door" pos="-0.25 -0.185 0">
+              <!-- door slab – collision & visual  -->
+              <geom name="cabinet_B_left_door_col" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="cabinet_B_left_door_vis" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <!-- decorative trims (visual only) -->
+              <geom name="cabinet_B_lt_trim_top" size="0.1685 0.04 0.01" pos="0 -0.0025  0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_B_lt_trim_bottom" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_B_lt_trim_left" size="0.04 0.4585 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_B_lt_trim_right" size="0.04 0.4585 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <!-- handle -->
+              <body name="cabinet_B_left_handle" pos="0.1985 0 -0.2585">
+                <geom name="cabinet_B_lh_bar" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                <geom name="cabinet_B_lh_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+                <geom name="cabinet_B_lh_pin_t" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="cabinet_B_lh_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+                <geom name="cabinet_B_lh_pin_b" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="cabinet_B_lh_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              </body>
+            </body>
+          </body>
+          <!-- =========================================================== -->
+          <!--                     RIGHT DOOR                              -->
+          <!-- =========================================================== -->
+          <body name="cabinet_B_right_hinge">
+            <!-- <joint name="cabinet_B_rightdoor_hinge" pos="0.485 -0.2 0"
+                   axis="0 0 1" limited="true" range="0 3" damping="2"/> -->
+            <body name="cabinet_B_right_door" pos="0.25 -0.185 0">
+              <!-- collision & visual for slab -->
+              <geom name="cabinet_B_right_door_col" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="cabinet_B_right_door_vis" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <!-- same trims as left door -->
+              <geom name="cabinet_B_rt_trim_top" size="0.1685 0.04 0.01" pos="0 -0.0025 0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_B_rt_trim_bottom" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_B_rt_trim_left" size="0.04 0.4585 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <geom name="cabinet_B_rt_trim_right" size="0.04 0.4585 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+              <!-- handle mirrored across X -->
+              <body name="cabinet_B_right_handle" pos="-0.1985 0 -0.2585">
+                <geom name="cabinet_B_rh_bar" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                <geom name="cabinet_B_rh_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+                <geom name="cabinet_B_rh_pin_t" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="cabinet_B_rh_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+                <geom name="cabinet_B_rh_pin_b" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="cabinet_B_rh_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body pos="0.3 0 1.0" name="cup">
+      <joint name="cup_joint" type="free"/>
+      <geom name="cup_vis_0_mesh" mesh="cup_vis_0" material="cup_mat" class="cup_visual"/>
+      <geom name="cup_coll_0_mesh" mesh="cup_coll_0" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_1_mesh" mesh="cup_coll_1" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_2_mesh" mesh="cup_coll_2" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_3_mesh" mesh="cup_coll_3" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_4_mesh" mesh="cup_coll_4" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_5_mesh" mesh="cup_coll_5" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_6_mesh" mesh="cup_coll_6" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_7_mesh" mesh="cup_coll_7" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_8_mesh" mesh="cup_coll_8" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_9_mesh" mesh="cup_coll_9" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_10_mesh" mesh="cup_coll_10" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_11_mesh" mesh="cup_coll_11" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_12_mesh" mesh="cup_coll_12" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_13_mesh" mesh="cup_coll_13" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_14_mesh" mesh="cup_coll_14" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_15_mesh" mesh="cup_coll_15" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_16_mesh" mesh="cup_coll_16" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_17_mesh" mesh="cup_coll_17" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_18_mesh" mesh="cup_coll_18" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_19_mesh" mesh="cup_coll_19" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_20_mesh" mesh="cup_coll_20" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_21_mesh" mesh="cup_coll_21" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_22_mesh" mesh="cup_coll_22" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_23_mesh" mesh="cup_coll_23" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_24_mesh" mesh="cup_coll_24" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_25_mesh" mesh="cup_coll_25" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_26_mesh" mesh="cup_coll_26" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_27_mesh" mesh="cup_coll_27" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_28_mesh" mesh="cup_coll_28" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_29_mesh" mesh="cup_coll_29" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_30_mesh" mesh="cup_coll_30" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <geom name="cup_coll_31_mesh" mesh="cup_coll_31" rgba="0.8 0.8 0.8 1" class="cup_collision"/>
+      <site name="cup" pos="0 0 0" size="0.01" rgba="1 1 1 0"/>
+    </body>
+    <body pos="0.3 0 1.1" quat="0 1 0 0" name="spoon">
+      <site name="spoon_site" pos="0 0 0" size="0.02"/>
+      <joint name="spoon_joint" type="free"/>
+        ['
+      <geom mesh="spoon_vis_0" material="spoon_mat_handle" class="spoon_visual"/>
+      ', '
+      <geom mesh="spoon_vis_1" material="spoon_mat_bowl" class="spoon_visual"/>
+      ']
+      <geom mesh="spoon_coll_0" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_1" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_2" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_3" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_4" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_5" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_6" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_7" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_8" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_9" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_10" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_11" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_12" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_13" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_14" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_15" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_16" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_17" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_18" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_19" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_20" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_21" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_22" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_23" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_24" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_25" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_26" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_27" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_28" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_29" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_30" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+      <geom mesh="spoon_coll_31" rgba="0.8 0.8 0.8 1" class="spoon_collision"/>
+    </body>
+    <body name="bagel" childclass="bagel" pos="0.5 0.3 0.95" quat="0.707 -0.707 0 0">
+      <inertial mass="0.1" pos="0 0 0" diaginertia="0.00443333156 0.00443333156 0.0072"/>
+      <body name="bagel-base">
+        <inertial mass="0.1" pos="0 0 0" diaginertia="0.0102675 0.0102675 0.00666"/>
+        <geom mesh="bagel_0" class="bagel-visual"/>
+        <geom mesh="bagel_1" class="bagel-visual"/>
+        <geom class="bagel-collision" mesh="bagel_0"/>
+        <geom class="bagel-collision" mesh="bagel_1"/>
+      </body>
+    </body>
+    <body name="mug" pos="0.5 -0.15 0.95" quat="1 0 0 0">
+      <geom type="sdf" name="mug" mesh="spot" material="matspot" mass="0.075" quat="0 0 1 1" condim="4" solimp="0.95 0.99 0.001" solref="0.003 1">
+        <plugin instance="v-mug-sdf"/>
+      </geom>
+      <site name="mug_handle_1" pos="-0.054 0 0.075" size="0.005" rgba="1 1 1 1"/>
+      <site name="mug_handle_2" pos="-0.054 0 0.056" size="0.005" rgba="1 1 1 1"/>
+      <site name="mug_handle_3" pos="-0.054 0 0.037" size="0.005" rgba="1 1 1 1"/>
+    </body>
+    <body name="cupcake" pos="0.4 0.225 0.82" quat="0.707105 0 0 -0.707108">
+      <!-- <joint type="free"/> -->
+      <body name="cupcake_object">
+        <site name="cupcake_object" pos="0 0 0" size="0.02"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_0_vis" conaffinity="0" contype="0" group="1" material="cupcake_CupCake_PBR"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_22._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_23._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_21._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_20._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_24._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_30._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_18._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_19._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_31._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_25._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_27._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_26._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_9._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_8._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_6._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_7._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_5._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_4._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_0._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_1._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_3._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_2._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_17._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_16._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_28._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_14._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_15._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_29._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_11._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_10._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_12._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+        <geom solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" type="mesh" mesh="cupcake_model_normalized_collision_13._coll" group="0" rgba="0.8 0.8 0.8 0.0"/>
+      </body>
+    </body>
+    <body pos="0.3 0.4 0.95" name="bowl">
+      <!-- <joint name="bowl_joint" type="free"/> -->
+      <geom mesh="bowl_vis_0" material="bowl_mat" class="bowl_visual"/>
+      <geom name="bowl_coll_0_mesh" mesh="bowl_coll_0" rgba="0.3935998456529779 0.35922997346240615 0.11845517683283135 1" class="bowl_collision"/>
+      <geom name="bowl_coll_1_mesh" mesh="bowl_coll_1" rgba="0.17715807955622354 0.9703511688046853 0.1283849176313252 1" class="bowl_collision"/>
+      <geom name="bowl_coll_2_mesh" mesh="bowl_coll_2" rgba="0.02035032119815472 0.30507639154787547 0.48038465775170813 1" class="bowl_collision"/>
+      <geom name="bowl_coll_3_mesh" mesh="bowl_coll_3" rgba="0.031175242808543224 0.05616570412992894 0.9231070300106133 1" class="bowl_collision"/>
+      <geom name="bowl_coll_4_mesh" mesh="bowl_coll_4" rgba="0.573767609311484 0.25072845655675013 0.7461282256754279 1" class="bowl_collision"/>
+      <geom name="bowl_coll_5_mesh" mesh="bowl_coll_5" rgba="0.5338887156656726 0.8109303447171412 0.5759514154804751 1" class="bowl_collision"/>
+      <geom name="bowl_coll_6_mesh" mesh="bowl_coll_6" rgba="0.13573647850963733 0.22298944220830952 0.08825480082444215 1" class="bowl_collision"/>
+      <geom name="bowl_coll_7_mesh" mesh="bowl_coll_7" rgba="0.023778221049270187 0.23754832863206832 0.5875129861175284 1" class="bowl_collision"/>
+      <geom name="bowl_coll_8_mesh" mesh="bowl_coll_8" rgba="0.9780045264391443 0.7055213035145442 0.5336358592676881 1" class="bowl_collision"/>
+      <geom name="bowl_coll_9_mesh" mesh="bowl_coll_9" rgba="0.03301362561392429 0.2853231983532023 0.731317476106106 1" class="bowl_collision"/>
+      <geom name="bowl_coll_10_mesh" mesh="bowl_coll_10" rgba="0.13408144003059808 0.22861289272557028 0.7939660554702467 1" class="bowl_collision"/>
+      <geom name="bowl_coll_11_mesh" mesh="bowl_coll_11" rgba="0.3275010101541592 0.4001978070559137 0.17867658829230326 1" class="bowl_collision"/>
+      <geom name="bowl_coll_12_mesh" mesh="bowl_coll_12" rgba="0.8403792032798653 0.059065148174105575 0.06923489118900616 1" class="bowl_collision"/>
+      <geom name="bowl_coll_13_mesh" mesh="bowl_coll_13" rgba="0.6793160085042627 0.4307508109871463 0.7230789801497668 1" class="bowl_collision"/>
+      <geom name="bowl_coll_14_mesh" mesh="bowl_coll_14" rgba="0.27752039082742996 0.22298711970159346 0.7534551172606835 1" class="bowl_collision"/>
+      <geom name="bowl_coll_15_mesh" mesh="bowl_coll_15" rgba="0.6513532710341142 0.9403734980305503 0.15986448697475086 1" class="bowl_collision"/>
+      <geom name="bowl_coll_16_mesh" mesh="bowl_coll_16" rgba="0.7598041863352334 0.4181568770695643 0.897064648794696 1" class="bowl_collision"/>
+      <geom name="bowl_coll_17_mesh" mesh="bowl_coll_17" rgba="0.11590949480562929 0.05583320159561622 0.633399582772445 1" class="bowl_collision"/>
+      <geom name="bowl_coll_18_mesh" mesh="bowl_coll_18" rgba="0.7808598556269372 0.23145457943392456 0.05625342768433461 1" class="bowl_collision"/>
+      <geom name="bowl_coll_19_mesh" mesh="bowl_coll_19" rgba="0.006957767534431669 0.896942810956704 0.44945553182686315 1" class="bowl_collision"/>
+      <geom name="bowl_coll_20_mesh" mesh="bowl_coll_20" rgba="0.2772710341398108 0.7933851667621648 0.5659474299450424 1" class="bowl_collision"/>
+      <geom name="bowl_coll_21_mesh" mesh="bowl_coll_21" rgba="0.2048416408046526 0.1776735255456049 0.046076800271791285 1" class="bowl_collision"/>
+      <geom name="bowl_coll_22_mesh" mesh="bowl_coll_22" rgba="0.9319115825798947 0.44219792875429687 0.8533233432696506 1" class="bowl_collision"/>
+      <geom name="bowl_coll_23_mesh" mesh="bowl_coll_23" rgba="0.5889592925385267 0.518165051897509 0.7604583822403082 1" class="bowl_collision"/>
+      <geom name="bowl_coll_24_mesh" mesh="bowl_coll_24" rgba="0.5446467873192189 0.4379034430236266 0.6177695496076786 1" class="bowl_collision"/>
+      <geom name="bowl_coll_25_mesh" mesh="bowl_coll_25" rgba="0.14409305710806464 0.19637605252854617 0.4368130540629741 1" class="bowl_collision"/>
+      <geom name="bowl_coll_26_mesh" mesh="bowl_coll_26" rgba="0.9719465191701006 0.16660857184915612 0.7351771800770598 1" class="bowl_collision"/>
+      <geom name="bowl_coll_27_mesh" mesh="bowl_coll_27" rgba="0.5881063904722876 0.6355471402298505 0.1964566323148832 1" class="bowl_collision"/>
+      <geom name="bowl_coll_28_mesh" mesh="bowl_coll_28" rgba="0.5432368357350685 0.5257323402739128 0.3520163871192128 1" class="bowl_collision"/>
+      <geom name="bowl_coll_29_mesh" mesh="bowl_coll_29" rgba="0.08515959866007594 0.4629169563604857 0.7597417644591181 1" class="bowl_collision"/>
+      <geom name="bowl_coll_30_mesh" mesh="bowl_coll_30" rgba="0.3752180322332326 0.17946660313247542 0.8951159557080768 1" class="bowl_collision"/>
+      <geom name="bowl_coll_31_mesh" mesh="bowl_coll_31" rgba="0.9618150517276189 0.5122153595833874 0.3806881683896385 1" class="bowl_collision"/>
+      <site name="bowl" pos="0 0 0" size="0.01" rgba="1 1 1 0"/>
+    </body>
+    <body name="start_indicator-1" pos="-0.2 0.1 0.8">
+      <site name="start_indicator-1" pos="0 0.0 0.0" size="0.025"/>
+    </body>
+    <camera name="top" pos="-0.733 -0.1 1.7000000000000002" xyaxes="0 -1 0 1 0 0" fovy="46.69212571046592"/>
+    <camera name="left_l" pos="-0.633 0.36 1.4000000000000001" fovy="46.69212571046592" xyaxes="-1.0 0.0 0.0 0.0 -0.39872611141444997 0.9170700562532351"/>
+    <camera name="left" pos="-0.833 0.36 1.4000000000000001" fovy="46.69212571046592" xyaxes="-1.0 0.0 0.0 0.0 -0.39872611141444997 0.9170700562532351"/>
+    <camera name="right" pos="-0.833 -0.56 1.4000000000000001" fovy="46.69212571046592" xyaxes="1.0 0.0 0.0 -0.0 0.3987261114144499 0.9170700562532351"/>
+    <camera name="right_r" pos="-0.633 -0.56 1.4000000000000001" fovy="46.69212571046592" xyaxes="1.0 0.0 0.0 -0.0 0.3987261114144499 0.9170700562532351"/>
+    <camera name="front" pos="-1.15 -0.1 1.4000000000000001" fovy="46.69212571046592" xyaxes="-0.0 -1.0 0.0 0.447213595499958 0.0 0.894427190999916"/>
+    <camera name="front_r" pos="-1.15 -0.30000000000000004 1.4000000000000001" fovy="46.69212571046592" xyaxes="-0.0 -1.0 0.0 0.447213595499958 0.0 0.894427190999916"/>
+    <camera name="back" pos="-0.44999999999999996 -0.1 1.4000000000000001" fovy="46.69212571046592" xyaxes="-0.0 1.0 0.0 -0.5547001962252289 -0.0 0.8320502943378437"/>
+    <body name="gripper-float">
+      <joint name="gripper-float-floating-base" type="free"/>
+      <body name="gripper" pos="-0.3 0 1.25" quat="0 0 1 0">
+        <geom class="2f85-visual" mesh="base_mount" material="2f85-black"/>
+        <geom class="2f85-collision" mesh="base_mount"/>
+        <body name="gripper-base" pos="0 0 0.0038" quat="1 0 0 0">
+          <inertial mass="0.05" pos="0 -2.70394e-05 0.0354675" quat="1 -0.00152849 0 0" diaginertia="0.000260285 0.000225381 0.000152708"/>
+          <geom class="2f85-visual" mesh="base" material="2f85-black"/>
+          <geom class="2f85-collision" mesh="base"/>
+          <site name="gripper-pinch" pos="0 0 0.145" type="sphere" rgba="0.9 0.0 0.0 1" size="0.002"/>
+          <camera name="wrist" pos="-0.1 0 0.0" quat="-0.15 0.7 0.7 -0.15" fovy="46.69212571046592"/>
+          <!-- Right-hand side 4-bar linkage -->
+          <body name="gripper-right_driver" pos="0 0.0306011 0.054904">
+            <inertial mass="0.00899563" pos="2.96931e-12 0.0177547 0.00107314" quat="0.681301 0.732003 0 0" diaginertia="1.72352e-06 1.60906e-06 3.22006e-07"/>
+            <joint name="gripper-right_driver_joint" class="2f85-driver"/>
+            <geom class="2f85-visual" mesh="driver" material="2f85-gray"/>
+            <geom class="2f85-collision" mesh="driver"/>
+            <body name="gripper-right_coupler" pos="0 0.0315 -0.0041">
+              <inertial mass="0.0140974" pos="0 0.00301209 0.0232175" quat="0.705636 -0.0455904 0.0455904 0.705636" diaginertia="4.16206e-06 3.52216e-06 8.88131e-07"/>
+              <joint name="gripper-right_coupler_joint" class="2f85-coupler"/>
+              <geom class="2f85-visual" mesh="coupler" material="2f85-black"/>
+              <geom class="2f85-collision" mesh="coupler"/>
+            </body>
+          </body>
+          <body name="gripper-right_spring_link" pos="0 0.0132 0.0609">
+            <inertial mass="0.0221642" pos="-8.65005e-09 0.0181624 0.0212658" quat="0.663403 -0.244737 0.244737 0.663403" diaginertia="8.96853e-06 6.71733e-06 2.63931e-06"/>
+            <joint name="gripper-right_spring_link_joint" class="2f85-spring_link"/>
+            <geom class="2f85-visual" mesh="spring_link" material="2f85-black"/>
+            <geom class="2f85-collision" mesh="spring_link"/>
+            <body name="gripper-right_follower" pos="0 0.055 0.0375">
+              <inertial mass="0.0125222" pos="0 -0.011046 0.0124786" quat="1 0.1664 0 0" diaginertia="2.67415e-06 2.4559e-06 6.02031e-07"/>
+              <joint name="gripper-right_follower_joint" class="2f85-follower"/>
+              <geom class="2f85-visual" mesh="follower" material="2f85-black"/>
+              <geom class="2f85-collision" mesh="follower"/>
+              <body name="gripper-right_pad" pos="0 -0.0189 0.01352">
+                <geom class="2f85-pad_box1" name="gripper-right_pad1"/>
+                <geom class="2f85-pad_box2" name="gripper-right_pad2"/>
+                <inertial mass="0.0035" pos="0 -0.0025 0.0185" quat="0.707107 0 0 0.707107" diaginertia="4.73958e-07 3.64583e-07 1.23958e-07"/>
+                <geom class="2f85-visual" mesh="pad"/>
+                <body name="gripper-right_silicone_pad">
+                  <geom class="2f85-visual" mesh="silicone_pad" material="2f85-black"/>
+                </body>
+              </body>
+            </body>
+          </body>
+          <!-- Left-hand side 4-bar linkage -->
+          <body name="gripper-left_driver" pos="0 -0.0306011 0.054904" quat="0 0 0 1">
+            <inertial mass="0.00899563" pos="0 0.0177547 0.00107314" quat="0.681301 0.732003 0 0" diaginertia="1.72352e-06 1.60906e-06 3.22006e-07"/>
+            <joint name="gripper-left_driver_joint" class="2f85-driver"/>
+            <geom class="2f85-visual" mesh="driver" material="2f85-gray"/>
+            <geom class="2f85-collision" mesh="driver"/>
+            <body name="gripper-left_coupler" pos="0 0.0315 -0.0041">
+              <inertial mass="0.0140974" pos="0 0.00301209 0.0232175" quat="0.705636 -0.0455904 0.0455904 0.705636" diaginertia="4.16206e-06 3.52216e-06 8.88131e-07"/>
+              <joint name="gripper-left_coupler_joint" class="2f85-coupler"/>
+              <geom class="2f85-visual" mesh="coupler" material="2f85-black"/>
+              <geom class="2f85-collision" mesh="coupler"/>
+            </body>
+          </body>
+          <body name="gripper-left_spring_link" pos="0 -0.0132 0.0609" quat="0 0 0 1">
+            <inertial mass="0.0221642" pos="-8.65005e-09 0.0181624 0.0212658" quat="0.663403 -0.244737 0.244737 0.663403" diaginertia="8.96853e-06 6.71733e-06 2.63931e-06"/>
+            <joint name="gripper-left_spring_link_joint" class="2f85-spring_link"/>
+            <geom class="2f85-visual" mesh="spring_link" material="2f85-black"/>
+            <geom class="2f85-collision" mesh="spring_link"/>
+            <body name="gripper-left_follower" pos="0 0.055 0.0375">
+              <inertial mass="0.0125222" pos="0 -0.011046 0.0124786" quat="1 0.1664 0 0" diaginertia="2.67415e-06 2.4559e-06 6.02031e-07"/>
+              <joint name="gripper-left_follower_joint" class="2f85-follower"/>
+              <geom class="2f85-visual" mesh="follower" material="2f85-black"/>
+              <geom class="2f85-collision" mesh="follower"/>
+              <body name="gripper-left_pad" pos="0 -0.0189 0.01352">
+                <geom class="2f85-pad_box1" name="gripper-left_pad1"/>
+                <geom class="2f85-pad_box2" name="gripper-left_pad2"/>
+                <inertial mass="0.0035" pos="0 -0.0025 0.0185" quat="1 0 0 1" diaginertia="4.73958e-07 3.64583e-07 1.23958e-07"/>
+                <geom class="2f85-visual" mesh="pad"/>
+                <body name="gripper-left_silicone_pad">
+                  <geom class="2f85-visual" mesh="silicone_pad" material="2f85-black"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body mocap="true" name="gripper-mocap" pos="-0.3 0 1.1" quat="0 0 1 0">
+      <site name="gripper-mocap-site" size="0.002" type="sphere" rgba="0.13 0.3 0.2 1"/>
+    </body>
+  </worldbody>
+  <contact>
+    <exclude body1="dishwasher" body2="dwdoor"/>
+    <exclude body1="dishwasher" body2="dwtray_mid"/>
+    <exclude body1="dishwasher" body2="dwtray_bottom"/>
+    <exclude body1="dwdish_washer_bottom_wheel_1_l" body2="dishwasher"/>
+    <exclude body1="dwdish_washer_bottom_wheel_2_l" body2="dishwasher"/>
+    <exclude body1="dwdish_washer_bottom_wheel_3_l" body2="dishwasher"/>
+    <exclude body1="dwdish_washer_bottom_wheel_4_l" body2="dishwasher"/>
+    <exclude body1="dwdish_washer_bottom_wheel_1_r" body2="dishwasher"/>
+    <exclude body1="dwdish_washer_bottom_wheel_2_r" body2="dishwasher"/>
+    <exclude body1="dwdish_washer_bottom_wheel_3_r" body2="dishwasher"/>
+    <exclude body1="dwdish_washer_bottom_wheel_4_r" body2="dishwasher"/>
+    <exclude body1="gripper-base" body2="gripper-left_driver"/>
+    <exclude body1="gripper-base" body2="gripper-right_driver"/>
+    <exclude body1="gripper-base" body2="gripper-left_spring_link"/>
+    <exclude body1="gripper-base" body2="gripper-right_spring_link"/>
+    <exclude body1="gripper-right_coupler" body2="gripper-right_follower"/>
+    <exclude body1="gripper-left_coupler" body2="gripper-left_follower"/>
+  </contact>
+  <!--This adds stability to the model by having a tendon that distributes the forces between both
+      joints, such that the equality constraint doesn't have to do that much work in order to equalize
+      both joints. Since both joints share the same sign, we split the force between both equally by
+      setting coef=0.5-->
+  <tendon>
+    <fixed name="gripper-split">
+      <joint joint="gripper-right_driver_joint" coef="0.5"/>
+      <joint joint="gripper-left_driver_joint" coef="0.5"/>
+    </fixed>
+  </tendon>
+  <equality>
+    <connect anchor="0 0 0" body1="gripper-right_follower" body2="gripper-right_coupler" solimp="0.95 0.99 0.001" solref="0.005 1"/>
+    <connect anchor="0 0 0" body1="gripper-left_follower" body2="gripper-left_coupler" solimp="0.95 0.99 0.001" solref="0.005 1"/>
+    <joint joint1="gripper-right_driver_joint" joint2="gripper-left_driver_joint" polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1"/>
+    <weld name="gripper-control" site1="gripper-mocap-site" site2="gripper-pinch"/>
+  </equality>
+  <!--The general actuator below is a customized position actuator (with some damping) where
+      gainprm[0] != kp (see http://mujoco.org/book/modeling.html#position).
+      The reason why gainprm[0] != kp is because the control input range has to be re-scaled to
+      [0, 255]. The joint range is currently set at [0, 0.8], the control range is [0, 255] and
+      kp = 100. Tau = Kp * scale * control_input - Kp * error, max(Kp * scale * control_input) = 0.8,
+      hence scale = 0.8 * 100 / 255-->
+  <actuator>
+    <general class="2f85" name="gripper-fingers_actuator" tendon="gripper-split" forcerange="-5 5" ctrlrange="0 1" gainprm="80 0 0" biasprm="0 -100 -10"/>
+  </actuator>
+</mujoco>

@@ -1,0 +1,1518 @@
+<?xml version="1.0" ?>
+<mujoco model="default stage">
+  <compiler angle="radian" autolimits="true"/>
+  <statistic center="0.2 0 0.4" extent=".65"/>
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="150" elevation="-20" offwidth="1280" offheight="1024"/>
+  </visual>
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <texture type="2d" name="wall_tex_paint" file="assets/wall/paint.png"/>
+    <material name="wall_paint_mat" texture="wall_tex_paint" shininess="0.15"/>
+    <!--flat-coloured laminate & bright metal-->
+    <texture type="2d" name="cab_tex_body" file="assets/cabinet/laminate.png"/>
+    <texture type="2d" name="cab_tex_metal" file="assets/cabinet/metal.png"/>
+    <material name="cab_body_mat" texture="cab_tex_body" shininess="0.1" reflectance="0.1"/>
+    <material name="cab_door_mat" texture="cab_tex_body" shininess="0.1" reflectance="0.1"/>
+    <material name="cab_handle_mat" texture="cab_tex_metal" shininess="0.8" reflectance="0.8"/>
+    <texture type="2d" name="drawer_tex_lam" file="assets/drawer/laminate.png"/>
+    <texture type="2d" name="drawer_tex_metal" file="assets/drawer/metal.png"/>
+    <material name="drawer_lam_mat" texture="drawer_tex_lam" shininess="0.1" reflectance="0.1"/>
+    <material name="drawer_face_mat" texture="drawer_tex_lam" shininess="0.1" reflectance="0.1"/>
+    <material name="drawer_handle_mat" texture="drawer_tex_metal" shininess="0.8" reflectance="0.8"/>
+    <texture type="2d" name="single-cabinet_tex_body" file="assets/cabinet/laminate.png"/>
+    <texture type="2d" name="single-cabinet_tex_metal" file="assets/cabinet/metal.png"/>
+    <material name="single-cabinet_body_mat" texture="single-cabinet_tex_body" shininess="0.1" reflectance="0.1"/>
+    <material name="single-cabinet_door_mat" texture="single-cabinet_tex_body" shininess="0.1" reflectance="0.1"/>
+    <material name="single-cabinet_handle_mat" texture="single-cabinet_tex_metal" shininess="0.8" reflectance="0.8"/>
+    <texture type="2d" name="gr-countertop-marble" file="assets/counter/marble.png"/>
+    <material name="gr-countertop-granite" texture="gr-countertop-marble" texuniform="true" texrepeat="3 3" shininess="0.1" reflectance="0.1"/>
+    <texture type="2d" name="sink-wide_tex_model" file="assets/sink_wide/image0.png"/>
+    <texture type="2d" name="sink-wide_tex_sink" file="assets/sink_wide/image0.png"/>
+    <material name="sink-wide_model_mat" texture="sink-wide_tex_model" reflectance="0.5"/>
+    <material name="sink-wide_sink_mat" texture="sink-wide_tex_sink" shininess="0.25"/>
+    <mesh name="sink-wide_bowl_vis" file="assets/sink_wide/model_0.obj" scale="0.647059 0.647059 0.647059"/>
+    <mesh name="sink-wide_spout_vis" file="assets/sink_wide/spout_0.obj" scale="0.647059 0.647059 0.647059"/>
+    <mesh name="sink-wide_handle_vis" file="assets/sink_wide/handle_0.obj" scale="0.647059 0.647059 0.647059"/>
+    <texture type="2d" name="oven_tex_body" file="assets/oven/paint.png"/>
+    <material name="oven_glass_mat" shininess="1" rgba="0.103704 0.103704 0.103704 0.25"/>
+    <material name="oven_body_mat" texture="oven_tex_body" shininess="0.25"/>
+    <!--main chassis and knob meshes-->
+    <mesh name="oven_body_vis0" file="assets/oven/model_0.obj" scale="1.2 1.2 1.2"/>
+    <mesh name="oven_body_vis1" file="assets/oven/model_1.obj" scale="1.2 1.2 1.2"/>
+    <mesh name="oven_knob_rc_vis" file="assets/oven/knob_rear_center.obj" scale="1.2 1.2 1.2"/>
+    <mesh name="oven_knob_rr_vis" file="assets/oven/knob_rear_right.obj" scale="1.2 1.2 1.2"/>
+    <mesh name="oven_knob_fl_vis" file="assets/oven/knob_front_left.obj" scale="1.2 1.2 1.2"/>
+    <mesh name="oven_knob_fr_vis" file="assets/oven/knob_front_right.obj" scale="1.2 1.2 1.2"/>
+    <mesh name="oven_knob_rl_vis" file="assets/oven/knob_rear_left.obj" scale="1.2 1.2 1.2"/>
+    <texture type="2d" name="mw_tex_0" file="assets/microwave/tex_2.png"/>
+    <texture type="2d" name="mw_tex_1" file="assets/microwave/tex_0.png"/>
+    <texture type="2d" name="mw_tex_2" file="assets/microwave/tex_1.png"/>
+    <material name="mw_mat_0" texture="mw_tex_0" shininess="0.25"/>
+    <material name="mw_mat_1" texture="mw_tex_1" shininess="0.25"/>
+    <material name="mw_mat_2" texture="mw_tex_2" shininess="0.25"/>
+    <!--chassis meshes-->
+    <mesh name="mw_vis0" file="assets/microwave/model_0.obj" scale="0.791753 0.515464 0.791753"/>
+    <mesh name="mw_vis1" file="assets/microwave/model_1.obj" scale="0.791753 0.515464 0.791753"/>
+    <mesh name="mw_vis2" file="assets/microwave/model_2.obj" scale="0.791753 0.515464 0.791753"/>
+    <!--door meshes-->
+    <mesh name="mw_door0" file="assets/microwave/door_0.obj" scale="0.791753 0.515464 0.791753"/>
+    <mesh name="mw_door1" file="assets/microwave/door_1.obj" scale="0.791753 0.515464 0.791753"/>
+    <mesh name="mw_door2" file="assets/microwave/door_2.obj" scale="0.791753 0.515464 0.791753"/>
+    <!--textures-->
+    <texture type="2d" name="dw-basket" file="assets/dishwasher/basket.png"/>
+    <texture type="2d" name="dw-body" file="assets/dishwasher/body.png"/>
+    <texture type="2d" name="dw-bottom" file="assets/dishwasher/bottom.png"/>
+    <texture type="2d" name="dw-door" file="assets/dishwasher/door.png"/>
+    <texture type="2d" name="dw-middle" file="assets/dishwasher/middle.png"/>
+    <!--materials-->
+    <material name="dw-dishwasher" rgba="0.3 0.3 0.3 1"/>
+    <material name="dw-basket" texture="dw-basket" rgba="0.3 0.3 0.3 1"/>
+    <material name="dw-body" texture="dw-body"/>
+    <material name="dw-bottom" texture="dw-bottom"/>
+    <material name="dw-door" texture="dw-door"/>
+    <material name="dw-middle" texture="dw-middle"/>
+    <!--meshes – visual-->
+    <mesh name="dw-dish_washer_body_001" file="assets/dishwasher/visual/dish_washer_body_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_door_001" file="assets/dishwasher/visual/dish_washer_door_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_mid_001" file="assets/dishwasher/visual/dish_washer_mid_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_mid_sprinkle" file="assets/dishwasher/visual/dish_washer_mid_sprinkle.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_bottom_001" file="assets/dishwasher/visual/dish_washer_bottom_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_bottom_wheel" file="assets/dishwasher/visual/dish_washer_bottom_wheel.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_bottom_plates_holder_001" file="assets/dishwasher/visual/dish_washer_bottom_plates_holder_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-dish_washer_bottom_cuttlery_basket_001" file="assets/dishwasher/visual/dish_washer_bottom_cuttlery_basket_001.obj" scale="1.0 1.0 1.0"/>
+    <!--meshes – collision (parameterised helper)-->
+    <mesh name="dw-collision_door_001" file="assets/dishwasher/collision/collision_door_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_003" file="assets/dishwasher/collision/collision_door_003.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_004" file="assets/dishwasher/collision/collision_door_004.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_006" file="assets/dishwasher/collision/collision_door_006.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_007" file="assets/dishwasher/collision/collision_door_007.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_008" file="assets/dishwasher/collision/collision_door_008.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_door_009" file="assets/dishwasher/collision/collision_door_009.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_001" file="assets/dishwasher/collision/collision_tray_mid_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_002" file="assets/dishwasher/collision/collision_tray_mid_002.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_003" file="assets/dishwasher/collision/collision_tray_mid_003.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_004" file="assets/dishwasher/collision/collision_tray_mid_004.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_005" file="assets/dishwasher/collision/collision_tray_mid_005.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_006" file="assets/dishwasher/collision/collision_tray_mid_006.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_007" file="assets/dishwasher/collision/collision_tray_mid_007.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_008" file="assets/dishwasher/collision/collision_tray_mid_008.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_009" file="assets/dishwasher/collision/collision_tray_mid_009.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_010" file="assets/dishwasher/collision/collision_tray_mid_010.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_011" file="assets/dishwasher/collision/collision_tray_mid_011.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_012" file="assets/dishwasher/collision/collision_tray_mid_012.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_013" file="assets/dishwasher/collision/collision_tray_mid_013.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_014" file="assets/dishwasher/collision/collision_tray_mid_014.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_015" file="assets/dishwasher/collision/collision_tray_mid_015.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_016" file="assets/dishwasher/collision/collision_tray_mid_016.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_017" file="assets/dishwasher/collision/collision_tray_mid_017.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_018" file="assets/dishwasher/collision/collision_tray_mid_018.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_019" file="assets/dishwasher/collision/collision_tray_mid_019.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_020" file="assets/dishwasher/collision/collision_tray_mid_020.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_021" file="assets/dishwasher/collision/collision_tray_mid_021.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_022" file="assets/dishwasher/collision/collision_tray_mid_022.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_023" file="assets/dishwasher/collision/collision_tray_mid_023.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_024" file="assets/dishwasher/collision/collision_tray_mid_024.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_025" file="assets/dishwasher/collision/collision_tray_mid_025.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_026" file="assets/dishwasher/collision/collision_tray_mid_026.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_mid_027" file="assets/dishwasher/collision/collision_tray_mid_027.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_001" file="assets/dishwasher/collision/collision_tray_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_002" file="assets/dishwasher/collision/collision_tray_002.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_003" file="assets/dishwasher/collision/collision_tray_003.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_004" file="assets/dishwasher/collision/collision_tray_004.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_005" file="assets/dishwasher/collision/collision_tray_005.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_006" file="assets/dishwasher/collision/collision_tray_006.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_007" file="assets/dishwasher/collision/collision_tray_007.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_008" file="assets/dishwasher/collision/collision_tray_008.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_009" file="assets/dishwasher/collision/collision_tray_009.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_010" file="assets/dishwasher/collision/collision_tray_010.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_011" file="assets/dishwasher/collision/collision_tray_011.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_012" file="assets/dishwasher/collision/collision_tray_012.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_013" file="assets/dishwasher/collision/collision_tray_013.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_014" file="assets/dishwasher/collision/collision_tray_014.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_015" file="assets/dishwasher/collision/collision_tray_015.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_016" file="assets/dishwasher/collision/collision_tray_016.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_017" file="assets/dishwasher/collision/collision_tray_017.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_018" file="assets/dishwasher/collision/collision_tray_018.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_019" file="assets/dishwasher/collision/collision_tray_019.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_020" file="assets/dishwasher/collision/collision_tray_020.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_021" file="assets/dishwasher/collision/collision_tray_021.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_022" file="assets/dishwasher/collision/collision_tray_022.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_023" file="assets/dishwasher/collision/collision_tray_023.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_024" file="assets/dishwasher/collision/collision_tray_024.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_025" file="assets/dishwasher/collision/collision_tray_025.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_026" file="assets/dishwasher/collision/collision_tray_026.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_027" file="assets/dishwasher/collision/collision_tray_027.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_028" file="assets/dishwasher/collision/collision_tray_028.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_029" file="assets/dishwasher/collision/collision_tray_029.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_030" file="assets/dishwasher/collision/collision_tray_030.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_031" file="assets/dishwasher/collision/collision_tray_031.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_032" file="assets/dishwasher/collision/collision_tray_032.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_tray_033" file="assets/dishwasher/collision/collision_tray_033.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_001" file="assets/dishwasher/collision/collision_holder_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_002" file="assets/dishwasher/collision/collision_holder_002.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_003" file="assets/dishwasher/collision/collision_holder_003.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_004" file="assets/dishwasher/collision/collision_holder_004.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_005" file="assets/dishwasher/collision/collision_holder_005.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_006" file="assets/dishwasher/collision/collision_holder_006.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_007" file="assets/dishwasher/collision/collision_holder_007.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_008" file="assets/dishwasher/collision/collision_holder_008.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_009" file="assets/dishwasher/collision/collision_holder_009.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_010" file="assets/dishwasher/collision/collision_holder_010.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_011" file="assets/dishwasher/collision/collision_holder_011.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_012" file="assets/dishwasher/collision/collision_holder_012.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_013" file="assets/dishwasher/collision/collision_holder_013.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_holder_014" file="assets/dishwasher/collision/collision_holder_014.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_mid_sprinkle" file="assets/dishwasher/collision/collision_dish_washer_mid_sprinkle.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_001" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_001.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_002" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_002.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_003" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_003.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_004" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_004.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_005" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_005.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_006" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_006.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_007" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_007.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_008" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_008.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_009" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_009.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_010" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_010.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_011" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_011.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_012" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_012.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_013" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_013.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_014" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_014.obj" scale="1.0 1.0 1.0"/>
+    <mesh name="dw-collision_dish_washer_bottom_basket_015" file="assets/dishwasher/collision/collision_dish_washer_bottom_basket_015.obj" scale="1.0 1.0 1.0"/>
+    <mesh file="assets/fridge/visuals/Body001.obj" name="fr/Body001_vis"/>
+    <mesh file="assets/fridge/visuals/Body002.obj" name="fr/Body002_vis"/>
+    <mesh file="assets/fridge/visuals/Door001.obj" name="fr/Door001_vis"/>
+    <mesh file="assets/fridge/visuals/Door001_Clear.obj" name="fr/Door001_Clear_vis"/>
+    <mesh file="assets/fridge/visuals/Drawer001.obj" name="fr/Drawer001_vis"/>
+    <mesh file="assets/fridge/visuals/Drawer002.obj" name="fr/Drawer002_vis"/>
+    <texture file="assets/fridge/visuals/T_BC001.png" name="fr/Body001_material" type="2d"/>
+    <material name="fr/Body001_material" rgba="1 1 1 1.0" texture="fr/Body001_material" shininess="0.31350553035736084" specular="0.3103448502657381"/>
+    <texture file="assets/fridge/visuals/T_BC001.png" name="fr/Body002_material" type="2d"/>
+    <material name="fr/Body002_material" rgba="1 1 1 1.0" texture="fr/Body002_material" shininess="0.31350553035736084" specular="0.3103448502657381"/>
+    <texture file="assets/fridge/visuals/T_BC001.png" name="fr/Door001_material" type="2d"/>
+    <material name="fr/Door001_material" rgba="1 1 1 1.0" texture="fr/Door001_material" shininess="0.31350553035736084" specular="0.3103448502657381"/>
+    <texture file="assets/fridge/visuals/T_BC001.png" name="fr/Drawer001_material" type="2d"/>
+    <material name="fr/Drawer001_material" rgba="1 1 1 1.0" texture="fr/Drawer001_material" shininess="0.31350553035736084" specular="0.3103448502657381"/>
+    <texture file="assets/fridge/visuals/T_BC001.png" name="fr/Drawer002_material" type="2d"/>
+    <material name="fr/Drawer002_material" rgba="1 1 1 1.0" texture="fr/Drawer002_material" shininess="0.31350553035736084" specular="0.3103448502657381"/>
+    <material name="fr/Door001_Clear_material" rgba="0.800000011920929 0.800000011920929 0.800000011920929 0.08733627200126648" shininess="0.5" specular="0.3103448502657381"/>
+  </asset>
+  <default>
+    <default class="dw">
+      <default class="dw-visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="0" mass="0"/>
+      </default>
+      <default class="dw-collision">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1"/>
+      </default>
+      <default class="dw-collision_basket">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1"/>
+      </default>
+      <default class="dw-collision_holder">
+        <geom type="mesh" group="3" friction="0.1" solimp="0.998 0.998 0.001" solref="0.004 1" density="1"/>
+      </default>
+    </default>
+    <default class="fr">
+      <default class="fr-visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="0"/>
+      </default>
+      <default class="fr-collision">
+        <geom group="3" rgba="0.5 0 0 0.5"/>
+      </default>
+      <default class="fr-region">
+        <geom group="0" contype="0" conaffinity="0" rgba="0 1 0 0"/>
+      </default>
+    </default>
+  </default>
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+    <body name="wall_room" pos="1.15 0.02 1.5" quat="-0.707107 0.707107 0 0">
+      <geom name="wall_room_panel_col" size="2.3 1.5 0.02" type="box" group="3" rgba="0.5 0 0 1"/>
+      <geom name="wall_room_panel_vis" size="2.3 1.5 0.02" type="box" contype="0" conaffinity="0" group="0" mass="0" material="wall_paint_mat"/>
+    </body>
+    <body name="right_wall_room" pos="3.15 -1.2 1.5" quat="0.5 -0.5 -0.5 0.5">
+      <geom name="right_wall_room_panel_col" size="1.4 1.5 0.02" type="box" group="3" rgba="0.5 0 0 1"/>
+      <geom name="right_wall_room_panel_vis" size="1.4 1.5 0.02" type="box" contype="0" conaffinity="0" group="0" mass="0" material="wall_paint_mat"/>
+    </body>
+    <body name="cabinet_A" pos="-0.3 -0.20 2.0" quat="1 0 0 0">
+      <body name="cabinet_A_main">
+        <!-- ========= cabinet carcass – collisions (group 3) ========= -->
+        <geom name="cabinet_A_top" size="0.5 0.185 0.015" pos="0 0.015 0.445" type="box" group="3" density="10"/>
+        <geom name="cabinet_A_bottom" size="0.5 0.185 0.015" pos="0 0.015 -0.445" type="box" group="3" density="10"/>
+        <geom name="cabinet_A_back" size="0.47 0.015 0.43" pos="0 0.185 0" type="box" group="3" density="10"/>
+        <geom name="cabinet_A_right" size="0.015 0.185 0.43" pos="0.485 0.015 0" type="box" group="3" density="10"/>
+        <geom name="cabinet_A_left" size="0.015 0.185 0.43" pos="-0.485 0.015 0" type="box" group="3" density="10"/>
+        <geom name="cabinet_A_shelf" size="0.47 0.15 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+        <!-- ========= cabinet carcass – visuals (group 0) ============ -->
+        <geom name="cabinet_A_top_v" size="0.5 0.185 0.015" pos="0 0.015 0.445" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_A_bottom_v" size="0.5 0.185 0.015" pos="0 0.015 -0.445" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_A_back_v" size="0.47 0.015 0.43" pos="0 0.185 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_A_right_v" size="0.015 0.185 0.43" pos="0.485 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_A_left_v" size="0.015 0.185 0.43" pos="-0.485 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_A_shelf_v" size="0.47 0.15 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <!-- =========================================================== -->
+        <!--                     LEFT  DOOR                              -->
+        <!-- =========================================================== -->
+        <body name="cabinet_A_left_hinge">
+          <joint name="cabinet_A_leftdoor_hinge" pos="-0.485 -0.2 0" axis="0 0 1" limited="true" range="-3 0" damping="2"/>
+          <body name="cabinet_A_left_door" pos="-0.25 -0.185 0">
+            <!-- door slab – collision & visual  -->
+            <geom name="cabinet_A_left_door_col" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+            <geom name="cabinet_A_left_door_vis" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- decorative trims (visual only) -->
+            <geom name="cabinet_A_lt_trim_top" size="0.1685 0.04 0.01" pos="0 -0.0025  0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_A_lt_trim_bottom" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_A_lt_trim_left" size="0.04 0.4585 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_A_lt_trim_right" size="0.04 0.4585 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- handle -->
+            <body name="cabinet_A_left_handle" pos="0.1985 0 -0.2585">
+              <geom name="cabinet_A_lh_bar" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+              <geom name="cabinet_A_lh_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_A_lh_pin_t" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_A_lh_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_A_lh_pin_b" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_A_lh_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+            </body>
+          </body>
+        </body>
+        <!-- =========================================================== -->
+        <!--                     RIGHT DOOR                              -->
+        <!-- =========================================================== -->
+        <body name="cabinet_A_right_hinge">
+          <joint name="cabinet_A_rightdoor_hinge" pos="0.485 -0.2 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+          <body name="cabinet_A_right_door" pos="0.25 -0.185 0">
+            <!-- collision & visual for slab -->
+            <geom name="cabinet_A_right_door_col" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+            <geom name="cabinet_A_right_door_vis" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- same trims as left door -->
+            <geom name="cabinet_A_rt_trim_top" size="0.1685 0.04 0.01" pos="0 -0.0025 0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_A_rt_trim_bottom" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_A_rt_trim_left" size="0.04 0.4585 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_A_rt_trim_right" size="0.04 0.4585 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- handle mirrored across X -->
+            <body name="cabinet_A_right_handle" pos="-0.1985 0 -0.2585">
+              <geom name="cabinet_A_rh_bar" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+              <geom name="cabinet_A_rh_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_A_rh_pin_t" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_A_rh_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_A_rh_pin_b" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_A_rh_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="cabinet_B" pos="2.0 -0.20 2.0" quat="1 0 0 0">
+      <body name="cabinet_B_main">
+        <!-- ========= cabinet carcass – collisions (group 3) ========= -->
+        <geom name="cabinet_B_top" size="0.5 0.185 0.015" pos="0 0.015 0.445" type="box" group="3" density="10"/>
+        <geom name="cabinet_B_bottom" size="0.5 0.185 0.015" pos="0 0.015 -0.445" type="box" group="3" density="10"/>
+        <geom name="cabinet_B_back" size="0.47 0.015 0.43" pos="0 0.185 0" type="box" group="3" density="10"/>
+        <geom name="cabinet_B_right" size="0.015 0.185 0.43" pos="0.485 0.015 0" type="box" group="3" density="10"/>
+        <geom name="cabinet_B_left" size="0.015 0.185 0.43" pos="-0.485 0.015 0" type="box" group="3" density="10"/>
+        <geom name="cabinet_B_shelf" size="0.47 0.15 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+        <!-- ========= cabinet carcass – visuals (group 0) ============ -->
+        <geom name="cabinet_B_top_v" size="0.5 0.185 0.015" pos="0 0.015 0.445" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_B_bottom_v" size="0.5 0.185 0.015" pos="0 0.015 -0.445" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_B_back_v" size="0.47 0.015 0.43" pos="0 0.185 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_B_right_v" size="0.015 0.185 0.43" pos="0.485 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_B_left_v" size="0.015 0.185 0.43" pos="-0.485 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_B_shelf_v" size="0.47 0.15 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <!-- =========================================================== -->
+        <!--                     LEFT  DOOR                              -->
+        <!-- =========================================================== -->
+        <body name="cabinet_B_left_hinge">
+          <joint name="cabinet_B_leftdoor_hinge" pos="-0.485 -0.2 0" axis="0 0 1" limited="true" range="-3 0" damping="2"/>
+          <body name="cabinet_B_left_door" pos="-0.25 -0.185 0">
+            <!-- door slab – collision & visual  -->
+            <geom name="cabinet_B_left_door_col" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+            <geom name="cabinet_B_left_door_vis" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- decorative trims (visual only) -->
+            <geom name="cabinet_B_lt_trim_top" size="0.1685 0.04 0.01" pos="0 -0.0025  0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_B_lt_trim_bottom" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_B_lt_trim_left" size="0.04 0.4585 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_B_lt_trim_right" size="0.04 0.4585 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- handle -->
+            <body name="cabinet_B_left_handle" pos="0.1985 0 -0.2585">
+              <geom name="cabinet_B_lh_bar" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+              <geom name="cabinet_B_lh_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_B_lh_pin_t" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_B_lh_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_B_lh_pin_b" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_B_lh_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+            </body>
+          </body>
+        </body>
+        <!-- =========================================================== -->
+        <!--                     RIGHT DOOR                              -->
+        <!-- =========================================================== -->
+        <body name="cabinet_B_right_hinge">
+          <joint name="cabinet_B_rightdoor_hinge" pos="0.485 -0.2 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+          <body name="cabinet_B_right_door" pos="0.25 -0.185 0">
+            <!-- collision & visual for slab -->
+            <geom name="cabinet_B_right_door_col" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+            <geom name="cabinet_B_right_door_vis" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- same trims as left door -->
+            <geom name="cabinet_B_rt_trim_top" size="0.1685 0.04 0.01" pos="0 -0.0025 0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_B_rt_trim_bottom" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_B_rt_trim_left" size="0.04 0.4585 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_B_rt_trim_right" size="0.04 0.4585 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- handle mirrored across X -->
+            <body name="cabinet_B_right_handle" pos="-0.1985 0 -0.2585">
+              <geom name="cabinet_B_rh_bar" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+              <geom name="cabinet_B_rh_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_B_rh_pin_t" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_B_rh_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_B_rh_pin_b" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_B_rh_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="cabinet_C" pos="2.91031 -0.65 2.0" quat="0.7071068 0 0 -0.7071068">
+      <body name="cabinet_C_main">
+        <!-- ========= cabinet carcass – collisions (group 3) ========= -->
+        <geom name="cabinet_C_top" size="0.5 0.185 0.015" pos="0 0.015 0.445" type="box" group="3" density="10"/>
+        <geom name="cabinet_C_bottom" size="0.5 0.185 0.015" pos="0 0.015 -0.445" type="box" group="3" density="10"/>
+        <geom name="cabinet_C_back" size="0.47 0.015 0.43" pos="0 0.185 0" type="box" group="3" density="10"/>
+        <geom name="cabinet_C_right" size="0.015 0.185 0.43" pos="0.485 0.015 0" type="box" group="3" density="10"/>
+        <geom name="cabinet_C_left" size="0.015 0.185 0.43" pos="-0.485 0.015 0" type="box" group="3" density="10"/>
+        <geom name="cabinet_C_shelf" size="0.47 0.15 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+        <!-- ========= cabinet carcass – visuals (group 0) ============ -->
+        <geom name="cabinet_C_top_v" size="0.5 0.185 0.015" pos="0 0.015 0.445" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_C_bottom_v" size="0.5 0.185 0.015" pos="0 0.015 -0.445" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_C_back_v" size="0.47 0.015 0.43" pos="0 0.185 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_C_right_v" size="0.015 0.185 0.43" pos="0.485 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_C_left_v" size="0.015 0.185 0.43" pos="-0.485 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <geom name="cabinet_C_shelf_v" size="0.47 0.15 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_body_mat"/>
+        <!-- =========================================================== -->
+        <!--                     LEFT  DOOR                              -->
+        <!-- =========================================================== -->
+        <body name="cabinet_C_left_hinge">
+          <joint name="cabinet_C_leftdoor_hinge" pos="-0.485 -0.2 0" axis="0 0 1" limited="true" range="-3 0" damping="2"/>
+          <body name="cabinet_C_left_door" pos="-0.25 -0.185 0">
+            <!-- door slab – collision & visual  -->
+            <geom name="cabinet_C_left_door_col" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+            <geom name="cabinet_C_left_door_vis" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- decorative trims (visual only) -->
+            <geom name="cabinet_C_lt_trim_top" size="0.1685 0.04 0.01" pos="0 -0.0025  0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_C_lt_trim_bottom" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_C_lt_trim_left" size="0.04 0.4585 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_C_lt_trim_right" size="0.04 0.4585 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- handle -->
+            <body name="cabinet_C_left_handle" pos="0.1985 0 -0.2585">
+              <geom name="cabinet_C_lh_bar" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+              <geom name="cabinet_C_lh_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_C_lh_pin_t" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_C_lh_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_C_lh_pin_b" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_C_lh_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+            </body>
+          </body>
+        </body>
+        <!-- =========================================================== -->
+        <!--                     RIGHT DOOR                              -->
+        <!-- =========================================================== -->
+        <body name="cabinet_C_right_hinge">
+          <joint name="cabinet_C_rightdoor_hinge" pos="0.485 -0.2 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+          <body name="cabinet_C_right_door" pos="0.25 -0.185 0">
+            <!-- collision & visual for slab -->
+            <geom name="cabinet_C_right_door_col" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+            <geom name="cabinet_C_right_door_vis" size="0.1685 0.3785 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- same trims as left door -->
+            <geom name="cabinet_C_rt_trim_top" size="0.1685 0.04 0.01" pos="0 -0.0025 0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_C_rt_trim_bottom" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.4185" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_C_rt_trim_left" size="0.04 0.4585 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <geom name="cabinet_C_rt_trim_right" size="0.04 0.4585 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="cab_door_mat"/>
+            <!-- handle mirrored across X -->
+            <body name="cabinet_C_right_handle" pos="-0.1985 0 -0.2585">
+              <geom name="cabinet_C_rh_bar" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+              <geom name="cabinet_C_rh_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_C_rh_pin_t" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_C_rh_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+              <geom name="cabinet_C_rh_pin_b" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+              <geom name="cabinet_C_rh_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="cab_handle_mat"/>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="stack_A" pos="-0.75 -0.3 0.00" quat="1 0 0 0">
+      <body name="stack_A_drawer" pos="0 0 0.78" quat="1 0 0 0">
+        <!-- ========== OUTER FRAME ========== -->
+        <body name="stack_A_drawer_frame">
+          <!-- collisions -->
+          <geom name="stack_A_drawer_top_col" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" group="3" mass="0.2"/>
+          <geom name="stack_A_drawer_bottom_col" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" group="3" mass="0.2"/>
+          <geom name="stack_A_drawer_back_col" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_A_drawer_right_col" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_A_drawer_left_col" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+          <!-- visuals -->
+          <geom name="stack_A_drawer_top_v" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_A_drawer_bottom_v" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_A_drawer_back_v" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_A_drawer_right_v" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_A_drawer_left_v" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <!-- ========== SLIDING BOX ========== -->
+          <body name="stack_A_drawer_box">
+            <joint name="stack_A_drawer_slide" type="slide" axis="0 1 0" pos="0 -0.3 0" limited="true" range="-0.5 0" damping="10"/>
+            <!-- collisions -->
+            <geom name="stack_A_drawer_ibox_col" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" group="3" mass="0.2"/>
+            <geom name="stack_A_drawer_iback_col" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_A_drawer_iright_col" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_A_drawer_ileft_col" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" group="3" mass="0.2"/>
+            <!-- visuals -->
+            <geom name="stack_A_drawer_ibox_v" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_A_drawer_iback_v" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_A_drawer_iright_v" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_A_drawer_ileft_v" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <!-- ========== FACE PANEL ========== -->
+            <body name="stack_A_drawer_face" pos="0 -0.285 0">
+              <geom name="stack_A_drawer_face_col" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_A_drawer_face_v" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- horizontal trims -->
+              <geom name="stack_A_drawer_trim_t_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_A_drawer_trim_b_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 -0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- vertical trims -->
+              <geom name="stack_A_drawer_trim_l_v" size="0.04 0.1035 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_A_drawer_trim_r_v" size="0.04 0.1035 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- handle -->
+              <body name="stack_A_drawer_handle">
+                <geom name="stack_A_drawer_bar_col" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" group="3" density="10"/>
+                <geom name="stack_A_drawer_bar_v" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_A_drawer_pin_t_v" type="cylinder" size="0.008 0.025" pos="0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_A_drawer_pin_b_v" type="cylinder" size="0.008 0.025" pos="-0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_A_cab" pos="0 0 0.362" quat="1 0 0 0">
+        <body name="stack_A_cab_main">
+          <!-- carcass collisions (group 3) -->
+          <geom name="stack_A_cab_top_col" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_A_cab_bottom_col" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_A_cab_back_col" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_A_cab_right_col" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_A_cab_left_col" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_A_cab_shelf_col" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+          <!-- carcass visuals (group 0) -->
+          <geom name="stack_A_cab_top_v" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_A_cab_bottom_v" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_A_cab_back_v" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_A_cab_right_v" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_A_cab_left_v" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_A_cab_shelf_v" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <body name="stack_A_cab_hinge">
+            <joint name="stack_A_cab_door_hinge" pos="0.235 -0.3 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+            <body name="stack_A_cab_door" pos="0 -0.285 0">
+              <!-- door slab -->
+              <geom name="stack_A_cab_door_col" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_A_cab_door_v" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- decorative trims (visual only) -->
+              <geom name="stack_A_cab_trim_top_v" size="0.1685 0.04 0.01" pos="0 -0.0025 0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_A_cab_trim_bottom_v" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_A_cab_trim_left_v" size="0.04 0.3135 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_A_cab_trim_right_v" size="0.04 0.3135 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- handle -->
+              <body name="stack_A_cab_handle" pos="-0.1985 0 0.1135">
+                <geom name="stack_A_cab_handle_bar_col" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                <geom name="stack_A_cab_handle_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_A_cab_pin_t_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_A_cab_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_A_cab_pin_b_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_A_cab_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_A_bar" pos="0 0 0.025">
+        <geom name="stack_A_bar_bar_geom" type="box" size="0.25 0.25 0.025" density="1000" material="single-cabinet_body_mat"/>
+      </body>
+    </body>
+    <body name="stack_B" pos="0.51 -0.3 0.00" quat="1 0 0 0">
+      <body name="stack_B_drawer" pos="0 0 0.78" quat="1 0 0 0">
+        <!-- ========== OUTER FRAME ========== -->
+        <body name="stack_B_drawer_frame">
+          <!-- ========== SLIDING BOX ========== -->
+          <body name="stack_B_drawer_box">
+            <!-- ========== FACE PANEL ========== -->
+            <body name="stack_B_drawer_face" pos="0 -0.285 0">
+              <geom name="stack_B_drawer_face_col" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_B_drawer_face_v" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- horizontal trims -->
+              <geom name="stack_B_drawer_trim_t_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_B_drawer_trim_b_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 -0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- vertical trims -->
+              <geom name="stack_B_drawer_trim_l_v" size="0.04 0.1035 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_B_drawer_trim_r_v" size="0.04 0.1035 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- handle -->
+              <body name="stack_B_drawer_handle">
+                <geom name="stack_B_drawer_bar_col" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" group="3" density="10"/>
+                <geom name="stack_B_drawer_bar_v" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_B_drawer_pin_t_v" type="cylinder" size="0.008 0.025" pos="0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_B_drawer_pin_b_v" type="cylinder" size="0.008 0.025" pos="-0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_B_cab" pos="0 0 0.362" quat="1 0 0 0">
+        <body name="stack_B_cab_main">
+          <!-- carcass collisions (group 3) -->
+          <geom name="stack_B_cab_top_col" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_B_cab_bottom_col" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_B_cab_back_col" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_B_cab_right_col" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_B_cab_left_col" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_B_cab_shelf_col" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+          <!-- carcass visuals (group 0) -->
+          <geom name="stack_B_cab_top_v" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_B_cab_bottom_v" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_B_cab_back_v" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_B_cab_right_v" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_B_cab_left_v" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_B_cab_shelf_v" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <body name="stack_B_cab_hinge">
+            <joint name="stack_B_cab_door_hinge" pos="0.235 -0.3 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+            <body name="stack_B_cab_door" pos="0 -0.285 0">
+              <!-- door slab -->
+              <geom name="stack_B_cab_door_col" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_B_cab_door_v" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- decorative trims (visual only) -->
+              <geom name="stack_B_cab_trim_top_v" size="0.1685 0.04 0.01" pos="0 -0.0025 0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_B_cab_trim_bottom_v" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_B_cab_trim_left_v" size="0.04 0.3135 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_B_cab_trim_right_v" size="0.04 0.3135 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- handle -->
+              <body name="stack_B_cab_handle" pos="-0.1985 0 0.1135">
+                <geom name="stack_B_cab_handle_bar_col" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                <geom name="stack_B_cab_handle_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_B_cab_pin_t_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_B_cab_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_B_cab_pin_b_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_B_cab_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_B_bar" pos="0 0 0.025">
+        <geom name="stack_B_bar_bar_geom" type="box" size="0.25 0.25 0.025" density="1000" material="single-cabinet_body_mat"/>
+      </body>
+    </body>
+    <body name="stack_C" pos="1.02 -0.3 0.00" quat="1 0 0 0">
+      <body name="stack_C_drawer" pos="0 0 0.78" quat="1 0 0 0">
+        <!-- ========== OUTER FRAME ========== -->
+        <body name="stack_C_drawer_frame">
+          <!-- ========== SLIDING BOX ========== -->
+          <body name="stack_C_drawer_box">
+            <!-- ========== FACE PANEL ========== -->
+            <body name="stack_C_drawer_face" pos="0 -0.285 0">
+              <geom name="stack_C_drawer_face_col" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_C_drawer_face_v" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- horizontal trims -->
+              <geom name="stack_C_drawer_trim_t_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_C_drawer_trim_b_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 -0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- vertical trims -->
+              <geom name="stack_C_drawer_trim_l_v" size="0.04 0.1035 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_C_drawer_trim_r_v" size="0.04 0.1035 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- handle -->
+              <body name="stack_C_drawer_handle">
+                <geom name="stack_C_drawer_bar_col" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" group="3" density="10"/>
+                <geom name="stack_C_drawer_bar_v" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_C_drawer_pin_t_v" type="cylinder" size="0.008 0.025" pos="0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_C_drawer_pin_b_v" type="cylinder" size="0.008 0.025" pos="-0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_C_cab" pos="0 0 0.362" quat="1 0 0 0">
+        <body name="stack_C_cab_main">
+          <!-- carcass collisions (group 3) -->
+          <geom name="stack_C_cab_top_col" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_C_cab_bottom_col" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_C_cab_back_col" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_C_cab_right_col" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_C_cab_left_col" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_C_cab_shelf_col" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+          <!-- carcass visuals (group 0) -->
+          <geom name="stack_C_cab_top_v" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_C_cab_bottom_v" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_C_cab_back_v" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_C_cab_right_v" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_C_cab_left_v" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_C_cab_shelf_v" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <body name="stack_C_cab_hinge">
+            <joint name="stack_C_cab_door_hinge" pos="0.235 -0.3 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+            <body name="stack_C_cab_door" pos="0 -0.285 0">
+              <!-- door slab -->
+              <geom name="stack_C_cab_door_col" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_C_cab_door_v" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- decorative trims (visual only) -->
+              <geom name="stack_C_cab_trim_top_v" size="0.1685 0.04 0.01" pos="0 -0.0025 0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_C_cab_trim_bottom_v" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_C_cab_trim_left_v" size="0.04 0.3135 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_C_cab_trim_right_v" size="0.04 0.3135 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- handle -->
+              <body name="stack_C_cab_handle" pos="-0.1985 0 0.1135">
+                <geom name="stack_C_cab_handle_bar_col" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                <geom name="stack_C_cab_handle_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_C_cab_pin_t_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_C_cab_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_C_cab_pin_b_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_C_cab_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_C_bar" pos="0 0 0.025">
+        <geom name="stack_C_bar_bar_geom" type="box" size="0.25 0.25 0.025" density="1000" material="single-cabinet_body_mat"/>
+      </body>
+    </body>
+    <body name="stack_D" pos="1.53 -0.3 0.00" quat="1 0 0 0">
+      <body name="stack_D_drawer" pos="0 0 0.78" quat="1 0 0 0">
+        <!-- ========== OUTER FRAME ========== -->
+        <body name="stack_D_drawer_frame">
+          <!-- collisions -->
+          <geom name="stack_D_drawer_top_col" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" group="3" mass="0.2"/>
+          <geom name="stack_D_drawer_bottom_col" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" group="3" mass="0.2"/>
+          <geom name="stack_D_drawer_back_col" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_D_drawer_right_col" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_D_drawer_left_col" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+          <!-- visuals -->
+          <geom name="stack_D_drawer_top_v" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_D_drawer_bottom_v" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_D_drawer_back_v" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_D_drawer_right_v" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_D_drawer_left_v" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <!-- ========== SLIDING BOX ========== -->
+          <body name="stack_D_drawer_box">
+            <joint name="stack_D_drawer_slide" type="slide" axis="0 1 0" pos="0 -0.3 0" limited="true" range="-0.5 0" damping="10"/>
+            <!-- collisions -->
+            <geom name="stack_D_drawer_ibox_col" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_drawer_iback_col" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_drawer_iright_col" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_D_drawer_ileft_col" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" group="3" mass="0.2"/>
+            <!-- visuals -->
+            <geom name="stack_D_drawer_ibox_v" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_D_drawer_iback_v" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_D_drawer_iright_v" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_D_drawer_ileft_v" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <!-- ========== FACE PANEL ========== -->
+            <body name="stack_D_drawer_face" pos="0 -0.285 0">
+              <geom name="stack_D_drawer_face_col" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_D_drawer_face_v" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- horizontal trims -->
+              <geom name="stack_D_drawer_trim_t_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_D_drawer_trim_b_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 -0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- vertical trims -->
+              <geom name="stack_D_drawer_trim_l_v" size="0.04 0.1035 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_D_drawer_trim_r_v" size="0.04 0.1035 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- handle -->
+              <body name="stack_D_drawer_handle">
+                <geom name="stack_D_drawer_bar_col" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" group="3" density="10"/>
+                <geom name="stack_D_drawer_bar_v" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_D_drawer_pin_t_v" type="cylinder" size="0.008 0.025" pos="0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_D_drawer_pin_b_v" type="cylinder" size="0.008 0.025" pos="-0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_D_cab" pos="0 0 0.362" quat="1 0 0 0">
+        <body name="stack_D_cab_main">
+          <!-- carcass collisions (group 3) -->
+          <geom name="stack_D_cab_top_col" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_D_cab_bottom_col" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_D_cab_back_col" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_D_cab_right_col" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_D_cab_left_col" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_D_cab_shelf_col" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+          <!-- carcass visuals (group 0) -->
+          <geom name="stack_D_cab_top_v" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_D_cab_bottom_v" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_D_cab_back_v" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_D_cab_right_v" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_D_cab_left_v" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_D_cab_shelf_v" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <body name="stack_D_cab_hinge">
+            <joint name="stack_D_cab_door_hinge" pos="0.235 -0.3 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+            <body name="stack_D_cab_door" pos="0 -0.285 0">
+              <!-- door slab -->
+              <geom name="stack_D_cab_door_col" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_D_cab_door_v" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- decorative trims (visual only) -->
+              <geom name="stack_D_cab_trim_top_v" size="0.1685 0.04 0.01" pos="0 -0.0025 0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_D_cab_trim_bottom_v" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_D_cab_trim_left_v" size="0.04 0.3135 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_D_cab_trim_right_v" size="0.04 0.3135 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- handle -->
+              <body name="stack_D_cab_handle" pos="-0.1985 0 0.1135">
+                <geom name="stack_D_cab_handle_bar_col" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                <geom name="stack_D_cab_handle_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_D_cab_pin_t_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_D_cab_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_D_cab_pin_b_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_D_cab_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_D_bar" pos="0 0 0.025">
+        <geom name="stack_D_bar_bar_geom" type="box" size="0.25 0.25 0.025" density="1000" material="single-cabinet_body_mat"/>
+      </body>
+    </body>
+    <body name="stack_E" pos="2.04 -0.3 0.00" quat="1 0 0 0">
+      <body name="stack_E_drawer" pos="0 0 0.78" quat="1 0 0 0">
+        <!-- ========== OUTER FRAME ========== -->
+        <body name="stack_E_drawer_frame">
+          <!-- collisions -->
+          <geom name="stack_E_drawer_top_col" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" group="3" mass="0.2"/>
+          <geom name="stack_E_drawer_bottom_col" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" group="3" mass="0.2"/>
+          <geom name="stack_E_drawer_back_col" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_E_drawer_right_col" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_E_drawer_left_col" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+          <!-- visuals -->
+          <geom name="stack_E_drawer_top_v" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_E_drawer_bottom_v" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_E_drawer_back_v" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_E_drawer_right_v" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_E_drawer_left_v" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <!-- ========== SLIDING BOX ========== -->
+          <body name="stack_E_drawer_box">
+            <joint name="stack_E_drawer_slide" type="slide" axis="0 1 0" pos="0 -0.3 0" limited="true" range="-0.5 0" damping="10"/>
+            <!-- collisions -->
+            <geom name="stack_E_drawer_ibox_col" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_drawer_iback_col" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_drawer_iright_col" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_E_drawer_ileft_col" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" group="3" mass="0.2"/>
+            <!-- visuals -->
+            <geom name="stack_E_drawer_ibox_v" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_E_drawer_iback_v" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_E_drawer_iright_v" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_E_drawer_ileft_v" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <!-- ========== FACE PANEL ========== -->
+            <body name="stack_E_drawer_face" pos="0 -0.285 0">
+              <geom name="stack_E_drawer_face_col" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_E_drawer_face_v" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- horizontal trims -->
+              <geom name="stack_E_drawer_trim_t_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_E_drawer_trim_b_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 -0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- vertical trims -->
+              <geom name="stack_E_drawer_trim_l_v" size="0.04 0.1035 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_E_drawer_trim_r_v" size="0.04 0.1035 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- handle -->
+              <body name="stack_E_drawer_handle">
+                <geom name="stack_E_drawer_bar_col" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" group="3" density="10"/>
+                <geom name="stack_E_drawer_bar_v" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_E_drawer_pin_t_v" type="cylinder" size="0.008 0.025" pos="0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_E_drawer_pin_b_v" type="cylinder" size="0.008 0.025" pos="-0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_E_cab" pos="0 0 0.362" quat="1 0 0 0">
+        <body name="stack_E_cab_main">
+          <!-- carcass collisions (group 3) -->
+          <geom name="stack_E_cab_top_col" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_E_cab_bottom_col" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_E_cab_back_col" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_E_cab_right_col" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_E_cab_left_col" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_E_cab_shelf_col" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+          <!-- carcass visuals (group 0) -->
+          <geom name="stack_E_cab_top_v" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_E_cab_bottom_v" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_E_cab_back_v" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_E_cab_right_v" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_E_cab_left_v" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_E_cab_shelf_v" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <body name="stack_E_cab_hinge">
+            <joint name="stack_E_cab_door_hinge" pos="0.235 -0.3 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+            <body name="stack_E_cab_door" pos="0 -0.285 0">
+              <!-- door slab -->
+              <geom name="stack_E_cab_door_col" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_E_cab_door_v" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- decorative trims (visual only) -->
+              <geom name="stack_E_cab_trim_top_v" size="0.1685 0.04 0.01" pos="0 -0.0025 0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_E_cab_trim_bottom_v" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_E_cab_trim_left_v" size="0.04 0.3135 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_E_cab_trim_right_v" size="0.04 0.3135 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- handle -->
+              <body name="stack_E_cab_handle" pos="-0.1985 0 0.1135">
+                <geom name="stack_E_cab_handle_bar_col" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                <geom name="stack_E_cab_handle_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_E_cab_pin_t_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_E_cab_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_E_cab_pin_b_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_E_cab_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_E_bar" pos="0 0 0.025">
+        <geom name="stack_E_bar_bar_geom" type="box" size="0.25 0.25 0.025" density="1000" material="single-cabinet_body_mat"/>
+      </body>
+    </body>
+    <body name="corner_box" pos="2.7 -0.3 0.45">
+      <geom name="corner_box_geom" type="box" size="0.4 0.275 0.45" density="1000" material="single-cabinet_body_mat"/>
+    </body>
+    <body name="table_A" pos="-0.285 -0.325 0.905">
+      <geom name="table_A_main_main_group_top_left_visual" size="0.72 0.325 0.015" type="box" contype="0" conaffinity="0" mass="0" material="gr-countertop-granite"/>
+      <geom name="table_A_main_main_group_top_left_0" size="0.72 0.325 0.015" type="box" density="10" group="3" rgba="0.5 0 0 1"/>
+    </body>
+    <body name="table_B" pos="0.77 -0.616 0.905">
+      <geom name="table_B_main_main_group_top_left_visual" size="0.36 0.0345 0.015" type="box" contype="0" conaffinity="0" mass="0" material="gr-countertop-granite"/>
+      <geom name="table_B_main_main_group_top_left_0" size="0.36 0.0345 0.015" type="box" density="10" group="3" rgba="0.5 0 0 1"/>
+    </body>
+    <body name="table_C" pos="0.77 -0.01 0.905">
+      <geom name="table_C_main_main_group_top_left_visual" size="0.36 0.0345 0.015" type="box" contype="0" conaffinity="0" mass="0" material="gr-countertop-granite"/>
+      <geom name="table_C_main_main_group_top_left_0" size="0.36 0.0345 0.015" type="box" density="10" group="3" rgba="0.5 0 0 1"/>
+    </body>
+    <body name="table_D" pos="1.77 -0.325 0.905">
+      <geom name="table_D_main_main_group_top_left_visual" size="0.71 0.325 0.015" type="box" contype="0" conaffinity="0" mass="0" material="gr-countertop-granite"/>
+      <geom name="table_D_main_main_group_top_left_0" size="0.71 0.325 0.015" type="box" density="10" group="3" rgba="0.5 0 0 1"/>
+    </body>
+    <body name="table_E" pos="2.8 -0.575 0.905" quat="0.7071068 0 0 -0.7071068">
+      <geom name="table_E_main_main_group_top_left_visual" size="0.575 0.325 0.015" type="box" contype="0" conaffinity="0" mass="0" material="gr-countertop-granite"/>
+      <geom name="table_E_main_main_group_top_left_0" size="0.575 0.325 0.015" type="box" density="10" group="3" rgba="0.5 0 0 1"/>
+    </body>
+    <body name="table_F" pos="2.8 -2.175 0.905" quat="0.7071068 0 0 -0.7071068">
+      <geom name="table_F_main_main_group_top_left_visual" size="0.26 0.325 0.015" type="box" contype="0" conaffinity="0" mass="0" material="gr-countertop-granite"/>
+      <geom name="table_F_main_main_group_top_left_0" size="0.26 0.325 0.015" type="box" density="10" group="3" rgba="0.5 0 0 1"/>
+    </body>
+    <body name="sink-wide" pos="0.75 -0.31 0.94">
+      <body name="sink-wide_main">
+        <geom name="sink-wide_bowl_vis" type="mesh" mesh="sink-wide_bowl_vis" material="sink-wide_sink_mat" density="100" friction="0.95 0.3 0.1" contype="0" conaffinity="0" solref="0.001" solimp="0.998 0.998"/>
+        <geom name="sink-wide_bottom" type="box" pos="0 -0.0258824 -0.168235" size="0.2717647 0.2070588 0.0097059" group="3" rgba="0 0 1 0.15"/>
+        <geom name="sink-wide_rear" type="box" pos="0  0.1876471 -0.0938235" size="0.2976471 0.2070588 0.0776471" axisangle="1 0 0 -0.10" group="3" rgba="0 0 1 0.15"/>
+        <geom name="sink-wide_front" type="box" pos="0 -0.2426471 -0.0938235" size="0.2976471 0.2070588 0.0776471" axisangle="1 0 0  0.10" group="3" rgba="0 0 1 0.15"/>
+        <geom name="sink-wide_left" type="box" pos="-0.2911765 0 -0.0938235" size="0.0097059 0.2070588 0.0776471" axisangle="0 1 0 -0.17" group="3" rgba="0 0 1 0.15"/>
+        <geom name="sink-wide_right" type="box" pos=" 0.2911765 0 -0.0938235" size="0.0097059 0.2070588 0.0776471" axisangle="0 1 0  0.17" group="3" rgba="0 0 1 0.15"/>
+        <geom name="sink-wide_lip_front" type="box" pos="0 -0.2620588 -0.0226471" size="0.3235294 0.0440000 0.0045294" group="3" rgba="0 0 1 0.15"/>
+        <geom name="sink-wide_lip_back" type="box" pos="0  0.2303529 -0.0226471" size="0.3235294 0.0440000 0.0045294" group="3" rgba="0 0 1 0.15"/>
+        <geom name="sink-wide_lip_left" type="box" pos="-0.3105882 0 -0.0226471" size="0.0129412 0.2588235 0.0045294" group="3" rgba="0 0 1 0.15"/>
+        <geom name="sink-wide_lip_right" type="box" pos=" 0.3105882 0 -0.0226471" size="0.0129412 0.2588235 0.0045294" group="3" rgba="0 0 1 0.15"/>
+        <body name="sink-wide_spout">
+          <joint name="sink-wide_spout_joint" type="hinge" pos="0 0.2381176 0.0291176" axis="0 0 1" range="-1.57 1.57" damping="10"/>
+          <geom name="sink-wide_spout_vis" type="mesh" mesh="sink-wide_spout_vis" material="sink-wide_sink_mat" density="100" solref="0.001" solimp="0.998 0.998"/>
+          <geom name="sink-wide_spout_col" type="cylinder" pos="0 0.2381176 0.0291176" size="0.0220000 0.0220000" group="3" rgba="0 1 0 0.15"/>
+        </body>
+        <body name="sink-wide_handle">
+          <joint name="sink-wide_handle_joint" type="hinge" pos="0 0.2381176 0.0711765" axis="-1 0 0" range="0 0.52" damping="10"/>
+          <joint name="sink-wide_temp_joint" type="hinge" pos="0 0.2381176 0.0753824" axis="0 0 1" range="-0.79 0.79" damping="50"/>
+          <geom name="sink-wide_handle_vis" type="mesh" mesh="sink-wide_handle_vis" material="sink-wide_sink_mat" contype="0" conaffinity="0" density="100" friction="0.95 0.3 0.1" solref="0.001" solimp="0.998 0.998"/>
+          <geom name="sink-wide_handle_bar" type="box" pos="0 0.1895882 0.134588" size="0.0148824 0.0841176 0.0042059" axisangle="1 0 0 -0.63" group="3" rgba="0 1 0 0.15"/>
+          <geom name="sink-wide_handle_pivot" type="cylinder" pos="0 0.2381176 0.0753824" size="0.0220000 0.0106765" axisangle="1 0 0 0.17" group="3" rgba="0 1 0 0.15"/>
+        </body>
+      </body>
+    </body>
+    <body name="stack_F" pos="2.85 -0.9 0" quat="0.707105 0 0 -0.707108">
+      <body name="stack_F_drawer" pos="0 0 0.78" quat="1 0 0 0">
+        <!-- ========== OUTER FRAME ========== -->
+        <body name="stack_F_drawer_frame">
+          <!-- collisions -->
+          <geom name="stack_F_drawer_top_col" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" group="3" mass="0.2"/>
+          <geom name="stack_F_drawer_bottom_col" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" group="3" mass="0.2"/>
+          <geom name="stack_F_drawer_back_col" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_F_drawer_right_col" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_F_drawer_left_col" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+          <!-- visuals -->
+          <geom name="stack_F_drawer_top_v" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_F_drawer_bottom_v" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_F_drawer_back_v" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_F_drawer_right_v" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_F_drawer_left_v" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <!-- ========== SLIDING BOX ========== -->
+          <body name="stack_F_drawer_box">
+            <joint name="stack_F_drawer_slide" type="slide" axis="0 1 0" pos="0 -0.3 0" limited="true" range="-0.5 0" damping="10"/>
+            <!-- collisions -->
+            <geom name="stack_F_drawer_ibox_col" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" group="3" mass="0.2"/>
+            <geom name="stack_F_drawer_iback_col" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_F_drawer_iright_col" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_F_drawer_ileft_col" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" group="3" mass="0.2"/>
+            <!-- visuals -->
+            <geom name="stack_F_drawer_ibox_v" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_F_drawer_iback_v" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_F_drawer_iright_v" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_F_drawer_ileft_v" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <!-- ========== FACE PANEL ========== -->
+            <body name="stack_F_drawer_face" pos="0 -0.285 0">
+              <geom name="stack_F_drawer_face_col" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_F_drawer_face_v" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- horizontal trims -->
+              <geom name="stack_F_drawer_trim_t_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_F_drawer_trim_b_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 -0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- vertical trims -->
+              <geom name="stack_F_drawer_trim_l_v" size="0.04 0.1035 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_F_drawer_trim_r_v" size="0.04 0.1035 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- handle -->
+              <body name="stack_F_drawer_handle">
+                <geom name="stack_F_drawer_bar_col" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" group="3" density="10"/>
+                <geom name="stack_F_drawer_bar_v" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_F_drawer_pin_t_v" type="cylinder" size="0.008 0.025" pos="0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_F_drawer_pin_b_v" type="cylinder" size="0.008 0.025" pos="-0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_F_cab" pos="0 0 0.362" quat="1 0 0 0">
+        <body name="stack_F_cab_main">
+          <!-- carcass collisions (group 3) -->
+          <geom name="stack_F_cab_top_col" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_F_cab_bottom_col" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_F_cab_back_col" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_F_cab_right_col" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_F_cab_left_col" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_F_cab_shelf_col" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+          <!-- carcass visuals (group 0) -->
+          <geom name="stack_F_cab_top_v" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_F_cab_bottom_v" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_F_cab_back_v" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_F_cab_right_v" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_F_cab_left_v" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_F_cab_shelf_v" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <body name="stack_F_cab_hinge">
+            <joint name="stack_F_cab_door_hinge" pos="0.235 -0.3 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+            <body name="stack_F_cab_door" pos="0 -0.285 0">
+              <!-- door slab -->
+              <geom name="stack_F_cab_door_col" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_F_cab_door_v" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- decorative trims (visual only) -->
+              <geom name="stack_F_cab_trim_top_v" size="0.1685 0.04 0.01" pos="0 -0.0025 0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_F_cab_trim_bottom_v" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_F_cab_trim_left_v" size="0.04 0.3135 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_F_cab_trim_right_v" size="0.04 0.3135 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- handle -->
+              <body name="stack_F_cab_handle" pos="-0.1985 0 0.1135">
+                <geom name="stack_F_cab_handle_bar_col" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                <geom name="stack_F_cab_handle_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_F_cab_pin_t_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_F_cab_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_F_cab_pin_b_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_F_cab_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_F_bar" pos="0 0 0.025">
+        <geom name="stack_F_bar_bar_geom" type="box" size="0.25 0.25 0.025" density="1000" material="single-cabinet_body_mat"/>
+      </body>
+    </body>
+    <body name="stack_G" pos="2.85 -2.17 0" quat="0.707105 0 0 -0.707108">
+      <body name="stack_G_drawer" pos="0 0 0.78" quat="1 0 0 0">
+        <!-- ========== OUTER FRAME ========== -->
+        <body name="stack_G_drawer_frame">
+          <!-- collisions -->
+          <geom name="stack_G_drawer_top_col" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" group="3" mass="0.2"/>
+          <geom name="stack_G_drawer_bottom_col" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" group="3" mass="0.2"/>
+          <geom name="stack_G_drawer_back_col" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_G_drawer_right_col" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_G_drawer_left_col" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" group="3" mass="0.2"/>
+          <!-- visuals -->
+          <geom name="stack_G_drawer_top_v" size="0.2500 0.2850 0.0150" pos="0 0.015 0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_G_drawer_bottom_v" size="0.2500 0.2850 0.0150" pos="0 0.015 -0.09" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_G_drawer_back_v" size="0.2200 0.0150 0.0750" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_G_drawer_right_v" size="0.0150 0.2850 0.0750" pos="0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <geom name="stack_G_drawer_left_v" size="0.0150 0.2850 0.0750" pos="-0.2350 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+          <!-- ========== SLIDING BOX ========== -->
+          <body name="stack_G_drawer_box">
+            <joint name="stack_G_drawer_slide" type="slide" axis="0 1 0" pos="0 -0.3 0" limited="true" range="-0.5 0" damping="10"/>
+            <!-- collisions -->
+            <geom name="stack_G_drawer_ibox_col" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" group="3" mass="0.2"/>
+            <geom name="stack_G_drawer_iback_col" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_G_drawer_iright_col" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" group="3" mass="0.2"/>
+            <geom name="stack_G_drawer_ileft_col" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" group="3" mass="0.2"/>
+            <!-- visuals -->
+            <geom name="stack_G_drawer_ibox_v" size="0.2190 0.2700 0.0150" pos="0 0 -0.059" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_G_drawer_iback_v" size="0.1890 0.0150 0.0440" pos="0 0.255 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_G_drawer_iright_v" size="0.0150 0.2700 0.0440" pos="0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <geom name="stack_G_drawer_ileft_v" size="0.0150 0.2700 0.0440" pos="-0.2035 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_lam_mat"/>
+            <!-- ========== FACE PANEL ========== -->
+            <body name="stack_G_drawer_face" pos="0 -0.285 0">
+              <geom name="stack_G_drawer_face_col" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_G_drawer_face_v" size="0.1685 0.0235 0.0050" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- horizontal trims -->
+              <geom name="stack_G_drawer_trim_t_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_G_drawer_trim_b_v" size="0.1685 0.0400 0.0100" pos="0 -0.0025 -0.0635" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- vertical trims -->
+              <geom name="stack_G_drawer_trim_l_v" size="0.04 0.1035 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <geom name="stack_G_drawer_trim_r_v" size="0.04 0.1035 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="drawer_face_mat"/>
+              <!-- handle -->
+              <body name="stack_G_drawer_handle">
+                <geom name="stack_G_drawer_bar_col" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" group="3" density="10"/>
+                <geom name="stack_G_drawer_bar_v" type="cylinder" size="0.013 0.0635" pos="0 -0.05 0" quat="0.707105 0 0.707108 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_G_drawer_pin_t_v" type="cylinder" size="0.008 0.025" pos="0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+                <geom name="stack_G_drawer_pin_b_v" type="cylinder" size="0.008 0.025" pos="-0.0381 -0.025 0" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="drawer_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_G_cab" pos="0 0 0.362" quat="1 0 0 0">
+        <body name="stack_G_cab_main">
+          <!-- carcass collisions (group 3) -->
+          <geom name="stack_G_cab_top_col" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_G_cab_bottom_col" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" group="3" mass="0.2"/>
+          <geom name="stack_G_cab_back_col" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_G_cab_right_col" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_G_cab_left_col" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" group="3" mass="0.2"/>
+          <geom name="stack_G_cab_shelf_col" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" group="3" density="10"/>
+          <!-- carcass visuals (group 0) -->
+          <geom name="stack_G_cab_top_v" size="0.25 0.285 0.015" pos="0 0.015 0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_G_cab_bottom_v" size="0.25 0.285 0.015" pos="0 0.015 -0.3" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_G_cab_back_v" size="0.22 0.015 0.285" pos="0 0.285 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_G_cab_right_v" size="0.015 0.285 0.285" pos="0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_G_cab_left_v" size="0.015 0.285 0.285" pos="-0.235 0.015 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <geom name="stack_G_cab_shelf_v" size="0.22 0.25 0.015" pos="0 0.035 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_body_mat"/>
+          <body name="stack_G_cab_hinge">
+            <joint name="stack_G_cab_door_hinge" pos="0.235 -0.3 0" axis="0 0 1" limited="true" range="0 3" damping="2"/>
+            <body name="stack_G_cab_door" pos="0 -0.285 0">
+              <!-- door slab -->
+              <geom name="stack_G_cab_door_col" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" group="3" density="10"/>
+              <geom name="stack_G_cab_door_v" size="0.1685 0.2335 0.005" pos="0 0.005 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- decorative trims (visual only) -->
+              <geom name="stack_G_cab_trim_top_v" size="0.1685 0.04 0.01" pos="0 -0.0025 0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_G_cab_trim_bottom_v" size="0.1685 0.04 0.01" pos="0 -0.0025 -0.2735" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_G_cab_trim_left_v" size="0.04 0.3135 0.01" pos="-0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <geom name="stack_G_cab_trim_right_v" size="0.04 0.3135 0.01" pos="0.2085 -0.0025 0" quat="0.707105 0.707108 0 0" type="box" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_door_mat"/>
+              <!-- handle -->
+              <body name="stack_G_cab_handle" pos="-0.1985 0 0.1135">
+                <geom name="stack_G_cab_handle_bar_col" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" group="3" density="10"/>
+                <geom name="stack_G_cab_handle_bar_v" type="cylinder" size="0.013 0.12" pos="0 -0.05 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_G_cab_pin_t_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_G_cab_pin_t_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+                <geom name="stack_G_cab_pin_b_col" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" group="3" density="10"/>
+                <geom name="stack_G_cab_pin_b_v" type="cylinder" size="0.008 0.025" pos="0 -0.025 -0.072" quat="0.707107 0.707107 0 0" contype="0" conaffinity="0" group="0" mass="0" material="single-cabinet_handle_mat"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="stack_G_bar" pos="0 0 0.025">
+        <geom name="stack_G_bar_bar_geom" type="box" size="0.25 0.25 0.025" density="1000" material="single-cabinet_body_mat"/>
+      </body>
+    </body>
+    <body name="oven" pos="2.796 -1.534 0.6404" quat="0.707105 0 0 -0.707108">
+      <body name="oven_main">
+        <!-- visual shell -->
+        <geom name="oven_vis0" type="mesh" mesh="oven_body_vis0" material="oven_glass_mat" contype="0" conaffinity="0" group="0"/>
+        <geom name="oven_vis1" type="mesh" mesh="oven_body_vis1" material="oven_body_mat" contype="0" conaffinity="0" group="0"/>
+        <!-- collision hulls -->
+        <geom name="oven_core_col" size="0.384 0.33 0.432" pos="0 0.024 -0.156" type="box" group="3" rgba="0.5 0 0 0.5"/>
+        <geom name="oven_lip_col" size="0.384 0.036 0.18" pos="0 0.324 0.42" type="box" group="3" rgba="0.5 0 0 0.5"/>
+        <geom name="oven_lip2_col" size="0.384 0.012 0.03" pos="0 0.276 0.444" type="box" group="3" rgba="0.5 0 0 0.5"/>
+        <geom name="oven_plate_col" size="0.156 0.012 0.036" pos="-0.03 0.288 0.516" type="box" group="3" rgba="0.5 0 0 0.5"/>
+        <!-- burner sites -->
+        <site name="oven_burner_fl" pos="-0.1824 -0.12 0.2676" size="0.12 0.00012" type="cylinder" rgba="0.5 0 0 0"/>
+        <site name="oven_burner_fr" pos="0.1824 -0.12 0.2676" size="0.12 0.00012" type="cylinder" rgba="0.5 0 0 0"/>
+        <site name="oven_burner_rl" pos="-0.2304 0.138 0.2676" size="0.084 0.00012" type="cylinder" rgba="0.5 0 0 0"/>
+        <site name="oven_burner_rr" pos="0.228 0.138 0.2676" size="0.084 0.00012" type="cylinder" rgba="0.5 0 0 0"/>
+        <site name="oven_burner_rc" pos="0 0.1284 0.2676" size="0.078 0.00012" type="cylinder" rgba="0.5 0 0 0"/>
+        <!-- ============ five knobs (explicit, no helper) ============ -->
+        <body name="oven_knob_rc">
+          <joint name="oven_knob_rc_joint" pos="0.168 0.264 0.5124" axis="0 1 0" damping="1"/>
+          <geom name="oven_knob_rc_vis" type="mesh" mesh="oven_knob_rc_vis" material="oven_body_mat" contype="0" conaffinity="0" group="0"/>
+          <geom name="oven_knob_rc_col" type="box" size="0.012 0.018 0.0264" pos="0.168 0.264 0.5124" group="3" rgba="0.5 0 0 0.5"/>
+        </body>
+        <body name="oven_knob_rr">
+          <joint name="oven_knob_rr_joint" pos="0.24 0.264 0.5124" axis="0 1 0" damping="1"/>
+          <geom name="oven_knob_rr_vis" type="mesh" mesh="oven_knob_rr_vis" material="oven_body_mat" contype="0" conaffinity="0" group="0"/>
+          <geom name="oven_knob_rr_col" type="box" size="0.012 0.018 0.0264" pos="0.24 0.264 0.5124" group="3" rgba="0.5 0 0 0.5"/>
+        </body>
+        <body name="oven_knob_fl">
+          <joint name="oven_knob_fl_joint" pos="-0.312 0.264 0.5124" axis="0 1 0" damping="1"/>
+          <geom name="oven_knob_fl_vis" type="mesh" mesh="oven_knob_fl_vis" material="oven_body_mat" contype="0" conaffinity="0" group="0"/>
+          <geom name="oven_knob_fl_col" type="box" size="0.012 0.018 0.0264" pos="-0.312 0.264 0.5124" group="3" rgba="0.5 0 0 0.5"/>
+        </body>
+        <body name="oven_knob_fr">
+          <joint name="oven_knob_fr_joint" pos="0.318 0.264 0.5124" axis="0 1 0" damping="1"/>
+          <geom name="oven_knob_fr_vis" type="mesh" mesh="oven_knob_fr_vis" material="oven_body_mat" contype="0" conaffinity="0" group="0"/>
+          <geom name="oven_knob_fr_col" type="box" size="0.012 0.018 0.0264" pos="0.318 0.264 0.5124" group="3" rgba="0.5 0 0 0.5"/>
+        </body>
+        <body name="oven_knob_rl">
+          <joint name="oven_knob_rl_joint" pos="-0.24 0.264 0.5124" axis="0 1 0" damping="1"/>
+          <geom name="oven_knob_rl_vis" type="mesh" mesh="oven_knob_rl_vis" material="oven_body_mat" contype="0" conaffinity="0" group="0"/>
+          <geom name="oven_knob_rl_col" type="box" size="0.012 0.018 0.0264" pos="-0.24 0.264 0.5124" group="3" rgba="0.5 0 0 0.5"/>
+        </body>
+      </body>
+    </body>
+    <body name="microwave" pos="2.91031 -1.534 1.59586" quat="0.707105 0 0 -0.707108">
+      <body name="mw_main">
+        <!-- detailed visual shell -->
+        <geom name="mw_g0" type="mesh" mesh="mw_vis0" material="mw_mat_1" contype="0" conaffinity="0" group="0"/>
+        <geom name="mw_g1" type="mesh" mesh="mw_vis1" material="mw_mat_2" contype="0" conaffinity="0" group="0"/>
+        <geom name="mw_g2" type="mesh" mesh="mw_vis2" material="mw_mat_0" contype="0" conaffinity="0" group="0"/>
+        <!-- grey plastic control-panel frame -->
+        <geom name="mw_panel_top" size="0.0752165 0.0170103 0.197938" pos="0.285031 -0.190206 0.0229608" type="box" contype="0" conaffinity="0" group="0" rgba="0.4 0.4 0.4 1"/>
+        <geom name="mw_panel_cap" size="0.0752165 0.0154639 0.00870928" pos="0.285031 -0.186598 0.229608" type="box" contype="0" conaffinity="0" group="0" rgba="0.4 0.4 0.4 1"/>
+        <geom name="mw_panel_base" size="0.0752165 0.0154639 0.0134598" pos="0.285031 -0.187113 -0.188437" type="box" contype="0" conaffinity="0" group="0" rgba="0.4 0.4 0.4 1"/>
+        <!-- simplified collision hull -->
+        <geom name="mw_col_top" size="0.384 0.0463918 0.239109" pos="0 0.216495 0" type="box" group="3" rgba="0.5 0 0 0.5"/>
+        <geom name="mw_col_back" size="0.384 0.172165 0.0435464" pos="0 0 -0.196355" type="box" group="3" rgba="0.5 0 0 0.5"/>
+        <geom name="mw_col_left" size="0.0197938 0.172165 0.239109" pos="-0.364206 0 0" type="box" group="3" rgba="0.5 0 0 0.5"/>
+        <geom name="mw_col_right" size="0.117179 0.172165 0.239109" pos="0.265237 0 0" type="box" group="3" rgba="0.5 0 0 0.5"/>
+        <geom name="mw_col_face" size="0.384 0.172165 0.0229608" pos="0 0 0.216148" type="box" group="3" rgba="0.5 0 0 0.5"/>
+        <!-- green buttons -->
+        <geom name="mw_btn_start" size="0.0237526 0.011134 0.0197938" pos="0.336495 -0.198454 -0.102928" type="box" contype="0" conaffinity="0" group="0" rgba="0 0.5 0 0.5"/>
+        <geom name="mw_btn_stop" size="0.0237526 0.011134 0.0197938" pos="0.237526 -0.198454 -0.102928" type="box" contype="0" conaffinity="0" group="0" rgba="0 0.5 0 0.5"/>
+        <!-- interior tray (visual only) -->
+        <geom name="mw_tray" type="cylinder" size="0.143794 0.00395876" pos="-0.0950103 -0.0103093 -0.154392" contype="0" conaffinity="0" group="0" rgba="0 1 0 0.5"/>
+        <body name="mw_door">
+          <joint name="mw_hinge" pos="-0.384 -0.172165 0" axis="0 0 1" limited="true" range="-1.57 0" damping="2" frictionloss="2"/>
+          <!-- door visuals -->
+          <geom name="mw_d0" type="mesh" mesh="mw_door0" material="mw_mat_1" contype="0" conaffinity="0" group="0"/>
+          <geom name="mw_d1" type="mesh" mesh="mw_door1" material="mw_mat_2" contype="0" conaffinity="0" group="0"/>
+          <geom name="mw_d2" type="mesh" mesh="mw_door2" material="mw_mat_0" contype="0" conaffinity="0" group="0"/>
+          <!-- collision slab + handle -->
+          <geom name="mw_door_col" size="0.278618 0.0190722 0.220899" pos="-0.0712577 -0.191237 0.0182103" type="box" group="3" rgba="0.5 0 0 0.5"/>
+          <geom name="mw_handle" type="cylinder" size="0.0174186 0.0927835" pos="0.161518 -0.24433 0.0308784" group="3" rgba="0.5 0 0 0.5"/>
+          <!-- mounting pins (visual) -->
+          <geom name="mw_pin_top_v" size="0.0213773 0.0242268 0.0166268" pos="0.161518 -0.233505 0.186854" type="box" contype="0" conaffinity="0" group="0" rgba="0.5 0 0 0.5"/>
+          <geom name="mw_pin_bot_v" size="0.0213773 0.0242268 0.0166268" pos="0.161518 -0.233505 -0.125889" type="box" contype="0" conaffinity="0" group="0" rgba="0.5 0 0 0.5"/>
+        </body>
+      </body>
+    </body>
+    <body name="dishwasher" childclass="dw" pos="-0.1 -0.075 0.00">
+      <geom material="dw-body" mesh="dw-dish_washer_body_001" class="dw-visual" euler="1.5708 0 0"/>
+      <geom pos="0 -0.258 0.129" size="0.3 0.258 0.129" type="box" class="dw-collision"/>
+      <geom pos="0 -0.278 0.269" size="0.3 0.278 0.011" type="box" class="dw-collision"/>
+      <geom pos="0.286 -0.278 0.531" size="0.014 0.278 0.274" type="box" class="dw-collision"/>
+      <geom pos="-0.286 -0.278 0.531" size="0.014 0.278 0.274" type="box" class="dw-collision"/>
+      <geom pos="0 -0.008 0.531" size="0.3 0.008 0.274" type="box" class="dw-collision"/>
+      <geom pos="0 -0.278 0.808" size="0.3 0.278 0.0128" type="box" class="dw-collision"/>
+      <body name="door" pos="0 -0.57 0.245" euler="1.5708 0 0">
+        <joint name="door_hinge" axis="1 0 0" range="0 1.5708" damping="0.01" solimplimit="0.998 0.998 0.001" solreflimit="0.004 1"/>
+        <inertial mass="0.01" pos="0 0 0" quat="1 0 0 0" diaginertia="0.0001 0.0001 0.0001"/>
+        <geom material="dw-door" mesh="dw-dish_washer_door_001" class="dw-visual"/>
+        <geom pos="0 0.517 0.086" size="0.019 0.28" type="cylinder" class="dw-collision" euler="0 1.5708 0"/>
+        <geom pos="0.238 0.517 0.06" size="0.031 0.025 0.014" type="box" class="dw-collision" euler="1.5708 0 0"/>
+        <geom pos="-0.238 0.517 0.06" size="0.031 0.025 0.014" type="box" class="dw-collision" euler="1.5708 0 0"/>
+        <geom pos="0 0.261 0.03" size="0.295 0.016 0.295" type="box" class="dw-collision" euler="1.5708 0 0"/>
+        <geom pos="0 0.546 0.0192" size="0.295 0.02603 0.019" type="box" class="dw-collision" euler="1.5708 0 0"/>
+        <geom pos="0 0.0148 0.0192" size="0.295 0.02603 0.0584" type="box" class="dw-collision" euler="1.5708 0 0"/>
+        <geom pos="0.275 0.2606 0.0192" size="0.0216 0.02603 0.295" type="box" class="dw-collision" euler="1.5708 0 0"/>
+        <geom pos="-0.275 0.2606 0.0192" size="0.0216 0.02603 0.295" type="box" class="dw-collision" euler="1.5708 0 0"/>
+        <geom mesh="dw-collision_door_001" class="dw-collision"/>
+        <geom mesh="dw-collision_door_003" class="dw-collision"/>
+        <geom mesh="dw-collision_door_004" class="dw-collision"/>
+        <geom mesh="dw-collision_door_006" class="dw-collision"/>
+        <geom mesh="dw-collision_door_007" class="dw-collision"/>
+        <geom mesh="dw-collision_door_008" class="dw-collision"/>
+        <geom mesh="dw-collision_door_009" class="dw-collision"/>
+      </body>
+      <body name="tray_mid" pos="0 -0.248 0.6" euler="1.5708 0 0">
+        <joint name="tray_mid_linear" type="slide" axis="0 0 1" range="0 0.45" damping="5" solimplimit="0.998 0.998 0.001" solreflimit="0.004 1"/>
+        <geom material="dw-middle" mesh="dw-dish_washer_mid_001" class="dw-visual"/>
+        <geom mesh="dw-collision_tray_mid_001" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_002" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_003" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_004" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_005" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_006" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_007" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_008" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_009" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_010" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_011" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_012" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_013" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_014" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_015" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_016" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_017" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_018" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_019" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_020" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_021" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_022" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_023" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_024" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_025" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_026" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_mid_027" class="dw-collision"/>
+        <!-- plates holders -->
+        <body name="dish_washer_mid_holder_1" pos="0.085 0.0025 0" euler="0 1.5708 0">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+          <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+        </body>
+        <body name="dish_washer_mid_holder_2" pos="-0.085 0.0025 0" euler="0 1.5708 0">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+          <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+        </body>
+        <!-- sprinkler -->
+        <body name="tray_mid_sprinkler" pos="0 -0.029338 0">
+          <joint name="tray_mid_sprinkler" axis="0 1 0" limited="false" damping="0.001"/>
+          <inertial mass="0.01" pos="0 0 0" quat="1 0 0 0" diaginertia="0.001 0.001 0.001"/>
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_mid_sprinkle" class="dw-visual"/>
+          <geom mesh="dw-collision_dish_washer_mid_sprinkle" class="dw-collision"/>
+        </body>
+      </body>
+      <body name="tray_bottom" pos="0 -0.309 0.35" euler="1.5708 0 0">
+        <joint name="tray_bottom_linear" type="slide" axis="0 0 1" range="0 0.5" damping="5" solimplimit="0.998 0.998 0.001" solreflimit="0.004 1"/>
+        <geom material="dw-bottom" mesh="dw-dish_washer_bottom_001" class="dw-visual"/>
+        <geom mesh="dw-collision_tray_001" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_002" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_003" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_004" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_005" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_006" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_007" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_008" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_009" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_010" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_011" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_012" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_013" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_014" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_015" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_016" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_017" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_018" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_019" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_020" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_021" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_022" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_023" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_024" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_025" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_026" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_027" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_028" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_029" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_030" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_031" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_032" class="dw-collision"/>
+        <geom mesh="dw-collision_tray_033" class="dw-collision"/>
+        <!-- plates holders -->
+        <body name="dish_washer_bottom_holder_1" pos="-0.047521 -0.048164 0.145" euler="0.523599 0 0">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+          <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+        </body>
+        <body name="dish_washer_bottom_holder_2" pos="-0.047521 -0.048164 0.088794" euler="-0.523599 0 0">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+          <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+        </body>
+        <body name="dish_washer_bottom_holder_3" pos="-0.047521 -0.048164 -0.1133" euler="0.523599 0 0">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+          <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+        </body>
+        <body name="dish_washer_bottom_holder_4" pos="-0.047521 -0.048164 -0.189036" euler="-0.523599 0 0">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_plates_holder_001" class="dw-visual"/>
+          <geom mesh="dw-collision_holder_001" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_002" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_003" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_004" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_005" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_006" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_007" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_008" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_009" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_010" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_011" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_012" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_013" class="dw-collision_holder"/>
+          <geom mesh="dw-collision_holder_014" class="dw-collision_holder"/>
+        </body>
+        <!-- wheels -->
+        <body name="dish_washer_bottom_wheel_1_l" pos="0.250505 -0.049095 0.139046">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+          <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+        </body>
+        <body name="dish_washer_bottom_wheel_2_l" pos="0.250505 -0.049095 0.040992">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+          <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+        </body>
+        <body name="dish_washer_bottom_wheel_3_l" pos="0.250505 -0.049095 -0.087648">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+          <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+        </body>
+        <body name="dish_washer_bottom_wheel_4_l" pos="0.250505 -0.049095 -0.190549">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+          <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+        </body>
+        <body name="dish_washer_bottom_wheel_1_r" pos="-0.250505 -0.049095 0.139046" euler="0 3.14159 0">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+          <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+        </body>
+        <body name="dish_washer_bottom_wheel_2_r" pos="-0.250505 -0.049095 0.040992" euler="0 3.14159 0">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+          <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+        </body>
+        <body name="dish_washer_bottom_wheel_3_r" pos="-0.250505 -0.049095 -0.087648" euler="0 3.14159 0">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+          <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+        </body>
+        <body name="dish_washer_bottom_wheel_4_r" pos="-0.250505 -0.049095 -0.190549" euler="0 3.14159 0">
+          <geom material="dw-dishwasher" mesh="dw-dish_washer_bottom_wheel" class="dw-visual"/>
+          <geom mesh="dw-dish_washer_bottom_wheel" class="dw-collision"/>
+        </body>
+        <!-- basket -->
+        <body name="cuttlery_basket" pos="0.218 0.030 -0.02">
+          <geom material="dw-basket" mesh="dw-dish_washer_bottom_cuttlery_basket_001" class="dw-visual"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_001" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_002" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_003" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_004" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_005" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_006" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_007" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_008" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_009" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_010" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_011" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_012" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_013" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_014" class="dw-collision_basket"/>
+          <geom mesh="dw-collision_dish_washer_bottom_basket_015" class="dw-collision_basket"/>
+        </body>
+      </body>
+    </body>
+    <body name="{prefix}-frame" pos="-1.4 -0.45 0.95">
+      <geom mesh="fr/Body001_vis" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" class="fr-visual" material="fr/Body001_material"/>
+      <geom class="fr-collision" type="box" pos="-0.3940710127353668 0.06275410205125809 -0.0006774307112209499" size="0.031181402504444122 0.37738826870918274 0.9359207153320312" quat="1.0 0.0 0.0 0.0"/>
+      <geom class="fr-collision" type="box" pos="0.3919791281223297 0.06275410950183868 -0.0006774307112209499" size="0.030255861580371857 0.3773885667324066 0.9359207153320312" quat="1.0 0.0 0.0 0.0"/>
+      <geom class="fr-collision" type="box" pos="-0.003005377249792218 0.06247815489768982 0.9109719395637512" size="0.4162082374095917 0.37711286544799805 0.024271223694086075" quat="1.0 0.0 0.0 0.0"/>
+      <geom class="fr-collision" type="box" pos="-0.003005377249792218 0.4117155075073242 -0.0009676485788077116" size="0.4162082374095917 0.027595268562436104 0.9359143972396851" quat="1.0 0.0 0.0 0.0"/>
+      <geom class="fr-collision" type="box" pos="-0.003005377249792218 0.06275410950183868 -0.8789532780647278" size="0.4162082374095917 0.3773896396160126 0.05723448842763901" quat="1.0 0.0 0.0 0.0"/>
+      <geom class="fr-collision" type="box" pos="-0.003005377249792218 -0.35098278522491455 -0.8917291760444641" size="0.4084376096725464 0.0465230792760849 0.0444585345685482" quat="1.0 0.0 0.0 0.0"/>
+      <body name="{prefix}-frame-Body002">
+        <geom mesh="fr/Body002_vis" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" class="fr-visual" material="fr/Body002_material"/>
+        <geom class="fr-collision" type="box" pos="-0.0014342060312628746 0.09791933000087738 0.5651807188987732" size="0.3656265139579773 0.2948967516422272 0.008134711533784866" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="-0.001195636112242937 0.04632935672998428 0.24166375398635864" size="0.3633967638015747 0.3461066484451294 0.00927546713501215" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="-0.001195636112242937 0.059925638139247894 -0.10092896223068237" size="0.3633967638015747 0.3794723451137543 0.017055664211511612" quat="1.0 0.0 0.0 0.0"/>
+      </body>
+      <body name="{prefix}-frame-Door001">
+        <joint axis="0.0 0.0 1.0" pos="0.3793938457965851 -0.3540734648704529 0.4236448109149933" limited="true" name="{prefix}-frame-Door001_joint" range="0.0 1.5707963267948966" type="hinge" damping="1" frictionloss="1" armature=".01" stiffness="0.05"/>
+        <geom mesh="fr/Door001_vis" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" class="fr-visual" material="fr/Door001_material"/>
+        <geom class="fr-collision" type="box" pos="-0.02830483205616474 -0.3667275309562683 0.4207412898540497" size="0.3724071681499481 0.02750129997730255 0.5125665664672852" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="-0.3156786859035492 -0.42462262511253357 0.4115767180919647" size="0.03464058041572571 0.006546389311552048 0.4979086220264435" quat="0.9950294494628906 0.0 0.0 -0.09958113729953766"/>
+        <body name="{prefix}-frame-Door001_Clear">
+          <geom mesh="fr/Door001_Clear_vis" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" class="fr-visual" material="fr/Door001_Clear_material"/>
+          <geom class="fr-collision" type="box" pos="0.3027845323085785 -0.24827545881271362 0.37747132778167725" size="0.005082062911242247 0.08504998683929443 0.0777270495891571" quat="1.0 0.0 0.0 0.0"/>
+          <geom class="fr-collision" type="box" pos="-0.3163357377052307 -0.24827545881271362 0.37747135758399963" size="0.005082057788968086 0.08504989743232727 0.07772698253393173" quat="1.0 0.0 0.0 0.0"/>
+          <geom class="fr-collision" type="box" pos="-0.007146106101572514 -0.24822264909744263 0.3075364828109741" size="0.31459107995033264 0.07752437889575958 0.00779131893068552" quat="1.0 0.0 0.0 0.0"/>
+          <geom class="fr-collision" type="box" pos="-0.007146095857024193 -0.16828928887844086 0.37747135758399963" size="0.3145938515663147 0.004805755335837603 0.0777268260717392" quat="1.0 0.0 0.0 0.0"/>
+          <geom class="fr-collision" type="box" pos="-0.007146095857024193 -0.16828928887844086 0.6888020634651184" size="0.31459343433380127 0.004805749747902155 0.07772675156593323" quat="1.0 0.0 0.0 0.0"/>
+          <geom class="fr-collision" type="box" pos="-0.007146106101572514 -0.24822264909744263 0.6188671588897705" size="0.31459107995033264 0.07752411812543869 0.00779131893068552" quat="1.0 0.0 0.0 0.0"/>
+          <geom class="fr-collision" type="box" pos="-0.3163357377052307 -0.24827545881271362 0.6888020634651184" size="0.005082026589661837 0.08504942059516907 0.07772659510374069" quat="1.0 0.0 0.0 0.0"/>
+          <geom class="fr-collision" type="box" pos="0.3027845323085785 -0.24827545881271362 0.6888020038604736" size="0.00508201913908124 0.08504932373762131 0.07772649824619293" quat="1.0 0.0 0.0 0.0"/>
+        </body>
+      </body>
+      <body name="{prefix}-frame-Drawer001">
+        <joint axis="0.0 -1.0 0.0" pos="-0.022611111402511597 0.04361245781183243 0.03509211167693138" limited="true" name="{prefix}-frame-Drawer001_joint" range="0.0 0.45" type="slide" damping="1" frictionloss="1" armature=".01" stiffness="0.05"/>
+        <geom mesh="fr/Drawer001_vis" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" class="fr-visual" material="fr/Drawer001_material"/>
+        <geom class="fr-collision" type="box" pos="-0.02497066743671894 -0.28286805748939514 0.032526299357414246" size="0.3206898868083954 0.004805822391062975 0.10691582411527634" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="-0.02497066743671894 0.35859888792037964 0.032526299357414246" size="0.32068946957588196 0.004805815871804953 0.10691565275192261" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="-0.02497066743671894 0.03844917565584183 -0.06659462302923203" size="0.3206806480884552 0.31774669885635376 0.007791309151798487" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="-0.3402498960494995 0.03839649632573128 0.032526299357414246" size="0.005082127638161182 0.3252722918987274 0.10691531002521515" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="0.2910495400428772 0.03839649632573128 0.032526299357414246" size="0.005082123447209597 0.325271874666214 0.10691513866186142" quat="1.0 0.0 0.0 0.0"/>
+      </body>
+      <body name="{prefix}-frame-Drawer002">
+        <joint axis="0.0 -1.0 0.0" pos="-7.969141006469727e-05 -0.03420105576515198 -0.4718346893787384" limited="true" name="{prefix}-frame-Drawer002_joint" range="0.0 0.5" type="slide" damping="1" frictionloss="1" armature=".01" stiffness="0.05"/>
+        <geom mesh="fr/Drawer002_vis" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" class="fr-visual" material="fr/Drawer002_material"/>
+        <geom class="fr-collision" type="box" pos="-0.0011914935894310474 0.3628953993320465 -0.48247089982032776" size="0.341813325881958 0.004805789794772863 0.3093748092651367" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="-0.010098197497427464 -0.00039964914321899414 -0.7799317240715027" size="0.32364463806152344 0.3330284655094147 0.017229238525032997" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="-0.33811312913894653 0.0170903243124485 -0.4841383993625641" size="0.005082099698483944 0.3525598347187042 0.307706743478775" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="0.33599114418029785 0.013876717537641525 -0.48419347405433655" size="0.0050820945762097836 0.3493458032608032 0.3076513707637787" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="-0.02944262884557247 -0.3667554259300232 -0.4704700708389282" size="0.38856837153434753 0.026475509628653526 0.36812254786491394" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="-0.0011914935894310474 -0.33533552289009094 -0.48247089982032776" size="0.34181052446365356 0.004805746953934431 0.30937305092811584" quat="1.0 0.0 0.0 0.0"/>
+        <geom class="fr-collision" type="box" pos="0.0007595455390401185 -0.43163663148880005 -0.16591814160346985" size="0.031590551137924194 0.007566715590655804 0.3390676975250244" quat="0.7045928239822388 -0.05957247316837311 0.7045928835868835 -0.059572722762823105"/>
+      </body>
+      <geom class="fr-region" name="{prefix}-frame-reg_main" type="box" pos="0.0 0.02290348708629608 0.0" size="0.42529571056365967 0.4173002243041992 0.9352431297302246"/>
+    </body>
+  </worldbody>
+  <contact>
+    <exclude body1="dishwasher" body2="door"/>
+    <exclude body1="dishwasher" body2="tray_mid"/>
+    <exclude body1="dishwasher" body2="tray_bottom"/>
+    <exclude body1="dish_washer_bottom_wheel_1_l" body2="dishwasher"/>
+    <exclude body1="dish_washer_bottom_wheel_2_l" body2="dishwasher"/>
+    <exclude body1="dish_washer_bottom_wheel_3_l" body2="dishwasher"/>
+    <exclude body1="dish_washer_bottom_wheel_4_l" body2="dishwasher"/>
+    <exclude body1="dish_washer_bottom_wheel_1_r" body2="dishwasher"/>
+    <exclude body1="dish_washer_bottom_wheel_2_r" body2="dishwasher"/>
+    <exclude body1="dish_washer_bottom_wheel_3_r" body2="dishwasher"/>
+    <exclude body1="dish_washer_bottom_wheel_4_r" body2="dishwasher"/>
+  </contact>
+</mujoco>

@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<mujoco>
+  <compiler angle="radian" assetdir="assets"/>
+  <extension>
+    <plugin plugin="mujoco.sdf.sdflib">
+      <instance name="v-mug-sdf">
+        <config key="aabb" value="0"/>
+      </instance>
+    </plugin>
+  </extension>
+  <option sdf_iterations="10" sdf_initpoints="20"/>
+  <asset>
+    <texture name="texspot" type="2d" file="vuer-mug/vuer.png"/>
+    <material name="matspot" texture="texspot"/>
+    <mesh name="spot" file="vuer-mug/mug.obj" scale="0.01 0.01 0.01">
+      <plugin instance="v-mug-sdf"/>
+    </mesh>
+  </asset>
+  <worldbody>
+    <body name="mug1" pos="0 -0.1 1.3">
+      <freejoint/>
+      <geom type="sdf" name="mug1" mesh="spot" material="matspot">
+        <plugin instance="v-mug-sdf"/>
+      </geom>
+    </body>
+    <body name="mug2" pos="0.1 0 1.3">
+      <freejoint/>
+      <geom type="sdf" name="mug2" mesh="spot" material="matspot">
+        <plugin instance="v-mug-sdf"/>
+      </geom>
+    </body>
+    <geom type="plane" pos="0 0 0" size="1 1 1" name="floor"/>
+  </worldbody>
+</mujoco>

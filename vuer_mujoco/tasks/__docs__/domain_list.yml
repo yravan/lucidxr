@@ -1,0 +1,10 @@
+- name: basketball_shot
+  factory_fn: "vuer_mujoco.tasks.basketball_shot:make_schema"
+- name: mug_tree
+  factory_fn: "vuer_mujoco.tasks.mug_tree:make_schema"
+- name: ball_sorting_toy
+  factory_fn: "vuer_mujoco.tasks.ball_sorting_toy:make_schema"
+- name: shape_insertion
+  factory_fn: "vuer_mujoco.tasks.shape_insertion:make_schema"
+- name: tie
+  factory_fn: "vuer_mujoco.tasks.tie_knot:make_schema"

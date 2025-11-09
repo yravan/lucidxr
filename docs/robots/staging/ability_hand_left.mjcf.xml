@@ -1,0 +1,238 @@
+<mujoco model="ability_hand_left">
+  <compiler angle="radian" meshdir="ability_hand"/>
+  <option impratio="20" cone="elliptic" density="0.2" viscosity="0.0002" timestep="0.002"/>
+
+  <default>
+    <default class="proximal">
+      <joint damping="0.1" range="0 2.5" armature="0.001" frictionloss="0.001" actuatorfrcrange="-40 40"/>
+      <position kp="1.2" ctrlrange="-0.5 2.5" forcerange="-40 40"/>
+      <geom group="4"/>
+    </default>
+
+    <default class="distal">
+      <joint axis="1 0 0" range="0 2.5" damping="0.1" armature="0.001" frictionloss="0.001" actuatorfrcrange="-10 10"/>
+      <position kp="1.2" ctrlrange="0.61 2.5" forcerange="-10 10"/>
+      <geom group="4"/>
+    </default>
+
+    <default class="thumb-proximal">
+      <joint damping="0.1" armature="0.001" frictionloss="0.001" actuatorfrcrange="-10 10"/>
+      <position kp="1.2" ctrlrange="0 2" forcerange="-10 10" gear="-1"/>
+      <geom group="4"/>
+    </default>
+
+    <default class="thumb">
+      <joint damping="0.1" armature="0.001" frictionloss="0.001" actuatorfrcrange="-10 10"/>
+      <position kp="1.2" ctrlrange="0 6" forcerange="-10 10"/>
+      <geom group="4"/>
+    </default>
+
+    <default class="collision">
+      <geom group="4"/>
+    </default>
+
+    <default class="collision-ball">
+      <geom type="sphere" density="1.2" contype="1" conaffinity="1" group="4"/>
+    </default>
+
+    <default class="collision-box">
+      <geom type="box" density="0.001" contype="1" conaffinity="1" group="4"/>
+    </default>
+
+    <default class="plastic">
+      <geom type="mesh" contype="0" conaffinity="0" group="0" density="0.001"/>
+    </default>
+
+    <default class="rubber">
+      <geom type="mesh" contype="0" conaffinity="0" group="0" rgba="0.2 0.2 0.2 1" density="0.001"/>
+    </default>
+  </default>
+
+  <asset>
+    <mesh class="plastic" name="wristmesh_left" file="wristmesh.obj"/>
+    <mesh class="plastic" name="wristmesh_C_left" file="wristmesh_C.obj"/>
+    <mesh class="plastic" name="FB_palm_ref_left" file="FB_palm_ref.obj"/>
+    <mesh class="rubber" name="idx-F1_left" file="idx-F1.obj"/>
+    <mesh class="rubber" name="idx-F2_left" file="idx-F2.obj"/>
+    <mesh class="rubber" name="idx-F2_C_left" file="idx-F2_C.obj"/>
+    <mesh class="rubber" name="thumb-F1_left" file="thumb-F1.obj"/>
+    <mesh class="rubber" name="thumb-F1_C_left" file="thumb-F1_C.obj"/>
+    <mesh class="rubber" name="thumb-F2_left" file="thumb-F2.obj"/>
+    <mesh class="rubber" name="thumb-F2_C_left" file="thumb-F2_C.obj"/>
+
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+             markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+  </asset>
+
+  <worldbody>
+    <body name="left_hand">
+      <joint type="free"/>
+      <site name="left_wrist_site" pos="0 0 0" quat="0.7071 0.7071 0 0" rgba="0.5 0.5 0.5 1"/>
+      <geom name="wrist_mesh_left" type="mesh" contype="0" conaffinity="0" group="1" density="0" mesh="wristmesh_left"/>
+      <geom class="collision" type="mesh" mesh="wristmesh_C_left"/>
+      <geom name="palm_mesh_left" class="rubber" pos="0.0240477 0.00378125 0.0323296" quat="0.0442297 0.00061027 0.999021 2.70192e-05"
+            type="mesh" mesh="FB_palm_ref_left"/>
+      <geom pos="0.0240477 0.00378125 0.0323296" quat="0.0442297 0.00061027 0.999021 2.70192e-05" type="mesh" mesh="FB_palm_ref_left"/>
+
+      <body name="index_L1_left" pos="0.0279216 -0.00927034 0.0958706" quat="-0.714459 -0.129917 0.685906 0.0469401">
+        <joint name="left-index_q1" class="proximal" pos="0 0 0" axis="0 0 1"/>
+        <geom name="index_mesh_1_left" class="rubber" pos="0.0384727 0.0032577 0" quat="0.999108 0 0 0.0422244" type="mesh"
+              mesh="idx-F1_left"/>
+        <geom class="collision-ball" size="0.0085" pos="0.036 -0.00175 0"/>
+        <geom class="collision-box" size="0.005 0.009 0.006" pos="0.023 0 0" quat="0.999108 0 0 0.0422374" type="box"/>
+        <body name="index_L2_left" pos="0.0384727 0.0032577 0" quat="0.999108 0 0 0.0422244">
+          <joint name="left-index_q2" class="distal" pos="0 0 0" axis="0 0 1" range="-6.223 2.6586"/>
+          <geom name="index_mesh_2_left" class="rubber" pos="0.0091241 0 0" quat="1 0 0 0" type="mesh" mesh="idx-F2_left"/>
+          <geom class="collision" type="mesh" mesh="idx-F2_C_left"/>
+          <geom class="collision" size="0.006" pos="0.03 -0.016 0"/>
+          <site name="index_L2_left_site" group="4" size="0.002" pos="0.04 -0.016 0" quat="0.5 0.5 0.5 -0.5"/>
+        </body>
+      </body>
+
+      <body name="middle_L1_left" pos="0.00841718 -0.0115172 0.0990634" quat="-0.698395 -0.103508 0.704562 0.0715738">
+        <joint name="left-middle_q1" class="proximal" pos="0 0 0" axis="0 0 1"/>
+        <geom name="middle_mesh_1_left" class="rubber" pos="0.0384727 0.0032577 0" quat="0.999108 0 0 0.0422244" type="mesh"
+              mesh="idx-F1_left"/>
+        <geom class="collision-ball" size="0.0085" pos="0.036 -0.00175 0"/>
+        <geom class="collision-box" size="0.005 0.009 0.006" pos="0.023 0 0" quat="0.999108 0 0 0.0422374" type="box"/>
+
+        <body name="middle_L2_left" pos="0.0384727 0.0032577 0" quat="0.999108 0 0 0.0422244">
+          <joint name="left-middle_q2" class="distal" pos="0 0 0" axis="0 0 1" range="-6.223 2.6586"/>
+          <geom name="middle_mesh_2_left" class="rubber" pos="0.0091241 0 0" quat="1 0 0 0" type="mesh" mesh="idx-F2_left"/>
+          <geom type="mesh" class="collision" mesh="idx-F2_C_left"/>
+          <geom class="collision" size="0.006" pos="0.03 -0.016 0"/>
+          <site name="middle_L2_left_site" group="4" size="0.002" pos="0.04 -0.016 0" quat="0.5 0.5 0.5 -0.5"/>
+        </body>
+      </body>
+
+      <body name="ring_L1_left" pos="-0.0117529 -0.0103946 0.0967038" quat="-0.681173 -0.0769649 0.721351 0.0986547">
+        <joint name="left-ring_q1" class="proximal" pos="0 0 0" axis="0 0 1"/>
+        <geom name="ring_mesh_1_left" class="rubber" pos="0.0384727 0.0032577 0" quat="0.999108 0 0 0.0422244" type="mesh"
+              mesh="idx-F1_left"/>
+        <geom class="collision-ball" size="0.0085" pos="0.036 -0.00175 0"/>
+        <geom class="collision-box" size="0.005 0.009 0.006" pos="0.023 0 0" quat="0.999108 0 0 0.0422374" type="box"/>
+        <body name="ring_L2_left" pos="0.0384727 0.0032577 0" quat="0.999108 0 0 0.0422244">
+          <joint name="left-ring_q2" class="distal" pos="0 0 0" axis="0 0 1" range="-6.223 2.6586"/>
+          <geom name="ring_mesh_2_left" class="rubber" pos="0.0091241 0 0" quat="1 0 0 0" type="mesh" mesh="idx-F2_left"/>
+          <geom type="mesh" class="collision" mesh="idx-F2_C_left"/>
+          <geom class="collision" size="0.006" pos="0.03 -0.016 0"/>
+          <site name="ring_L2_left_site" group="4" size="0.002" pos="0.04 -0.016 0" quat="0.5 0.5 0.5 -0.5"/>
+        </body>
+      </body>
+
+      <body name="pinky_L1_left" pos="-0.0308633 -0.00716283 0.0907346" quat="-0.681748 -0.0544096 0.719226 0.122363">
+        <joint name="left-pinky_q1" class="proximal" pos="0 0 0" axis="0 0 1"/>
+        <geom name="pinky_mesh_1_left" class="rubber" pos="0.0384727 0.0032577 0" quat="0.999108 0 0 0.0422244" type="mesh"
+              mesh="idx-F1_left"/>
+        <geom class="collision-ball" size="0.0085" pos="0.036 -0.00175 0"/>
+        <geom class="collision-box" size="0.005 0.009 0.006" pos="0.023 0 0" quat="0.999108 0 0 0.0422374" type="box"/>
+
+        <body name="pinky_L2_left" pos="0.0384727 0.0032577 0" quat="0.999108 0 0 0.0422244">
+          <joint name="left-pinky_q2" class="distal" pos="0 0 0" axis="0 0 1" range="-6.223 2.6586"/>
+          <geom name="pinky_mesh_2_left" class="rubber" pos="0.0091241 0 0" quat="1 0 0 0" type="mesh" mesh="idx-F2_left"/>
+          <geom type="mesh" class="collision" mesh="idx-F2_C_left"/>
+          <geom class="collision" size="0.006" pos="0.03 -0.016 0"/>
+          <site name="pinky_L2_left_site" group="4" size="0.002" pos="0.04 -0.016 0" quat="0.5 0.5 0.5 -0.5"/>
+        </body>
+      </body>
+
+      <body name="thumb_L1_left" pos="0.0240477 0.00378125 0.0323296" quat="-0.00419696 0.994514 -0.0947972 0.0440301">
+        <joint name="left-thumb_q1" class="thumb-proximal" pos="0 0 0" axis="0 0 1"/>
+        <geom name="thumb_mesh_1_left" class="plastic" pos="0.0278284 0 -0.0147507" quat="-0.608761 0.793353 0 0" type="mesh" contype="0"
+              conaffinity="0"
+              group="1" density="0" mesh="thumb-F1_left"/>
+        <geom class="collision" pos="0.0278284 0 -0.0147507" quat="-0.608761 0.793353 0 0" type="mesh" mesh="thumb-F1_C_left"/>
+        <body name="thumb_L2_left" pos="0.0278284 0 -0.0147507" quat="-0.608761 0.793353 0 0">
+          <joint name="left-thumb_q2" class="thumb" pos="0 0 0" axis="0 0 1"/>
+          <geom name="thumb_mesh_2_left" class="rubber" pos="0.0651867 0.0233402 -0.00393483"
+                quat="3.21978e-07 0.985259 0.171069 5.59046e-08" type="mesh"
+                mesh="thumb-F2_left"/>
+          <geom class="collision" pos="0.0651867 0.0233402 -0.00393483" quat="3.21978e-07 0.985259 0.171069 5.59046e-08" type="mesh" mesh="thumb-F2_C_left"/>
+          <site name="thumb_L2_left_site" group="4" size="0.002" pos="0.069 0.024 -0.005" quat="0.6415 0.2986 0.6415 -0.2986"/>
+        </body>
+      </body>
+    </body>
+
+
+    <!-- Other bodies -->
+    <light pos="0 0 1"/>
+    <light pos="0.3 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" pos="0 0 -0.1" size="0 0 0.05" type="plane" material="groundplane"/>
+
+    <body name="sticky-cube" pos="-0.2 -0.2 1">
+      <freejoint/>
+      <geom type="box" size="0.02 0.02 0.02" rgba="1 0.2 0.2 1" condim="6" priority="1"
+            friction="0.5 0.01 0.003"/>
+    </body>
+
+    <body name="sticky-cube-2 " pos="-0.3 -0.3 1">
+      <freejoint/>
+      <geom type="box" size="0.02 0.02 0.02" rgba="0.2 1 0.2 1" condim="6" priority="1"
+            friction="0.5 0.01 0.003"/>
+    </body>
+
+    <body name="sticky-cube-3" pos="-0.4 -0.4 1">
+      <freejoint/>
+      <geom type="box" size="0.03 0.03 0.03" rgba="0.2 0.2 1 1" condim="6" priority="1"
+            friction="0.5 0.01 0.003"/>
+    </body>
+
+    <body name="table" pos="-0.2 -0.2 0.8">
+      <geom type="box" size="0.5 0.7 0.02" rgba="0.6 0.3 0 1"/>
+    </body>
+
+    <!-- Mocap Bodies -->
+    <body mocap="true" name="left-wrist" pos="0 0 0" quat="0.7071 0.7071 0 0">
+      <site pos="0 0 0" name="left-wrist-site" size="0.001" rgba="1 1 1 1"/>
+    </body>
+
+    <body mocap="true" name="left-index-finger-tip" pos="0.033 -0.036 0.173" quat="0.7071 0.7071 0 0">
+      <site pos="0 0 0" name="left-index-finger-tip-site" size="0.001" rgba="1 1 1 1"/>
+    </body>
+
+    <body mocap="true" name="left-middle-finger-tip" pos="0.01 -0.039 0.173" quat="0.7071 0.7071 0 0">
+      <site pos="0 0 0" name="left-middle-finger-tip-site" size="0.001" rgba="1 1 1 1"/>
+    </body>
+
+    <body mocap="true" name="left-ring-finger-tip" pos="-0.016 -0.036 0.171" quat="0.7071 0.7071 0 0">
+      <site pos="0 0 0" name="left-ring-finger-tip-site" size="0.001" rgba="1 1 1 1"/>
+    </body>
+
+    <body mocap="true" name="left-pinky-finger-tip" pos="-0.036 -0.0342 0.164" quat="0.7071 0.7071 0 0">
+      <site name="left-pinky-finger-tip-site" size="0.001" rgba="1 1 1 1"/>
+    </body>
+
+    <body mocap="true" name="left-thumb-tip" pos="0.118 -0.004 0.077" quat="0.4330 0.6830 0.6830 0.1830">-->
+      <site name="left-thumb-tip-site" size="0.001" rgba="1 1 1 1"/>
+    </body>
+
+  </worldbody>
+
+  <actuator>
+    <position name="act_index_q1-left" class="proximal" joint="left-index_q1"/>
+    <position name="act_index_q2-left" class="distal" joint="left-index_q2"/>
+
+    <position name="act_middle_q1-left" class="proximal" joint="left-middle_q1"/>
+    <position name="act_middle_q2-left" class="distal" joint="left-middle_q2"/>
+
+    <position name="act_ring_q1-left" class="proximal" joint="left-ring_q1"/>
+    <position name="act_ring_q2-left" class="distal" joint="left-ring_q2"/>
+
+    <position name="act_pinky_q1-left" class="proximal" joint="left-pinky_q1"/>
+    <position name="act_pinky_q2-left" class="distal" joint="left-pinky_q2"/>
+
+    <position name="act_thumb_q1-left" class="thumb-proximal" joint="left-thumb_q1"/>
+    <position name="act_thumb_q2-left" class="thumb" joint="left-thumb_q2" ctrlrange="0 2.4"/>
+  </actuator>
+
+  <equality>
+    <weld site1="left-wrist-site" site2="left_wrist_site"/>
+    <weld site1="left-index-finger-tip-site" site2="index_L2_left_site"/>
+    <weld site1="left-middle-finger-tip-site" site2="middle_L2_left_site"/>
+    <weld site1="left-ring-finger-tip-site" site2="ring_L2_left_site"/>
+    <weld site1="left-pinky-finger-tip-site" site2="pinky_L2_left_site"/>
+    <weld site1="left-thumb-tip-site" site2="thumb_L2_left_site"/>
+  </equality>
+</mujoco>

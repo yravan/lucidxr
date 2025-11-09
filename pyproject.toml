@@ -1,0 +1,136 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lucidxr"
+version = "0.0.3"
+description = ""
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python",
+]
+dependencies = [
+    "aiohttp",
+    "aiohttp-cors",
+    "cmx",
+    "dm_control",
+    "dotvar",
+    "gym_dmc",
+    "matplotlib",
+    "ml-logger",
+    # required by aiohttp/sanic -> ml-logger
+    "multidict==6.4.3",
+    "mujoco",
+    "embr",
+    "h5py",
+    "killport",
+    "lxml",
+    "msgpack",
+    "mujoco",
+    "numpy>=1.21", # because we require numpy.typing.NDArray
+    "opencv-python",
+    "pandas",
+    "imageio[pyav]",
+    "params-proto",
+    "pillow",
+    "torch",
+    "torchvision",
+    "tqdm",
+    "vuer",
+    "websockets",
+    "zaku",
+    "zarr",
+]
+
+[project.optional-dependencies]
+# add the cors package, not needed in pyScript
+example = [
+    "open3d>=0.15.0,<0.16.0",
+    "trimesh",
+    "cmx",
+    "functional_notations",
+    "ml_logger",
+    "opencv-python"
+]
+dev = [
+    # these are needed for the doc site
+    "pylint==2.13.4",
+    "pytest==7.1.2",
+    "sphinx==7.1.2",
+    "furo",
+    "sphinx-autobuild",
+    "sphinx_copybutton",
+    "sphinxcontrib-video",
+    "myst_parser",
+    "trimesh",
+]
+
+[project.scripts]
+# Note, add the entrypoint name to scripts/completions/install.py to include CLI percentage
+rooms-demo = "vuer_mujoco.scripts.rooms_demo:spawn_room"
+robots-demo = "vuer_mujoco.scripts.robots_demo:spawn_panda_scene"
+doc-gen = "vuer_mujoco.scripts.doc_gen:scene_spec"
+upload-robocasa = "vuer_mujoco.scripts.upload_robocasa:main"
+glb2obj = "vuer_mujoco.scripts.glb2obj:main"
+scale-obj = "vuer_mujoco.scripts.scale_obj:cli_entry_point"
+
+collect-demo = "vuer_mujoco.scripts.collect_demo:main"
+visualize-demo = "vuer_mujoco.scripts.visualize_demo:main"
+playback-demo = "vuer_mujoco.scripts.playback_demo:main"
+lucid-launch = "lucidxr.scripts.launch:main"
+
+[tool.setuptools.packages.find]
+include = ["vuer_mujoco*", "lucidxr", "lucidxr_experiments"]
+
+[tool.setuptools.package-data]
+"*" = ["*.json"]
+
+# black
+[tool.black]
+line-length = 120
+
+# pylint
+[tool.pylint.messages_control]
+max-line-length = 120
+generated-members = []
+good-names-rgxs = "^[_a-zA-Z][_a-z0-9]?$"
+ignore-paths = []
+jobs = 0
+ignored-classes = ["TensorDataclass"]
+
+disable = [
+    "duplicate-code",
+    "fixme",
+    "logging-fstring-interpolation",
+    "too-many-arguments",
+    "too-many-branches",
+    "too-many-instance-attributes",
+    "too-many-locals",
+    "unnecessary-ellipsis",
+]
+
+#pytest
+#[tool.pytest.ini_options]
+#addopts = "-n=4 --typeguard-packages=vuer --disable-warnings"
+#testpaths = [
+#    "tests",
+#]
+
+# pyright
+[tool.pyright]
+include = ["lucidxr"]
+exclude = ["**/node_modules", "**/__pycache__", ]
+#ignore = ["nerf_vuer"]
+defineConstant = { DEBUG = true }
+
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportPrivateImportUsage = false
+reportUndefinedVariable = false
+
+#pythonVersion = "3.8"
+#pythonPlatform = "Linux"

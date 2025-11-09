@@ -1,0 +1,270 @@
+<mujoco model="right_shadow_hand scene">
+  <include file="right_hand.xml"/>
+  <include file="left_hand.xml"/>
+
+  <statistic extent="0.3" center="0.3 0 0"/>
+
+  <visual>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <quality shadowsize="8192"/>
+    <global azimuth="220" elevation="-30"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 1"/>
+    <light pos="0.3 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" pos="0 0 -0.1" size="0 0 0.05" type="plane" material="groundplane"/>
+
+    <body name="sticky-cube" pos="-0.2 -0.2 1">
+      <freejoint/>
+      <geom type="box" size="0.03 0.03 0.03" rgba="1 0.2 0.2 1" condim="6" priority="1"
+        friction="0.5 0.01 0.003"/>
+    </body>
+
+    <body name="sticky-cube-2 " pos="-0.3 -0.3 1">
+      <freejoint/>
+      <geom type="box" size="0.03 0.03 0.03" rgba="0.2 1 0.2 1" condim="6" priority="1"
+        friction="0.5 0.01 0.003"/>
+    </body>
+
+    <body name="sticky-cube-3" pos="-0.4 -0.4 1">
+      <freejoint/>
+      <geom type="box" size="0.03 0.03 0.03" rgba="0.2 0.2 1 1" condim="6" priority="1"
+        friction="0.5 0.01 0.003"/>
+    </body>
+
+    <body name="table" pos="-0.2 -0.2 0.8">
+      <geom type="box" size="0.5 0.7 0.02" rgba="0.6 0.3 0 1"/>
+    </body>
+
+    <body mocap="true" name="wrist-right" pos="0.22 0 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="wrist-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="wrist-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="wrist-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="wrist-left" pos="0.22 0.3 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="wrist-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="wrist-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="wrist-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+
+    <body mocap="true" name="index-finger-phalanx-distal-right" pos="0.417 -0.035 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="index-finger-phalanx-distal-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="index-finger-phalanx-distal-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="index-finger-phalanx-distal-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="index-finger-phalanx-intermediate-right" pos="0.383 -0.035 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="index-finger-phalanx-intermediate-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="index-finger-phalanx-intermediate-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="index-finger-phalanx-intermediate-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="index-finger-phalanx-proximal-right" pos="0.34 -0.035 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="index-finger-phalanx-proximal-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="index-finger-phalanx-proximal-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="index-finger-phalanx-proximal-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="index-finger-phalanx-distal-left" pos="0.43 0.3325 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="index-finger-phalanx-distal-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="index-finger-phalanx-distal-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="index-finger-phalanx-distal-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="index-finger-phalanx-intermediate-left" pos="0.4 0.3325 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="index-finger-phalanx-intermediate-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="index-finger-phalanx-intermediate-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="index-finger-phalanx-intermediate-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="index-finger-phalanx-proximal-left" pos="0.34 0.3325 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="index-finger-phalanx-proximal-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="index-finger-phalanx-proximal-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="index-finger-phalanx-proximal-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="thumb-phalanx-distal-right" pos="0.325 -0.085 1.02" quat="0.2706 0.6533 0.2706 -0.6533">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="thumb-phalanx-distal-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="thumb-phalanx-distal-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="thumb-phalanx-distal-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="thumb-phalanx-proximal-right" pos="0.3 -0.06 1.02" quat="0.2706 0.6533 0.2706 -0.6533">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="thumb-phalanx-proximal-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="thumb-phalanx-proximal-r®ight-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="thumb-phalanx-proximal-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="thumb-phalanx-distal-left" pos="0.34 0.4 1.02" quat="0.6533 -0.2706 -0.6533 -0.2706">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="thumb-phalanx-distal-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="thumb-phalanx-dist®al-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="thumb-phalanx-distal-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="thumb-phalanx-proximal-left" pos="0.31 0.37 1.02" quat="0.6533 -0.2706 -0.6533 -0.2706">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="thumb-phalanx-proximal-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="thumb-phalanx-proximal-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="thumb-phalanx-proximal-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="middle-finger-phalanx-distal-right" pos="0.422 -0.012 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="middle-finger-phalanx-distal-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="middle-finger-phalanx-distal-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="middle-finger-phalanx-distal-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="middle-finger-phalanx-intermediate-right" pos="0.385 -0.012 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="middle-finger-phalanx-intermediate-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="middle-finger-phalanx-intermediate-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="middle-finger-phalanx-intermediate-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="middle-finger-phalanx-proximal-right" pos="0.347 -0.012 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="middle-finger-phalanx-proximal-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="middle-finger-phalanx-proximal-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="middle-finger-phalanx-proximal-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="middle-finger-phalanx-distal-left" pos="0.435 0.31 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="middle-finger-phalanx-distal-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="middle-finger-phalanx-distal-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="middle-finger-phalanx-distal-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="middle-finger-phalanx-intermediate-left" pos="0.405 0.31 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="middle-finger-phalanx-intermediate-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="middle-finger-phalanx-intermediate-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="middle-finger-phalanx-intermediate-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="middle-finger-phalanx-proximal-left" pos="0.347 0.31 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="middle-finger-phalanx-proximal-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="middle-finger-phalanx-proximal-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="middle-finger-phalanx-proximal-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="ring-finger-phalanx-distal-right" pos="0.417 0.011 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="ring-finger-phalanx-distal-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="ring-finger-phalanx-distal-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="ring-finger-phalanx-distal-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="ring-finger-phalanx-intermediate-right" pos="0.383 0.011 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="ring-finger-phalanx-intermediate-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="ring-finger-phalanx-intermediate-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="ring-finger-phalanx-intermediate-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="ring-finger-phalanx-proximal-right" pos="0.34 0.011 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="ring-finger-phalanx-proximal-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="ring-finger-phalanx-proximal-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="ring-finger-phalanx-proximal-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+
+    <body mocap="true" name="ring-finger-phalanx-distal-left" pos="0.43 0.29 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="ring-finger-phalanx-distal-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="ring-finger-phalanx-distal-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="ring-finger-phalanx-distal-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="ring-finger-phalanx-intermediate-left" pos="0.4 0.29 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="ring-finger-phalanx-intermediate-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="ring-finger-phalanx-intermediate-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="ring-finger-phalanx-intermediate-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="ring-finger-phalanx-proximal-left" pos="0.34 0.29 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="ring-finger-phalanx-proximal-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="ring-finger-phalanx-proximal-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="ring-finger-phalanx-proximal-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+
+    <body mocap="true" name="pinky-finger-phalanx-distal-right" pos="0.41 0.034 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="pinky-finger-phalanx-distal-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="pinky-finger-phalanx-distal-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="pinky-finger-phalanx-distal-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="pinky-finger-phalanx-intermediate-right" pos="0.372 0.034 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="pinky-finger-phalanx-intermediate-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="pinky-finger-phalanx-intermediate-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="pinky-finger-phalanx-intermediate-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+     <body mocap="true" name="pinky-finger-phalanx-proximal-right" pos="0.335 0.034 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="pinky-finger-phalanx-proximal-right-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="pinky-finger-phalanx-proximal-right-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="pinky-finger-phalanx-proximal-right-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+
+    <body mocap="true" name="pinky-finger-phalanx-distal-left" pos="0.42 0.265 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="pinky-finger-phalanx-distal-left-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="pinky-finger-phalanx-distal-left-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="pinky-finger-phalanx-distal-left-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+    <body mocap="true" name="pinky-finger-phalanx-intermediate-left" pos="0.39 0.265 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="pinky-finger-phalanx-intermediate-left-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="pinky-finger-phalanx-intermediate-left-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="pinky-finger-phalanx-intermediate-left-left-site3" rgba="1 0 0 1"/>
+    </body>
+
+     <body mocap="true" name="pinky-finger-phalanx-proximal-left" pos="0.335 0.265 1.01" quat="0 -0.7071 -0.7071 0">
+      <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="pinky-finger-phalanx-proximal-left-site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="pinky-finger-phalanx-proximal-left-site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="pinky-finger-phalanx-proximal-left-site3" rgba="1 0 0 1"/>
+    </body>
+  </worldbody>
+
+  <equality>
+    <weld body1="wrist-right" body2="rh_wrist"/>
+    <weld body1="wrist-left" body2="lh_wrist"/>
+
+    <weld body1="index-finger-phalanx-distal-right" body2="rh_ffdistal"/>
+    <weld body1="index-finger-phalanx-intermediate-right" body2="rh_ffmiddle"/>
+    <weld body1="index-finger-phalanx-proximal-right" body2="rh_ffproximal"/>
+    <weld body1="index-finger-phalanx-distal-left" body2="lh_ffdistal"/>
+    <weld body1="index-finger-phalanx-intermediate-left" body2="lh_ffmiddle"/>
+    <weld body1="index-finger-phalanx-proximal-left" body2="lh_ffproximal"/>
+
+    <weld body1="thumb-phalanx-distal-right" body2="rh_thdistal"/>
+    <weld body1="thumb-phalanx-proximal-right" body2="rh_thmiddle"/>
+    <weld body1="thumb-phalanx-distal-left" body2="lh_thdistal"/>
+    <weld body1="thumb-phalanx-proximal-left" body2="lh_thmiddle"/>
+
+    <weld body1="middle-finger-phalanx-distal-right" body2="rh_mfdistal"/>
+    <weld body1="middle-finger-phalanx-intermediate-right" body2="rh_mfmiddle"/>
+    <weld body1="middle-finger-phalanx-proximal-right" body2="rh_mfproximal"/>
+    <weld body1="middle-finger-phalanx-distal-left" body2="lh_mfdistal"/>
+    <weld body1="middle-finger-phalanx-intermediate-left" body2="lh_mfmiddle"/>
+    <weld body1="middle-finger-phalanx-proximal-left" body2="lh_mfproximal"/>
+
+    <weld body1="ring-finger-phalanx-distal-right" body2="rh_rfdistal"/>
+    <weld body1="ring-finger-phalanx-intermediate-right" body2="rh_rfmiddle"/>
+    <weld body1="ring-finger-phalanx-proximal-right" body2="rh_rfproximal"/>
+    <weld body1="ring-finger-phalanx-distal-left" body2="lh_rfdistal"/>
+    <weld body1="ring-finger-phalanx-intermediate-left" body2="lh_rfmiddle"/>
+    <weld body1="ring-finger-phalanx-proximal-left" body2="lh_rfproximal"/>
+
+    <weld body1="pinky-finger-phalanx-distal-right" body2="rh_lfdistal"/>
+    <weld body1="pinky-finger-phalanx-intermediate-right" body2="rh_lfmiddle"/>
+    <weld body1="pinky-finger-phalanx-proximal-right" body2="rh_lfproximal"/>
+    <weld body1="pinky-finger-phalanx-distal-left" body2="lh_lfdistal"/>
+    <weld body1="pinky-finger-phalanx-intermediate-left" body2="lh_lfmiddle"/>
+    <weld body1="pinky-finger-phalanx-proximal-left" body2="lh_lfproximal"/>
+
+  </equality>
+</mujoco>

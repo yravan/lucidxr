@@ -1,0 +1,23 @@
+<mujoco model="ice skate">
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" rgb1=".1 .2 .3" rgb2=".2 .3 .4" width="512" height="512"/>
+    <material name="grid" texture="grid" texrepeat="1 1" texuniform="true" reflectance=".2"/>
+  </asset>
+
+  <worldbody>
+    <geom name="floor" pos="0 0 0" size="5 5 .05" type="plane" material="grid"/>
+    <body name="leg" pos="0 0 .3">
+      <joint type="slide" axis="1 0 0"/>
+      <joint type="slide" axis="0 1 0"/>
+      <joint type="slide" axis="0 0 1"/>
+      <joint type="hinge" axis="0 0 1"/>
+      <light pos="0 0 2"/>
+      <geom name="shin" type="box" size=".03 .02 .2"/>
+      <geom name="skate" type="capsule" fromto=".02 0 -.25 .1 0 -.25" size=".02"/>
+    </body>
+  </worldbody>
+
+  <contact>
+    <pair name="non-isotropic" geom1="floor" geom2="skate" condim="3" friction="0.1 1"/>
+  </contact>
+</mujoco>

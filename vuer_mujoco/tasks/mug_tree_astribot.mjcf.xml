@@ -1,0 +1,470 @@
+<?xml version="1.0" ?>
+<mujoco>
+  <compiler angle="radian" autolimits="true" assetdir="assets" meshdir="assets" texturedir="assets"/>
+  <!--<statistic center="0.2 0 0.4" extent=".65"/>-->
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="150" elevation="-20" offwidth="1280" offheight="1024"/>
+  </visual>
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.9 0.7 0.9" rgb2="0.94 0.97 0.97" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <!--Materials ported from MTL file-->
+    <material name="table_optical-mat_1" rgba="0.501961 0.517647 0.501961 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_2" rgba="1 1 1 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_3" rgba="0.752941 0.752941 0.752941 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_4" rgba="0.647059 0.619608 0.588235 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <!--Good wood-like color for tabletop-->
+    <material name="table_optical-mat_5" rgba="0.101961 0.101961 0.101961 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <!--Dark color for legs/structure-->
+    <material name="table_optical-mat_6" rgba="0.109804 0.109804 0.109804 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_7" rgba="0.792157 0.819608 0.933333 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_8" rgba="0.529412 0.549020 0.549020 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_9" rgba="0.098039 0.098039 0.098039 1.0" shininess=""/>
+    <material name="table_optical-mat_10" rgba="0 0 0 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_11" rgba="0.294118 0.294118 0.294118 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_12" rgba="0.250980 0.250980 0.250980 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_13" rgba="0.698039 0.698039 0.698039 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <material name="table_optical-mat_14" rgba="0.956863 0.956863 0.956863 1.0" roughness="0" shininess="1" specular="0.4"/>
+    <mesh name="optical_table-model_0" file="model/model_0.obj"/>
+    <mesh name="optical_table-model_1" file="model/model_1.obj"/>
+    <mesh name="optical_table-model_2" file="model/model_2.obj"/>
+    <mesh name="optical_table-model_3" file="model/model_3.obj"/>
+    <mesh name="optical_table-model_4" file="model/model_4.obj"/>
+    <mesh name="optical_table-model_5" file="model/model_5.obj"/>
+    <mesh name="optical_table-model_6" file="model/model_6.obj"/>
+    <mesh name="optical_table-model_7" file="model/model_7.obj"/>
+    <mesh name="optical_table-model_8" file="model/model_8.obj"/>
+    <mesh name="optical_table-model_9" file="model/model_9.obj"/>
+    <mesh name="optical_table-model_10" file="model/model_10.obj"/>
+    <mesh name="optical_table-model_11" file="model/model_11.obj"/>
+    <mesh name="optical_table-model_12" file="model/model_12.obj"/>
+    <mesh name="optical_table-model_13" file="model/model_13.obj"/>
+    <texture type="2d" name="tree-texture" file="mug_tree/texture.png"/>
+    <material name="tree-material" texture="tree-texture" specular="0.2" shininess="0.2"/>
+    <mesh name="tree-model" file="mug_tree/model.obj" scale="0.17 0.2118 0.17">
+      <plugin instance="mug_tree-sdf"/>
+    </mesh>
+    <texture name="texspot" type="2d" file="vuer-mug/vuer.png"/>
+    <material name="matspot" texture="texspot"/>
+    <mesh name="spot" file="vuer-mug/mug.obj" scale="0.00933 0.0142 0.00933">
+      <plugin instance="v-mug-sdf"/>
+    </mesh>
+    <material name="table-concrete" rgba="0.8 0 0 0.0" shininess="0.5"/>
+    <mesh name="astribot-astribot_torso_base_link" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_torso/astribot_torso_base_link.stl"/>
+    <mesh name="astribot-wheel_RF_Link" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_torso/wheel_RF_Link.stl"/>
+    <mesh name="astribot-wheel_LF_Link" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_torso/wheel_LF_Link.stl"/>
+    <mesh name="astribot-wheel_RR_Link" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_torso/wheel_RR_Link.stl"/>
+    <mesh name="astribot-wheel_LR_Link" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_torso/wheel_LR_Link.stl"/>
+    <mesh name="astribot-astribot_torso_link_1" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_torso/astribot_torso_link_1.stl"/>
+    <mesh name="astribot-astribot_torso_link_2" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_torso/astribot_torso_link_2.stl"/>
+    <mesh name="astribot-astribot_torso_link_3" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_torso/astribot_torso_link_3.stl"/>
+    <mesh name="astribot-astribot_torso_link_4" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_torso/astribot_torso_link_4.stl"/>
+    <mesh name="astribot-astribot_head_base_link" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_head/astribot_head_base_link.stl"/>
+    <mesh name="astribot-astribot_head_link_1" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_head/astribot_head_link_1.stl"/>
+    <mesh name="astribot-astribot_head_link_2" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_head/astribot_head_link_2.stl"/>
+    <mesh name="astribot-astribot_arm_left_base_link" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_arm/astribot_arm_left_base_link.stl"/>
+    <mesh name="astribot-astribot_arm_right_base_link" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_arm/astribot_arm_right_base_link.stl"/>
+    <mesh name="astribot-astribot_arm_link_1" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_arm/astribot_arm_link_1.stl"/>
+    <mesh name="astribot-astribot_arm_left_link_2" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_arm/astribot_arm_left_link_2.stl"/>
+    <mesh name="astribot-astribot_arm_link_3" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_arm/astribot_arm_link_3.stl"/>
+    <mesh name="astribot-astribot_arm_link_4" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_arm/astribot_arm_link_4.stl"/>
+    <mesh name="astribot-astribot_arm_link_5" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_arm/astribot_arm_link_5.stl"/>
+    <mesh name="astribot-astribot_arm_link_6" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_arm/astribot_arm_link_6.stl"/>
+    <mesh name="astribot-astribot_arm_link_7" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_arm/astribot_arm_link_7.stl"/>
+    <mesh name="astribot-astribot_arm_right_link_2" content_type="model/stl" file="astribot_s1/astribot_config/robot_config/astribot_s1/meshes/s1_arm/astribot_arm_right_link_2.stl"/>
+    <mesh name="astribot-gripper_base_link" content_type="model/stl" file="astribot_s1/astribot_gripper/meshes/astribot_gripper_base_link.stl"/>
+    <mesh name="astribot-gripper_L1_Link" content_type="model/stl" file="astribot_s1/astribot_gripper/meshes/astribot_gripper_L1_Link.stl"/>
+    <mesh name="astribot-gripper_L11_Link" content_type="model/stl" file="astribot_s1/astribot_gripper/meshes/astribot_gripper_L11_Link.stl"/>
+    <mesh name="astribot-gripper_L2_Link" content_type="model/stl" file="astribot_s1/astribot_gripper/meshes/astribot_gripper_L2_Link.stl"/>
+    <mesh name="astribot-gripper_R1_Link" content_type="model/stl" file="astribot_s1/astribot_gripper/meshes/astribot_gripper_R1_Link.stl"/>
+    <mesh name="astribot-gripper_R11_Link" content_type="model/stl" file="astribot_s1/astribot_gripper/meshes/astribot_gripper_R11_Link.stl"/>
+    <mesh name="astribot-gripper_R2_Link" content_type="model/stl" file="astribot_s1/astribot_gripper/meshes/astribot_gripper_R2_Link.stl"/>
+    <material class="2f85" name="2f85-metal" rgba="0.58 0.58 0.58 1"/>
+    <material class="2f85" name="2f85-silicone" rgba="0.1882 0.1882 0.1882 1"/>
+    <material class="2f85" name="2f85-gray" rgba="0.4627 0.4627 0.4627 1"/>
+    <material class="2f85" name="2f85-black" rgba="0.149 0.149 0.149 1"/>
+    <mesh class="2f85" file="robotiq_2f85/base_mount.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/base.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/driver.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/coupler.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/follower.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/pad.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/silicone_pad.stl"/>
+    <mesh class="2f85" file="robotiq_2f85/spring_link.stl"/>
+  </asset>
+  z
+  <default>
+    <default class="optical_table-visual">
+      <geom group="2" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default class="optical_table-collision">
+      <geom group="3" type="mesh"/>
+    </default>
+    <!--<joint limited="true"/>-->
+    <site size="0.005 0 0" rgba="0.4 0.9 0.4 1"/>
+    <general ctrllimited="true" ctrlrange="-6.2831 6.2831" forcelimited="true" biastype="affine"/>
+    <default class="2f85">
+      <mesh scale="0.001 0.001 0.001"/>
+      <general biastype="affine"/>
+      <joint axis="1 0 0"/>
+      <default class="2f85-driver">
+        <joint range="0 0.8" armature="0.005" damping="0.1" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"/>
+      </default>
+      <default class="2f85-follower">
+        <joint range="-0.872664 0.872664" armature="0.001" pos="0 -0.018 0.0065" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"/>
+      </default>
+      <default class="2f85-spring_link">
+        <joint range="-0.29670597283 0.8" armature="0.001" stiffness="0.05" springref="2.62" damping="0.00125"/>
+      </default>
+      <default class="2f85-coupler">
+        <joint range="-1.57 0" armature="0.001" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"/>
+      </default>
+      <default class="2f85-visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="0"/>
+      </default>
+      <default class="2f85-collision">
+        <geom type="mesh" group="3"/>
+        <default class="2f85-pad_box1">
+          <geom mass="0" type="box" pos="0 -0.0026 0.028125" size="0.011 0.004 0.009375" friction="4" solimp="0.95 0.99 0.001" solref="0.004 1" priority="1" rgba="0.55 0.55 0.55 1"/>
+        </default>
+        <default class="2f85-pad_box2">
+          <geom mass="0" type="box" pos="0 -0.0026 0.009375" size="0.011 0.004 0.009375" friction="3" solimp="0.95 0.99 0.001" solref="0.004 1" priority="1" rgba="0.45 0.45 0.45 1"/>
+        </default>
+      </default>
+    </default>
+  </default>
+  <option timestep="0.002" integrator="implicitfast" sdf_iterations="20" sdf_initpoints="40"/>
+  <extension>
+    <plugin plugin="mujoco.sdf.sdflib">
+      <instance name="mug_tree-sdf">
+        <config key="aabb" value="0"/>
+      </instance>
+      <instance name="v-mug-sdf">
+        <config key="aabb" value="0"/>
+      </instance>
+    </plugin>
+  </extension>
+  <worldbody>
+    <light name="key" pos="0.44999999999999996 0.3 0.3" dir="-1 -0.5 -0.5" cutoff="45" diffuse="0.3 0.3 0.3" directional="true"/>
+    <light name="fill" pos="0.25 -0.8999999999999999 0.2" dir="-0.8 0.5 -0.6" cutoff="60" diffuse="0.18 0.18 0.18" directional="true"/>
+    <light name="back" pos="-1.35 -0.2 1.0" dir="-1 0 1" cutoff="50" diffuse="0.5 0.5 0.5" directional="true"/>
+    <camera name="left" pos="0.03999999999999998 0.355 1.095" fovy="42.5" xyaxes="-1.0 0.0 0.0 0.0 -0.4046485876119067 0.9144722634086225"/>
+    <camera name="right" pos="-0.025000000000000022 -0.355 1.095" fovy="42.5" xyaxes="1.0 0.0 0.0 -0.0 0.4046485876119067 0.9144722634086225"/>
+    <body name="table_optical" pos="0.05 -0.5 0.77" quat="0.7071 0 0 0.7071">
+      <!--<freejoint/>-->
+      <geom mesh="optical_table-model_0" class="optical_table-visual" material="table_optical-mat_1"/>
+      <geom mesh="optical_table-model_1" class="optical_table-visual" material="table_optical-mat_2"/>
+      <geom mesh="optical_table-model_2" class="optical_table-visual" material="table_optical-mat_3"/>
+      <geom mesh="optical_table-model_3" class="optical_table-visual" material="table_optical-mat_4"/>
+      <geom mesh="optical_table-model_4" class="optical_table-visual" material="table_optical-mat_5"/>
+      <geom mesh="optical_table-model_5" class="optical_table-visual" material="table_optical-mat_6"/>
+      <geom mesh="optical_table-model_6" class="optical_table-visual" material="table_optical-mat_7"/>
+      <geom mesh="optical_table-model_7" class="optical_table-visual" material="table_optical-mat_8"/>
+      <geom mesh="optical_table-model_8" class="optical_table-visual" material="table_optical-mat_9"/>
+      <geom mesh="optical_table-model_9" class="optical_table-visual" material="table_optical-mat_10"/>
+      <geom mesh="optical_table-model_10" class="optical_table-visual" material="table_optical-mat_11"/>
+      <geom mesh="optical_table-model_11" class="optical_table-visual" material="table_optical-mat_12"/>
+      <geom mesh="optical_table-model_12" class="optical_table-visual" material="table_optical-mat_13"/>
+      <geom mesh="optical_table-model_13" class="optical_table-visual" material="table_optical-mat_14"/>
+    </body>
+    <body name="tree" quat="0.5 0.5 0.5 0.5" pos="0.17 0.0 1">
+      <joint type="free"/>
+      <geom type="sdf" name="tree-sdf" mesh="tree-model" quat="1 0 0 0" mass="0.3" material="tree-material" contype="1" conaffinity="1">
+        <plugin instance="mug_tree-sdf"/>
+      </geom>
+      <site name="tree_goal_1" pos="-.03 0.076 -0.036" size="0.007" rgba="1 1 1 1"/>
+      <site name="tree_goal_2" pos="-.03 0.066 -0.016" size="0.007" rgba="1 1 1 1"/>
+      <site name="tree_goal_3" pos="-.03 0.071 -0.026" size="0.007" rgba="1 1 1 1"/>
+      <site name="tree_goal_4" pos="-.03 0.081 -0.046" size="0.007" rgba="1 1 1 1"/>
+      <site name="tree_goal_5" pos="-.03 0.086 -0.056" size="0.007" rgba="1 1 1 1"/>
+      <site name="tree_goal_6" pos="-.03 0.091 -0.066" size="0.007" rgba="1 1 1 1"/>
+    </body>
+    <body name="mug" pos="-0.05 -0.025 0.85" quat="0 0 0 1">
+      <freejoint/>
+      <geom type="sdf" name="mug" mesh="spot" material="matspot" mass="0.075" quat="0 0 1 1" condim="4" solimp="0.95 0.99 0.001" solref="0.003 1">
+        <plugin instance="v-mug-sdf"/>
+      </geom>
+      <site name="mug_handle_1" pos="-0.054 0 0.075" size="0.005" rgba="1 1 1 1"/>
+      <site name="mug_handle_2" pos="-0.054 0 0.056" size="0.005" rgba="1 1 1 1"/>
+      <site name="mug_handle_3" pos="-0.054 0 0.037" size="0.005" rgba="1 1 1 1"/>
+    </body>
+    <body name="table" pos="0 0 0.76">
+      <geom name="table-concrete" type="box" group="4" material="table-concrete" size="0.7 0.7 0.05" pos="0 0 -0.05"/>
+    </body>
+    <body name="astribot" pos="-0.55 -0.2 -0.2" quat="1 0 0 0">
+      <!--<camera name="third-person" pos="2.205 -1.936 2.187" xyaxes="0.657 0.754 -0.000 -0.354 0.308 0.883"/>-->
+      <camera name="third-person" pos="-1.904 -4.026 3.227" xyaxes="0.910 -0.415 0.000 0.183 0.401 0.898"/>
+      <inertial pos="-0.0076187 -0.0020711 0.013725" quat="0.019455 0.708067 -0.0183173 0.70564" mass="6.7123" diaginertia="0.148701 0.08243 0.079229"/>
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_torso_base_link"/>
+      <body name="astribot-wheel_RF_Link" pos="0.216347 -0.216347 -0.015" quat="0.270599 0.65328 -0.2706 0.653282">
+        <inertial pos="2.7624e-07 -1.7583e-07 0.014539" quat="0.270598 0.653281 -0.270598 0.653281" mass="0.56418" diaginertia="0.0015639 0.000831884 0.000831876"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-wheel_RF_Link"/>
+      </body>
+      <body name="astribot-wheel_LF_Link" pos="0.216347 0.216347 -0.015" quat="0.270599 -0.65328 -0.2706 -0.653282">
+        <inertial pos="2.7617e-07 -1.7589e-07 0.014539" quat="0.270598 0.653281 -0.270598 0.653281" mass="0.56418" diaginertia="0.0015639 0.000831884 0.000831876"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-wheel_LF_Link"/>
+      </body>
+      <body name="astribot-wheel_RR_Link" pos="-0.216347 -0.211347 -0.015" quat="0.65328 0.270597 -0.653283 0.270598">
+        <inertial pos="-2.7619e-07 1.7583e-07 0.014539" quat="0.270598 0.653281 -0.270598 0.653281" mass="0.56418" diaginertia="0.0015639 0.000831884 0.000831876"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-wheel_RR_Link"/>
+      </body>
+      <body name="astribot-wheel_LR_Link" pos="-0.216347 0.211347 -0.015" quat="0.65328 -0.270597 -0.653283 -0.270598">
+        <inertial pos="0.0019998 -0.0070713 0.014539" quat="0.653281 0.270598 -0.653281 0.270598" mass="0.56418" diaginertia="0.0015639 0.000831884 0.000831876"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-wheel_LR_Link"/>
+      </body>
+      <body name="astribot-astribot_torso_link_1" pos="0 0 0.12" quat="0.499998 -0.5 0.5 0.500002">
+        <inertial pos="-0.15249 0.00021066 -0.0033476" quat="0.488335 0.4894 0.510843 0.510936" mass="7.3766" diaginertia="0.148533 0.14268 0.0286014"/>
+        <joint name="astribot-astribot_torso_joint_1" pos="0 0 0" axis="0 0 1" range="-0.2 0.2" limited="true"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_torso_link_1"/>
+        <body name="astribot-astribot_torso_link_2" pos="-0.38 0 0">
+          <inertial pos="-0.22214 0.028873 0.00059024" quat="0.0851505 0.715372 -0.0840248 0.688427" mass="5.6183" diaginertia="0.0175257 0.0129591 0.00795872"/>
+          <joint name="astribot-astribot_torso_joint_2" pos="0 0 0" axis="0 0 1" range="-0.2 0.2" limited="true"/>
+          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_torso_link_2"/>
+          <body name="astribot-astribot_torso_link_3" pos="-0.39 0 0">
+            <inertial pos="-0.017519 0.00059523 0.00025821" quat="0.00834705 0.708024 0.00970003 0.706073" mass="0.49013" diaginertia="0.000380401 0.000365211 0.000222118"/>
+            <site name="astribot-hip" type="sphere" size="0.05" pos="0 0 0"/>
+            <joint name="astribot-astribot_torso_joint_3" pos="0 0 0" axis="0 0 1" range="-0.2 0.2" limited="true"/>
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_torso_link_3"/>
+            <body name="astribot-astribot_torso_link_4" quat="0.499998 0.5 -0.500002 -0.5">
+              <inertial pos="0.0012784 -5.5993e-05 0.27195" quat="0.996969 0.00493705 -0.0512405 -0.0583368" mass="4.53954" diaginertia="0.0365744 0.0324277 0.0165454"/>
+              <joint name="astribot-astribot_torso_joint_4" pos="0 0 0" axis="0 0 1" range="-0.45 0.45" limited="true"/>
+              <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_torso_link_4"/>
+              <geom pos="0 0 0.46765" quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_head_base_link"/>
+              <geom pos="0 0.06449 0.36823" quat="0.579228 -0.40558 -0.40558 -0.579228" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_left_base_link"/>
+              <geom pos="0 -0.06449 0.36823" quat="0.579228 0.40558 -0.40558 0.579228" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_right_base_link"/>
+              <body name="astribot-astribot_head_link_1" pos="0 0 0.46765">
+                <inertial pos="3.191e-05 -0.00038566 -0.0257991" quat="0.710346 -0.0335656 0.0294335 0.702436" mass="0.139106" diaginertia="4.79716e-05 4.56699e-05 3.77084e-05"/>
+                <joint name="astribot-astribot_head_joint_1" pos="0 0 0" axis="0 0 1" range="-1.57 1.57" limited="true"/>
+                <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_head_link_1"/>
+                <body name="astribot-astribot_head_link_2" quat="0.707105 -0.707108 0 0">
+                  <inertial pos="0.00705824 -0.144726 -0.00061724" quat="0.696314 0.714797 -0.0643815 -0.00814535" mass="0.970124" diaginertia="0.00559994 0.00544762 0.00147305"/>
+                  <site name="astribot-head" type="sphere" size="0.01" pos="0 0 0"/>
+                  <joint name="astribot-astribot_head_joint_2" pos="0 0 0" axis="0 0 1" range="-1.22 1.22" limited="true"/>
+                  <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_head_link_2"/>
+                  <camera name="astribot_head_left" pos="0.06 -0.16 0.035" quat="0 -0.707107 0 0.707107" fovy="60"/>
+                  <camera name="astribot_head_right" pos="0.06 -0.16 -0.035" quat="0 -0.707107 0 0.707107" fovy="60"/>
+                  <body name="astribot-astribot_head_camera_base_link" pos="0.09 0 0.08" quat="0 0 -1 0">
+                </body>
+                </body>
+              </body>
+              <body name="astribot-astribot_arm_left_link_1" pos="-2.29129e-09 0.150002 0.399354" quat="0.579228 -0.40558 -0.40558 -0.579228">
+                <inertial pos="-3.38727e-10 -8.2617e-10 -0.0532426" quat="0.707107 0 0 0.707107" mass="0.209778" diaginertia="0.000323596 0.000323124 7.65561e-05"/>
+                <joint name="astribot-astribot_arm_left_joint_1" pos="0 0 0" axis="0 0 1" range="-3.1 3.1" limited="true" damping="5" springref="0" stiffness="10"/>
+                <!-- damping="5" springref="0" stiffness="600"/> -->
+                <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_1"/>
+                <body name="astribot-astribot_arm_left_link_2" quat="0.707105 0.707108 0 0">
+                  <inertial pos="-0.0121217 0.0368181 -0.01357" quat="0.791518 0.59161 0.1486 -0.0376264" mass="0.457087" diaginertia="0.000807391 0.00073487 0.00052421"/>
+                  <joint name="astribot-astribot_arm_left_joint_2" pos="0 0 0" axis="0 0 1" range="-1.53 0.46" limited="true" damping="5" springref="0" stiffness="10"/>
+                  <!-- damping="5" springref="0" stiffness="120" -->
+                  <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_left_link_2"/>
+                  <body name="astribot-astribot_arm_left_link_3" pos="0 0.05 0" quat="0.499998 0.5 -0.500002 -0.5">
+                    <inertial pos="0.011039 0.000213501 0.240357" quat="0.998444 -0.0037731 0.0555468 0.00311159" mass="0.494215" diaginertia="0.00242787 0.00227335 0.000529931"/>
+                    <joint name="astribot-astribot_arm_left_joint_3" pos="0 0 0" axis="0 0 1" range="-3.1 3.1" limited="true" damping="5" springref="-1.57" stiffness="10"/>
+                    <!-- damping="5" springref="-1.57" stiffness="600"/> -->
+                    <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_3"/>
+                    <body name="astribot-astribot_arm_left_link_4" pos="0.03 0 0.309" quat="0.707105 -0.707108 0 0">
+                      <inertial pos="7.03915e-06 -0.0168079 -2.59557e-05" quat="0.499707 0.500293 -0.499963 0.500037" mass="0.0997012" diaginertia="0.000116272 9.25243e-05 6.45973e-05"/>
+                      <joint name="astribot-astribot_arm_left_joint_4" pos="0 0 0" axis="0 0 1" range="0.7 2.61" limited="true" damping="5"/>
+                      <!-- damping="5" -->
+                      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_4"/>
+                      <body name="astribot-astribot_arm_left_link_5" quat="0.707105 0.707108 0 0">
+                        <inertial pos="-0.000298311 -6.59706e-05 0.195471" quat="0.999978 -0.00282806 0.00595135 0.000919051" mass="0.294855" diaginertia="0.000598295 0.000503604 0.00018486"/>
+                        <joint name="astribot-astribot_arm_left_joint_5" pos="0 0 0" axis="0 0 1" range="-2.56 2.56" limited="true" damping="5"/>
+                        <!-- damping="5" -->
+                        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_5"/>
+                        <body name="astribot-astribot_arm_left_link_6" pos="0 0 0.277" quat="0.707105 -0.707108 0 0">
+                          <inertial pos="-1.38286e-05 -2.85328e-08 -1.00704e-08" quat="0.500001 0.499999 0.499999 0.500001" mass="0.0256707" diaginertia="1.67925e-05 1.38505e-05 6.16131e-06"/>
+                          <joint name="astribot-astribot_arm_left_joint_6" pos="0 0 0" axis="0 0 1" range="-3 3" limited="true" damping="5"/>
+                          <!-- damping="5" -->
+                          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_6"/>
+                          <body name="astribot-astribot_arm_left_link_7" quat="0.707105 0 0.707108 0">
+                            <inertial pos="0.000159114 -0.00122462 0.0544212" quat="0.996987 -0.0775686 -0.000749819 0.000654519" mass="0.738617" diaginertia="0.00194624 0.00124628 0.000900314"/>
+                            <joint name="astribot-astribot_arm_left_joint_7" pos="0 0 0" axis="0 0 1" range="-1.53 1.53" limited="true" damping="5"/>
+                            <!-- damping="5" -->
+                            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_7"/>
+                            <site name="astribot-arm_left_tool" pos="0 -0.15 0" type="sphere" size="0.01"/>
+                            <site name="astribot-force_torque_sensor_left" pos="0 0 0"/>
+                            <body name="astribot-astribot_arm_left_tool_link" pos="0 -0.048 0" quat="0.707107 0.707107 0 0">
+                              <body name="gripper" pos="0 0 0" quat="1 0 0 0">
+                                <geom class="2f85-visual" mesh="base_mount" material="2f85-black"/>
+                                <geom class="2f85-collision" mesh="base_mount"/>
+                                <body name="gripper-base" pos="0 0 0.0038" quat="1 0 0 0">
+                                  <inertial mass="0.05" pos="0 -2.70394e-05 0.0354675" quat="1 -0.00152849 0 0" diaginertia="0.000260285 0.000225381 0.000152708"/>
+                                  <geom class="2f85-visual" mesh="base" material="2f85-black"/>
+                                  <geom class="2f85-collision" mesh="base"/>
+                                  <site name="gripper-pinch" pos="0 0 0.145" type="sphere" rgba="0.9 0.0 0.0 1" size="0.002"/>
+                                  <camera name="wrist" pos="-0.1 0.0 0.01" quat="-0.11 0.7 0.7 -0.11" fovy="42.5"/>
+                                  <!-- Right-hand side 4-bar linkage -->
+                                  <body name="gripper-right_driver" pos="0 0.0306011 0.054904">
+                                    <inertial mass="0.00899563" pos="2.96931e-12 0.0177547 0.00107314" quat="0.681301 0.732003 0 0" diaginertia="1.72352e-06 1.60906e-06 3.22006e-07"/>
+                                    <joint name="gripper-right_driver_joint" class="2f85-driver"/>
+                                    <geom class="2f85-visual" mesh="driver" material="2f85-gray"/>
+                                    <geom class="2f85-collision" mesh="driver"/>
+                                    <body name="gripper-right_coupler" pos="0 0.0315 -0.0041">
+                                      <inertial mass="0.0140974" pos="0 0.00301209 0.0232175" quat="0.705636 -0.0455904 0.0455904 0.705636" diaginertia="4.16206e-06 3.52216e-06 8.88131e-07"/>
+                                      <joint name="gripper-right_coupler_joint" class="2f85-coupler"/>
+                                      <geom class="2f85-visual" mesh="coupler" material="2f85-black"/>
+                                      <geom class="2f85-collision" mesh="coupler"/>
+                                    </body>
+                                  </body>
+                                  <body name="gripper-right_spring_link" pos="0 0.0132 0.0609">
+                                    <inertial mass="0.0221642" pos="-8.65005e-09 0.0181624 0.0212658" quat="0.663403 -0.244737 0.244737 0.663403" diaginertia="8.96853e-06 6.71733e-06 2.63931e-06"/>
+                                    <joint name="gripper-right_spring_link_joint" class="2f85-spring_link"/>
+                                    <geom class="2f85-visual" mesh="spring_link" material="2f85-black"/>
+                                    <geom class="2f85-collision" mesh="spring_link"/>
+                                    <body name="gripper-right_follower" pos="0 0.055 0.0375">
+                                      <inertial mass="0.0125222" pos="0 -0.011046 0.0124786" quat="1 0.1664 0 0" diaginertia="2.67415e-06 2.4559e-06 6.02031e-07"/>
+                                      <joint name="gripper-right_follower_joint" class="2f85-follower"/>
+                                      <geom class="2f85-visual" mesh="follower" material="2f85-black"/>
+                                      <geom class="2f85-collision" mesh="follower"/>
+                                      <body name="gripper-right_pad" pos="0 -0.0189 0.01352">
+                                        <geom class="2f85-pad_box1" name="gripper-right_pad1"/>
+                                        <geom class="2f85-pad_box2" name="gripper-right_pad2"/>
+                                        <inertial mass="0.0035" pos="0 -0.0025 0.0185" quat="0.707107 0 0 0.707107" diaginertia="4.73958e-07 3.64583e-07 1.23958e-07"/>
+                                        <geom class="2f85-visual" mesh="pad"/>
+                                        <body name="gripper-right_silicone_pad">
+                                          <geom class="2f85-visual" mesh="silicone_pad" material="2f85-black"/>
+                                        </body>
+                                      </body>
+                                    </body>
+                                  </body>
+                                  <!-- Left-hand side 4-bar linkage -->
+                                  <body name="gripper-left_driver" pos="0 -0.0306011 0.054904" quat="0 0 0 1">
+                                    <inertial mass="0.00899563" pos="0 0.0177547 0.00107314" quat="0.681301 0.732003 0 0" diaginertia="1.72352e-06 1.60906e-06 3.22006e-07"/>
+                                    <joint name="gripper-left_driver_joint" class="2f85-driver"/>
+                                    <geom class="2f85-visual" mesh="driver" material="2f85-gray"/>
+                                    <geom class="2f85-collision" mesh="driver"/>
+                                    <body name="gripper-left_coupler" pos="0 0.0315 -0.0041">
+                                      <inertial mass="0.0140974" pos="0 0.00301209 0.0232175" quat="0.705636 -0.0455904 0.0455904 0.705636" diaginertia="4.16206e-06 3.52216e-06 8.88131e-07"/>
+                                      <joint name="gripper-left_coupler_joint" class="2f85-coupler"/>
+                                      <geom class="2f85-visual" mesh="coupler" material="2f85-black"/>
+                                      <geom class="2f85-collision" mesh="coupler"/>
+                                    </body>
+                                  </body>
+                                  <body name="gripper-left_spring_link" pos="0 -0.0132 0.0609" quat="0 0 0 1">
+                                    <inertial mass="0.0221642" pos="-8.65005e-09 0.0181624 0.0212658" quat="0.663403 -0.244737 0.244737 0.663403" diaginertia="8.96853e-06 6.71733e-06 2.63931e-06"/>
+                                    <joint name="gripper-left_spring_link_joint" class="2f85-spring_link"/>
+                                    <geom class="2f85-visual" mesh="spring_link" material="2f85-black"/>
+                                    <geom class="2f85-collision" mesh="spring_link"/>
+                                    <body name="gripper-left_follower" pos="0 0.055 0.0375">
+                                      <inertial mass="0.0125222" pos="0 -0.011046 0.0124786" quat="1 0.1664 0 0" diaginertia="2.67415e-06 2.4559e-06 6.02031e-07"/>
+                                      <joint name="gripper-left_follower_joint" class="2f85-follower"/>
+                                      <geom class="2f85-visual" mesh="follower" material="2f85-black"/>
+                                      <geom class="2f85-collision" mesh="follower"/>
+                                      <body name="gripper-left_pad" pos="0 -0.0189 0.01352">
+                                        <geom class="2f85-pad_box1" name="gripper-left_pad1"/>
+                                        <geom class="2f85-pad_box2" name="gripper-left_pad2"/>
+                                        <inertial mass="0.0035" pos="0 -0.0025 0.0185" quat="1 0 0 1" diaginertia="4.73958e-07 3.64583e-07 1.23958e-07"/>
+                                        <geom class="2f85-visual" mesh="pad"/>
+                                        <body name="gripper-left_silicone_pad">
+                                          <geom class="2f85-visual" mesh="silicone_pad" material="2f85-black"/>
+                                        </body>
+                                      </body>
+                                    </body>
+                                  </body>
+                                </body>
+                              </body>
+                            </body>
+                          </body>
+                        </body>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+              <body name="astribot-astribot_arm_right_link_1" pos="-2.29129e-09 -0.150002 0.399354" quat="0.579228 0.40558 -0.40558 0.579228">
+                <inertial pos="-3.38727e-10 -8.2617e-10 -0.0532426" quat="0.707107 0 0 0.707107" mass="0.209778" diaginertia="0.000323596 0.000323124 7.65561e-05"/>
+                <joint name="astribot-astribot_arm_right_joint_1" pos="0 0 0" axis="0 0 1" range="-3.1 3.1" limited="true"/>
+                <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_1"/>
+                <body name="astribot-astribot_arm_right_link_2" quat="0.707105 0.707108 0 0">
+                  <inertial pos="-0.0121217 0.0368181 -0.01357" quat="0.791518 0.59161 0.1486 -0.0376264" mass="0.457087" diaginertia="0.000807391 0.00073487 0.00052421"/>
+                  <joint name="astribot-astribot_arm_right_joint_2" pos="0 0 0" axis="0 0 1" range="-0.46 0.46" limited="true"/>
+                  <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_right_link_2"/>
+                  <body name="astribot-astribot_arm_right_link_3" pos="0 0.05 0" quat="0.499998 0.5 -0.500002 -0.5">
+                    <inertial pos="0.011039 0.000213501 0.240357" quat="0.998444 -0.0037731 0.0555468 0.00311159" mass="0.494215" diaginertia="0.00242787 0.00227335 0.000529931"/>
+                    <joint name="astribot-astribot_arm_right_joint_3" pos="0 0 0" axis="0 0 1" range="-3.1 3.1" limited="true"/>
+                    <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_3"/>
+                    <body name="astribot-astribot_arm_right_link_4" pos="0.03 0 0.309" quat="0.707105 -0.707108 0 0">
+                      <inertial pos="7.03915e-06 -0.0168079 -2.59557e-05" quat="0.499707 0.500293 -0.499963 0.500037" mass="0.0997012" diaginertia="0.000116272 9.25243e-05 6.45973e-05"/>
+                      <joint name="astribot-astribot_arm_right_joint_4" pos="0 0 0" axis="0 0 1" range="0.5 2.61" limited="true"/>
+                      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_4"/>
+                      <body name="astribot-astribot_arm_right_link_5" quat="0.707105 0.707108 0 0">
+                        <inertial pos="-0.000298311 -6.59706e-05 0.195471" quat="0.999978 -0.00282806 0.00595135 0.000919051" mass="0.294855" diaginertia="0.000598295 0.000503604 0.00018486"/>
+                        <joint name="astribot-astribot_arm_right_joint_5" pos="0 0 0" axis="0 0 1" range="-2 2" limited="true"/>
+                        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_5"/>
+                        <body name="astribot-astribot_arm_right_link_6" pos="0 0 0.277" quat="0.707105 -0.707108 0 0">
+                          <inertial pos="-1.38286e-05 -2.85328e-08 -1.00704e-08" quat="0.500001 0.499999 0.499999 0.500001" mass="0.0256707" diaginertia="1.67925e-05 1.38505e-05 6.16131e-06"/>
+                          <joint name="astribot-astribot_arm_right_joint_6" pos="0 0 0" axis="0 0 1" range="-0.76 0.76" limited="true"/>
+                          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_6"/>
+                          <body name="astribot-astribot_arm_right_link_7" quat="0.707105 0 0.707108 0">
+                            <inertial pos="0.000159114 -0.00122462 0.0544212" quat="0.996987 -0.0775686 -0.000749819 0.000654519" mass="0.738617" diaginertia="0.00194624 0.00124628 0.000900314"/>
+                            <joint name="astribot-astribot_arm_right_joint_7" pos="0 0 0" axis="0 0 1" range="-1.53 1.53" limited="true"/>
+                            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="astribot-astribot_arm_link_7"/>
+                            <site name="astribot-arm_right_tool" pos="0 -0.18 0" size="0.01" xyaxes="0 0 -1 1 0 0"/>
+                            <body name="astribot-astribot_arm_right_tool_link" pos="0 -0.048 0" quat="0.707107 0.707107 0 0">
+                              <camera name="astribot_arm_right_effector" pos="0 0.16 -0.05" quat="1.28555e-06 3.28254e-07 0.968912 0.247404" fovy="60"/>
+                            </body>
+                            <site name="astribot-force_torque_sensor_right" pos="0 0 0"/>
+                          </body>
+                        </body>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body mocap="true" name="gripper-mocap" pos="-0.096904911 0.00114953518 1.14964232" quat="0 0 -1 0">
+      <site name="gripper-mocap-site" size="0.002" type="sphere" rgba="0.13 0.3 0.2 1"/>
+    </body>
+    <body name="astribot-head_target" pos="-0.55 -0.2 1.3" quat="0.9728406939043869 -0.025624495420225976 0.18798919942007714 0.13260629856642747" mocap="true">
+      <!--<geom type="sphere" size=".06" contype="0" conaffinity="0" rgba=".6 .3 .3 .2"/>-->
+      <site name="astribot-head_target_site" type="sphere" size="0.01" quat="0.707 -0.707 0 0" rgba="0 0 1 1" group="1"/>
+    </body>
+    <body name="astribot-arm_right_tool_target" pos="-0.10000000000000003 -0.41000000000000003 0.55" quat="-0.118949 0.847764 -0.168235 0.488717" mocap="true">
+      <!--<geom type="sphere" size=".06" contype="0" conaffinity="0" rgba=".6 .3 .3 .2"/>-->
+      <site name="astribot-arm_right_tool_target_site" type="sphere" size="0.01" rgba="0 0 1 1" group="1"/>
+    </body>
+  </worldbody>
+  <equality>
+    <weld name="astribot-arm_right_tool-weld" site1="astribot-arm_right_tool" site2="astribot-arm_right_tool_target_site" solref="0.003 1" solimp="0.9 0.95 0.001"/>
+    <weld name="astribot-head-weld" site1="astribot-head_target_site" site2="astribot-head"/>
+    <connect anchor="0 0 0" body1="gripper-right_follower" body2="gripper-right_coupler" solimp="0.95 0.99 0.001" solref="0.005 1"/>
+    <connect anchor="0 0 0" body1="gripper-left_follower" body2="gripper-left_coupler" solimp="0.95 0.99 0.001" solref="0.005 1"/>
+    <joint joint1="gripper-right_driver_joint" joint2="gripper-left_driver_joint" polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1"/>
+    <weld name="gripper-control" site1="gripper-mocap-site" site2="gripper-pinch" solref="0.003 1" solimp="0.9 0.95 0.001"/>
+  </equality>
+  <contact>
+    <exclude body1="gripper-base" body2="gripper-left_driver"/>
+    <exclude body1="gripper-base" body2="gripper-right_driver"/>
+    <exclude body1="gripper-base" body2="gripper-left_spring_link"/>
+    <exclude body1="gripper-base" body2="gripper-right_spring_link"/>
+    <exclude body1="gripper-right_coupler" body2="gripper-right_follower"/>
+    <exclude body1="gripper-left_coupler" body2="gripper-left_follower"/>
+  </contact>
+  <!--This adds stability to the model by having a tendon that distributes the forces between both
+      joints, such that the equality constraint doesn't have to do that much work in order to equalize
+      both joints. Since both joints share the same sign, we split the force between both equally by
+      setting coef=0.5-->
+  <tendon>
+    <fixed name="gripper-split">
+      <joint joint="gripper-right_driver_joint" coef="0.5"/>
+      <joint joint="gripper-left_driver_joint" coef="0.5"/>
+    </fixed>
+  </tendon>
+  <!--The general actuator below is a customized position actuator (with some damping) where
+      gainprm[0] != kp (see http://mujoco.org/book/modeling.html#position).
+      The reason why gainprm[0] != kp is because the control input range has to be re-scaled to
+      [0, 255]. The joint range is currently set at [0, 0.8], the control range is [0, 255] and
+      kp = 100. Tau = Kp * scale * control_input - Kp * error, max(Kp * scale * control_input) = 0.8,
+      hence scale = 0.8 * 100 / 255-->
+  <actuator>
+    <general class="2f85" name="gripper-fingers_actuator" tendon="gripper-split" forcerange="-5 5" ctrlrange="0 1" gainprm="80 0 0" biasprm="0 -100 -10"/>
+  </actuator>
+</mujoco>
