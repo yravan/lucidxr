@@ -219,8 +219,8 @@ run a learned depth model; termination in dm_control returned a discount rather
 than a boolean. Preserve the intended behavior and explicitly document changed
 APIs rather than cloning these accidents.
 
-Separate physical composition (Scene), simulation ownership (MujocoEnv), action
-encoding (Control), episode rules (Episode), and observation augmentation
+Separate physical composition (Scene), simulation ownership (MujocoEnv), policy-side action
+encoding, episode rules (Episode), and observation augmentation
 (wrappers). Share the observation path between replay and rollouts. A read must
 not silently step physics, alter success counters or resample model properties.
 Use explicit body/site names and declared spaces instead of array-position
@@ -228,7 +228,7 @@ assumptions and hidden wrapper nesting. Keep partial recording restoration
 separate from full simulator continuation, documenting what each captures.
 
 Use a few meaningful checks: Gymnasium's checker on a small composed scene,
-relative-pose roundtrip with out-of-order targets and zero actuators, snapshot
+native command validation with multiple targets and zero actuators, snapshot
 continuation, real image-space validation and seeded randomization. Then sweep
 existing scene definitions with short rollouts. This found a real geometry-scale
 problem that compile-only checks missed: sort_shapes used unit-scale meshes;
@@ -237,3 +237,22 @@ those explicit scene scales rather than hiding instability in the environment.
 
 See sim/mujoco_env/DESIGN.md for the dependency audit and
 sim/mujoco_env/README.md for the migration map and validation boundaries.
+
+### Keep representation and wrapper responsibilities explicit
+
+Return native physical dictionaries from the runtime. Rotation6d, flat vectors,
+normalization and relative coordinate choices belong with policy adapters, not
+simulator classes. Keep recording independent of the policy representation.
+
+Review each wrapper for a single responsibility. CameraWrapper composes
+observations; CameraView resolves configuration and captures images. Camera,
+lighting and texture randomization are separate wrappers sharing a small
+RandomizationWrapper lifecycle. Capture only each randomizer's owned rows so
+restoring one camera does not erase another camera's randomization.
+
+Measure wrapper overhead separately from actual requested work. Fuse adjacent
+compatible lifecycle passes, refresh the model once per randomization reset,
+cache identical renders only within one observation, and preserve third-party
+wrapper boundaries. Add operation-count regressions for duplicated work; keep
+machine-dependent timings in a manual benchmark. A hundred duplicate image
+requests need one render, but a hundred distinct images still have a real cost.

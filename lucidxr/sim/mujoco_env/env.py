@@ -1,13 +1,13 @@
 """A Scene-backed Gymnasium environment using native MuJoCo."""
 
+from collections.abc import Mapping
+
 import gymnasium as gym
 import mujoco
 import numpy as np
 from gymnasium import spaces
 
 from lucidxr.sim.scenes.base import Scene
-
-from .control import ActuatorControl, actuator_space
 
 FRAME_FIELDS = ("qpos", "qvel", "act", "ctrl", "mocap_pos", "mocap_quat")
 
@@ -32,7 +32,7 @@ class Episode:
 class MujocoEnv(gym.Env):
     """Compile a Scene once. Own simulation state, control timing and rendering.
 
-    Use MocapControl for floating rigs, otherwise actions directly set actuators.
+    Actions are native ctrl and, when present, world-space mocap pose arrays.
     Scene.seed controls construction; reset(seed=...) seeds episode sampling.
     Wrap with Gymnasium TimeLimit to impose a maximum number of control steps.
     """
@@ -43,7 +43,6 @@ class MujocoEnv(gym.Env):
         self,
         scene: Scene,
         *,
-        control=None,
         episode=None,
         frame_skip=10,
         settle_steps=0,
@@ -63,17 +62,29 @@ class MujocoEnv(gym.Env):
         self.scene = scene
         self.model = scene.compile()
         self.data = mujoco.MjData(self.model)
-        self.control = control if control is not None else ActuatorControl()
         self.episode = episode if episode is not None else Episode()
         self.frame_skip, self.settle_steps = frame_skip, settle_steps
         self.render_mode = render_mode
         self.camera, self.width, self.height = camera, width, height
         self.metadata = {**self.metadata, "render_fps": max(1, round(1 / self.dt))}
-        self.action_space = self.control.bind(self.model)
+        bounds = np.where(
+            self.model.actuator_ctrllimited[:, None],
+            self.model.actuator_ctrlrange,
+            np.array([-np.inf, np.inf]),
+        )
+        commands = {"ctrl": spaces.Box(bounds[:, 0], bounds[:, 1], dtype=np.float64)}
+        if self.model.nmocap:
+            commands.update(
+                {
+                    "mocap_pos": spaces.Box(-np.inf, np.inf, (self.model.nmocap, 3), dtype=np.float64),
+                    "mocap_quat": spaces.Box(-1, 1, (self.model.nmocap, 4), dtype=np.float64),
+                }
+            )
+        self.action_space = spaces.Dict(commands)
         self.observation_space = spaces.Dict(
             {
                 name: spaces.Box(-np.inf, np.inf, getattr(self.data, name).shape, dtype=np.float64)
-                for name in (*FRAME_FIELDS, "sensordata")
+                for name in (*FRAME_FIELDS, "sensordata", "site_xpos", "site_xmat")
             }
         )
         self._rendering = None
@@ -88,8 +99,8 @@ class MujocoEnv(gym.Env):
         return {name: getattr(self.data, name).copy() for name in self.observation_space.spaces}
 
     def current_action(self):
-        """Encode current commanded targets/ctrl, not measured end-effector poses."""
-        return self.control.encode(self.model, self.data)
+        """Copy current native commands, independently of measured site poses."""
+        return {name: getattr(self.data, name).copy() for name in self.action_space.spaces}
 
     def frame(self):
         """Portable recording fields; derived quantities are recomputed on restore."""
@@ -146,7 +157,7 @@ class MujocoEnv(gym.Env):
             mujoco.mj_resetDataKeyframe(self.model, self.data, key)
         else:
             mujoco.mj_resetData(self.model, self.data)
-            limits = actuator_space(self.model)
+            limits = self.action_space["ctrl"]
             self.data.ctrl[:] = np.clip(self.data.ctrl, limits.low, limits.high)
         self.episode.reset(self)
         if "frame" in options:
@@ -164,10 +175,21 @@ class MujocoEnv(gym.Env):
     def step(self, action):
         if not self._ready:
             raise gym.error.ResetNeeded("Call reset() before step()")
-        action = np.asarray(action, dtype=np.float64)
-        if not self.action_space.contains(action) or not np.isfinite(action).all():
-            raise ValueError("Action must be finite and inside action_space")
-        self.control.apply(self.model, self.data, action)
+        if not isinstance(action, Mapping) or set(action) != set(self.action_space.spaces):
+            raise ValueError(f"Action must contain exactly {tuple(self.action_space.spaces)}")
+        commands = {name: np.array(value, dtype=np.float64, copy=True) for name, value in action.items()}
+        if not self.action_space.contains(commands) or not all(
+            np.isfinite(v).all() for v in commands.values()
+        ):
+            raise ValueError("Commands must be finite and inside action_space")
+        if "mocap_quat" in commands:
+            norm = np.linalg.norm(commands["mocap_quat"], axis=-1, keepdims=True)
+            if np.any(norm < 1e-8):
+                raise ValueError("Mocap quaternions must be nonzero")
+            commands["mocap_quat"] /= norm
+        # Validate the entire command before mutating any simulation state.
+        for name, value in commands.items():
+            getattr(self.data, name)[:] = value
         self._advance(self.frame_skip)
         mujoco.mj_forward(self.model, self.data)
         if not np.isfinite(self.data.qpos).all() or not np.isfinite(self.data.qvel).all():
@@ -200,6 +222,12 @@ class MujocoEnv(gym.Env):
 
             self._rendering = Rendering(self.model, self.data)
         return self._rendering
+
+    def refresh_model(self, *, textures_changed=False):
+        """Refresh derived state and invalidate uploaded textures after model edits."""
+        mujoco.mj_forward(self.model, self.data)
+        if textures_changed and self._rendering is not None:
+            self._rendering.invalidate_images()
 
     def render(self):
         if self.render_mode is None:

@@ -33,16 +33,17 @@ Upstream sources inspected:
 
 1. Compile a schema Scene with its asset resolver directly, without changing cwd
    or requiring generated XML files. Each environment owns its model and data.
-2. Support actuator control and multiple mocap targets. The existing learned
-   action format is `[position(3), rotation6d(6)]` per target, then actuator ctrl.
-   Rotation6d stores the first two rotation-matrix columns, column by column;
-   MuJoCo quaternions use wxyz. Targets are absolute world poses, not deltas.
-3. Support hand-relative controls: wrists are world poses and finger targets are
-   relative to their wrist. Replace the implicit six-target ordering with named,
-   explicit parent mappings. Do not silently reinterpret old recordings.
-4. Distinguish commanded target poses from measured end-effector site poses.
-   Allow explicit named sites for policy observations; do not infer by array tail
-   or assume that site indices equal mocap indices.
+2. Expose native actuator controls and world-space mocap position/quaternion
+   arrays in a Gymnasium Dict action space. The old learned format was
+   `[position(3), rotation6d(6)]` per target, then ctrl. That is a policy encoding,
+   not the simulator interface. Quaternion/6D conversion and vector packing belong
+   in policy adapters; MuJoCo's native quaternion order is wxyz.
+3. Preserve the ability to command hand targets, but convert wrist-relative
+   fingers into world-space targets in policy adapters. The environment does not
+   infer hands, six-target groupings, or relative action representations.
+4. Return native measured site positions/matrices separately from commanded
+   targets. Site selection, flattening and encoding belong in policy preprocessing;
+   do not infer measured sites from an array tail or mocap-body ordering.
 5. Replay recorded qpos, qvel, act, ctrl and mocap poses without stepping. Recompute
    derived sites/sensors and render observation wrappers from the restored state.
    Frame restoration, observation, reward evaluation and episode advancement must

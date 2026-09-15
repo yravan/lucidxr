@@ -1,142 +1,102 @@
-"""Seeded visual randomization independent of camera observation wrappers."""
+"""Shared lifecycle for independently composable model randomizers."""
 
-from dataclasses import dataclass
+from abc import ABC, abstractmethod
 
 import gymnasium as gym
-import mujoco
 import numpy as np
-from scipy.spatial.transform import Rotation
 
 
-@dataclass(frozen=True)
-class VisualRandomization:
-    """Uniform perturbations around the original model, never the last sample.
+class RandomizationWrapper(gym.Wrapper, ABC):
+    """Sample on reset or explicit randomize(); observation reads never resample.
 
-    Names default to every camera/light. Textures are optional because large
-    texture trees require a baseline copy; no dataset/model service is involved.
+    Subclasses declare model fields and implement sample(). Each sample starts
+    from the captured baseline. Stack these inside image observation wrappers.
+    The environment RNG seeds the entire stack, in inner-to-outer reset order.
     """
 
-    cameras: tuple[str, ...] | None = None
-    lights: tuple[str, ...] | None = None
-    camera_position: float = 0.01
-    camera_rotation: float = 0.087
-    camera_fovy: float = 5.0
-    light_position: float = 0.1
-    light_color: float = 0.1
-    color: float = 0.2
-    textures: bool = False
-
-
-class DomainRandomization(gym.Wrapper):
-    """Randomize at reset; explicitly call randomize() for an offline variant.
-
-    Put this inside observation wrappers so reset observations see the sampled
-    model. Observation reads never resample. Physics dynamics are unchanged.
-    """
-
-    def __init__(self, env, config=None):
+    def __init__(self, env, *, fields, textures_changed=False):
         super().__init__(env)
-        self.config = config if config is not None else VisualRandomization()
-        for name in (
-            "camera_position",
-            "camera_rotation",
-            "camera_fovy",
-            "light_position",
-            "light_color",
-            "color",
+        self.base = env.unwrapped
+        self._indices = dict(fields) if isinstance(fields, dict) else {name: slice(None) for name in fields}
+        self._defaults = {
+            name: getattr(self.base.model, name)[index].copy() for name, index in self._indices.items()
+        }
+        self._textures_changed = textures_changed
+        if (
+            isinstance(env, RandomizationWrapper)
+            and getattr(env.reset, "__func__", None) is RandomizationWrapper.reset
+            and getattr(env.step, "__func__", None) is RandomizationWrapper.step
+            and getattr(env.observe, "__func__", None) is RandomizationWrapper.observe
+            and getattr(env.close, "__func__", None) is RandomizationWrapper.close
         ):
-            value = getattr(self.config, name)
+            self._source = env._source
+            self._randomizers = (*env._randomizers, self)
+        else:
+            self._source = env
+            self._randomizers = (self,)
+        self._read = self._source.get_wrapper_attr("observe")
+
+    @staticmethod
+    def validate_scales(**scales):
+        for name, value in scales.items():
             if not np.isfinite(value) or value < 0:
                 raise ValueError(f"{name} must be finite and nonnegative")
-        model = self.unwrapped.model
-        self._cameras = np.array(
-            [model.camera(name).id for name in self.config.cameras]
-            if self.config.cameras is not None
-            else list(range(model.ncam)),
-            dtype=int,
-        )
-        self._lights = np.array(
-            [model.light(name).id for name in self.config.lights]
-            if self.config.lights is not None
-            else list(range(model.nlight)),
-            dtype=int,
-        )
-        fields = [
-            "cam_pos",
-            "cam_quat",
-            "cam_fovy",
-            "light_pos",
-            "light_diffuse",
-            "light_ambient",
-            "light_specular",
-            "geom_rgba",
-            "mat_rgba",
-        ]
-        if self.config.textures:
-            fields.append("tex_data")
-        self._defaults = {name: getattr(model, name).copy() for name in fields}
 
-    def restore(self):
+    def _restore_model(self):
         for name, value in self._defaults.items():
-            getattr(self.unwrapped.model, name)[:] = value
-        self._refresh()
+            getattr(self.base.model, name)[self._indices[name]] = value
 
     def _refresh(self):
-        base = self.unwrapped
-        mujoco.mj_forward(base.model, base.data)
-        # Recreate the lazy renderer to upload changed textures without relying
-        # on private OpenGL context internals. Usually only happens at reset.
-        if self.config.textures and base._rendering is not None:
-            base._rendering.close()
-            base._rendering = None
+        self.base.refresh_model(textures_changed=self._textures_changed)
 
-    def randomize(self):
-        base = self.unwrapped
-        rng, model, config = base.np_random, base.model, self.config
-        for name, value in self._defaults.items():
-            getattr(model, name)[:] = value
-        for field, ids, scale, bounds in (
-            ("cam_pos", self._cameras, config.camera_position, None),
-            ("cam_fovy", self._cameras, config.camera_fovy, (1, 179)),
-            ("light_pos", self._lights, config.light_position, None),
-            ("light_diffuse", self._lights, config.light_color, (0, 1)),
-            ("light_ambient", self._lights, config.light_color, (0, 1)),
-            ("light_specular", self._lights, config.light_color, (0, 1)),
-        ):
-            target = getattr(model, field)
-            value = self._defaults[field][ids] + rng.uniform(-scale, scale, target[ids].shape)
-            target[ids] = np.clip(value, *bounds) if bounds else value
-        if len(self._cameras):
-            rotation = Rotation.from_rotvec(
-                rng.uniform(-config.camera_rotation, config.camera_rotation, (len(self._cameras), 3))
-            )
-            baseline = Rotation.from_quat(self._defaults["cam_quat"][self._cameras], scalar_first=True)
-            model.cam_quat[self._cameras] = (baseline * rotation).as_quat(scalar_first=True)
-        for name in ("geom_rgba", "mat_rgba"):
-            target = getattr(model, name)
-            target[:, :3] = np.clip(
-                target[:, :3] + rng.uniform(-config.color, config.color, target[:, :3].shape), 0, 1
-            )
-        if config.textures:
-            # Per-texture RGB tint, no full-sized noise array for large textures.
-            for index in range(model.ntex):
-                start = model.tex_adr[index]
-                count = model.tex_width[index] * model.tex_height[index] * model.tex_nchannel[index]
-                channels = model.tex_nchannel[index]
-                pixels = model.tex_data[start : start + count].reshape(-1, channels)
-                shift = rng.uniform(-config.color, config.color, min(3, channels)) * 255
-                pixels[:, : len(shift)] = np.clip(pixels[:, : len(shift)].astype(float) + shift, 0, 255)
+    def restore(self):
+        self._restore_model()
         self._refresh()
 
+    def randomize(self):
+        self._restore_model()
+        try:
+            self.sample(self.base.np_random)
+        except Exception:
+            self.restore()
+            raise
+        self._refresh()
+
+    @abstractmethod
+    def sample(self, rng):
+        """Modify owned model fields using rng; called after restoring defaults."""
+
+    def perturb(self, rng, field, scale, *, bounds=None):
+        target = getattr(self.base.model, field)
+        baseline = self._defaults[field]
+        value = baseline + rng.uniform(-scale, scale, baseline.shape)
+        target[self._indices[field]] = np.clip(value, *bounds) if bounds is not None else value
+
     def reset(self, *, seed=None, options=None):
-        self.restore()
-        _, info = self.env.reset(seed=seed, options=options)
-        self.randomize()
-        return self.env.get_wrapper_attr("observe")(), info
+        for wrapper in self._randomizers:
+            wrapper._restore_model()
+        _, info = self._source.reset(seed=seed, options=options)
+        try:
+            for wrapper in self._randomizers:
+                wrapper.sample(self.base.np_random)
+        except Exception:
+            for wrapper in self._randomizers:
+                wrapper._restore_model()
+            raise
+        finally:
+            self.base.refresh_model(textures_changed=any(w._textures_changed for w in self._randomizers))
+        return self.observe(), info
+
+    def step(self, action):
+        return self._source.step(action)
 
     def observe(self):
-        return self.env.get_wrapper_attr("observe")()
+        return self._read()
 
     def close(self):
-        self.restore()
-        self.env.close()
+        try:
+            for wrapper in self._randomizers:
+                wrapper._restore_model()
+            self.base.refresh_model(textures_changed=any(w._textures_changed for w in self._randomizers))
+        finally:
+            self._source.close()

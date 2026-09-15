@@ -1,9 +1,8 @@
 """Native MuJoCo environments built from LucidXR Scenes."""
 
-from .control import ActuatorControl, MocapControl, site_poses
 from .env import Episode, MujocoEnv
 
-__all__ = ["ActuatorControl", "Episode", "MocapControl", "MujocoEnv", "make_env", "site_poses"]
+__all__ = ["Episode", "MujocoEnv", "make_env"]
 
 
 def make_env(scene, *, scene_options=None, max_episode_steps=None, **kwargs):

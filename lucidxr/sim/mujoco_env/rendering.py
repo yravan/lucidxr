@@ -1,5 +1,8 @@
 """Lazy native rendering; visibility changes affect the render scene only."""
 
+from collections import OrderedDict
+from contextlib import contextmanager
+
 import mujoco
 import numpy as np
 
@@ -7,26 +10,51 @@ import numpy as np
 class Rendering:
     def __init__(self, model, data):
         self.model, self.data = model, data
-        self._renderer = None
+        self._renderers = OrderedDict()
         self._viewer = None
-        self._size = None
+        self._batch_cache = None
+
+    @contextmanager
+    def batch(self):
+        """Reuse identical image requests within one observation, never across steps."""
+        if self._batch_cache is not None:
+            yield
+            return
+        self._batch_cache = {}
+        try:
+            yield
+        finally:
+            self._batch_cache = None
 
     def image(self, camera, width, height, *, mode="rgb", hide=(), hide_sites=True):
+        key = (camera, width, height, mode, tuple(hide), hide_sites)
+        cache = self._batch_cache
+        if cache is not None and key in cache:
+            return cache[key].copy()
+        pixels = self._image(camera, width, height, mode=mode, hide=hide, hide_sites=hide_sites)
+        if cache is not None:
+            cache[key] = pixels.copy()
+        return pixels
+
+    def _image(self, camera, width, height, *, mode="rgb", hide=(), hide_sites=True):
         if mode not in {"rgb", "depth", "segmentation"}:
             raise ValueError(f"Unknown render mode {mode!r}")
         if width <= 0 or height <= 0:
             raise ValueError("Image dimensions must be positive")
-        if self._size != (width, height):
-            if self._renderer is not None:
-                self._renderer.close()
-                self._renderer = None
+        size = (width, height)
+        renderer = self._renderers.get(size)
+        if renderer is None:
+            # Bound GPU memory while retaining common multi-resolution views.
+            if len(self._renderers) == 4:
+                _, expired = self._renderers.popitem(last=False)
+                expired.close()
             self.model.vis.global_.offwidth = max(width, self.model.vis.global_.offwidth)
             self.model.vis.global_.offheight = max(height, self.model.vis.global_.offheight)
-            self._renderer = mujoco.Renderer(
+            renderer = mujoco.Renderer(
                 self.model, height=height, width=width, max_geom=max(10000, self.model.ngeom * 2)
             )
-            self._size = width, height
-        renderer = self._renderer
+            self._renderers[size] = renderer
+        self._renderers.move_to_end(size)
         renderer.disable_depth_rendering()
         renderer.disable_segmentation_rendering()
         if mode == "depth":
@@ -82,6 +110,16 @@ class Rendering:
         return pixels
 
     def calibration(self, camera, width, height):
+        key = ("calibration", camera, width, height)
+        cache = self._batch_cache
+        if cache is not None and key in cache:
+            return tuple(value.copy() for value in cache[key])
+        result = self._calibration(camera, width, height)
+        if cache is not None:
+            cache[key] = tuple(value.copy() for value in result)
+        return result
+
+    def _calibration(self, camera, width, height):
         """Pinhole K and camera-to-world pose (OpenCV: x right, y down, z forward)."""
         cam = self.model.camera(camera).id
         if self.model.cam_projection[cam] == mujoco.mjtProjection.mjPROJ_ORTHOGRAPHIC:
@@ -109,9 +147,16 @@ class Rendering:
         if self._viewer.is_running():
             self._viewer.sync()
 
+    def invalidate_images(self):
+        """Reload GPU resources on the next image without closing the human viewer."""
+        for renderer in self._renderers.values():
+            renderer.close()
+        self._renderers.clear()
+        if self._batch_cache is not None:
+            self._batch_cache.clear()
+
     def close(self):
-        for resource in (self._viewer, self._renderer):
-            if resource is not None:
-                resource.close()
-        self._viewer = self._renderer = None
-        self._size = None
+        self.invalidate_images()
+        if self._viewer is not None:
+            self._viewer.close()
+        self._viewer = None

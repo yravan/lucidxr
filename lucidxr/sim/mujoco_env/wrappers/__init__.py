@@ -1,16 +1,20 @@
-"""Gymnasium wrappers for measured state, image products and visual variation."""
+"""Native camera observations and independently composable visual randomizers."""
 
+from .camera_randomization import CameraRandomization
 from .cameras import Camera, CameraWrapper, body_geoms, depth_image
-from .observations import ObservationWrapper, Proprioception
-from .randomization import DomainRandomization, VisualRandomization
+from .lighting_randomization import LightingRandomization
+from .observations import ObservationWrapper
+from .randomization import RandomizationWrapper
+from .texture_randomization import TextureRandomization
 
 __all__ = [
     "Camera",
     "CameraWrapper",
-    "DomainRandomization",
+    "CameraRandomization",
+    "LightingRandomization",
+    "TextureRandomization",
+    "RandomizationWrapper",
     "ObservationWrapper",
-    "Proprioception",
-    "VisualRandomization",
     "body_geoms",
     "depth_image",
 ]

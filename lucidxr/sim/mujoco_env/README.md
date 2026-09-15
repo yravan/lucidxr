@@ -1,166 +1,181 @@
-# Scene-backed MuJoCo environments
+# Native MuJoCo environments
 
-`MujocoEnv` owns a compiled `Scene`, `MjModel`, `MjData`, and lazy rendering.
-It implements Gymnasium directly. No dm_control, gym_dmc, logging service,
-working-directory changes or generated XML files are required.
+`MujocoEnv` compiles a `Scene` directly and owns its model, data, episode lifecycle
+and lazy rendering. Actions and observations are dictionaries of physical
+quantities. Policy-specific encodings belong in policy input/output adapters.
 
 ```python
-from lucidxr.sim.mujoco_env import MocapControl, make_env
+from lucidxr.sim.mujoco_env import make_env
 
-with make_env("pick_block", control=MocapControl(), max_episode_steps=1250) as env:
+with make_env("pick_block", max_episode_steps=1250) as env:
     observation, info = env.reset(seed=7)
-    action = env.unwrapped.current_action()  # hold the current commanded pose
+    action = env.unwrapped.current_action()
+    # Change an actuator command or a world-space mocap target here.
     observation, reward, terminated, truncated, info = env.step(action)
 ```
 
-The default control is `ActuatorControl`: a vector in model actuator order.
-Choose `MocapControl` for floating grippers/hands or mocap-driven robot arms.
-This takes `[x,y,z, rotation6d]` for every mocap body, followed by actuator ctrl.
-Rotation6d concatenates the first two rotation-matrix columns. Zero/collinear
-rotation columns are rejected. The supported quaternion convention is wxyz.
-Raw MuJoCo control limits are retained; actions are not normalized to [-1,1].
-The encoder clips numerical rotation roundoff to its mathematical bounds.
+## Commands and observations
 
-Hands can use `MocapControl(relative_to={"finger_target": "wrist_target"})`:
-use actual mocap body names from your scene. Parent wrists are world-relative;
-finger positions/rotations are relative to their wrist. Model ordering determines
-vector ordering, so inspect `model.body_mocapid` before reusing an old dataset.
-There is no implicit grouping of six bodies or assumption about site ordering.
+`action_space` is a Gymnasium `Dict`:
 
-`Proprioception(env, sites=("pinch_site", ...), relative_to={...})` provides
-measured site poses plus ctrl under `observation["state"]`. Its optional mapping
-uses **site names**, independently from the controller's mocap **body names**.
-The default environment observation is a dictionary of qpos, qvel, act, ctrl,
-mocap_pos, mocap_quat and sensordata. All returned arrays are copies.
+| Field | Shape | Meaning |
+| --- | --- | --- |
+| ctrl | (nu,) | Native actuator commands, within model control limits |
+| mocap_pos | (nmocap, 3) | Absolute world-space target positions, meters |
+| mocap_quat | (nmocap, 4) | World-space target orientations, wxyz |
 
-## Scenes and episode rules
+Mocap keys are present only when the model has mocap bodies. `ctrl` is always
+present, including an empty array for models without actuators. Each step requires
+exactly the declared fields. All fields are validated before writing: wrong
+shapes, nonfinite values, out-of-range commands and zero quaternions raise.
+Nonzero quaternion rows inside [-1,1] are normalized before application. The
+Box describes component bounds; the additional nonzero constraint is checked at
+runtime. Caller arrays are never modified. `current_action()` returns copies of
+the current commanded values, not a previous policy output or measured pose.
 
-A Scene still overrides only `build()`. Pass a Scene instance directly to
-`MujocoEnv`, or a catalogue name to `make_env`. Scene construction randomness uses
-`Scene.seed`; `reset(seed=...)` seeds runtime episode/randomization sampling and
-does not rebuild the scene. Use `scene_options={"seed": 7}` with `make_env` to
-choose a scene construction seed.
+Observations contain qpos, qvel, act, ctrl, mocap_pos, mocap_quat, sensordata,
+site_xpos and site_xmat. These use native MuJoCo shapes, including (nsite, 9) for
+site rotation matrices. Sites are measured quantities, separately from mocap
+targets. Use model named access and body_mocapid to map names to array indices.
+All returned arrays are copies.
 
-Runtime objectives subclass `Episode` and use the environment's named model/data
-access. `reset(env)` initializes episode state with `env.np_random`;
-`after_step(env)` updates any counters; `evaluate(env)` returns
-`(reward, terminated, info)` and must be read-only. Defaults are zero reward and
-no task termination, suitable for teleop and playback. Historical per-task reward
-heuristics are not automatically attached to the scene catalogue or claimed to
-be validated benchmarks.
+Flattening, normalization, quaternion/6D conversion, delta actions and
+wrist-relative finger coordinates belong in the policy layer. The simulator
+has no ActuatorControl/MocapControl classes or encoded Proprioception wrapper.
+Recorded data can therefore be reused across policies with different encodings.
 
-`frame_skip` is the number of physics steps per control action (default 10).
-`env.dt` uses the model timestep rather than assuming every scene uses 0.002 s.
-`settle_steps` optionally advances physics during reset (default 0), before the
-returned initial observation. Time limits use Gymnasium's `TimeLimit` wrapper;
-timeouts set `truncated`, while Episode rules set `terminated`.
+## Episode and playback lifecycle
 
-Reset accepts `options={"keyframe": "name"}` or a numeric keyframe ID, and/or
-`options={"frame": {...}}`. Without a keyframe, default ctrl is clamped into
-actuator bounds before initialization. Explicit recording frames retain their
-ctrl values; unsupported keys and wrong shapes raise instead of partial writes.
-MuJoCo instability raises `FloatingPointError`; reset before continuing. The env
-does not substitute random observations or silently treat an automatic physics
-reset as a successful transition.
+A Scene still overrides only `build()`. `make_env` accepts an instance or catalogue
+name with `scene_options`. Scene.seed controls physical construction;
+reset(seed=...) seeds runtime sampling and does not rebuild the Scene.
 
-## Recording and playback
+Subclass `Episode` for objectives: reset(env) initializes state with env.np_random,
+after_step(env) updates counters, and read-only evaluate(env) returns
+(reward, terminated, info). Defaults permit free rollout with zero reward.
+Historical task reward heuristics are not automatically attached to scenes.
+
+frame_skip defaults to 10 physical steps per action; env.dt uses the model's
+actual timestep. Optional settle_steps runs during reset. Gymnasium TimeLimit
+sets truncated independently of task termination. MuJoCo instability raises
+FloatingPointError instead of returning fabricated data; reset before continuing.
+
+reset options accept a keyframe name/ID and/or a partial frame. Without a keyframe,
+default ctrl is clamped to actuator bounds before episode initialization.
+frame() records qpos, qvel, act, ctrl and mocap poses. restore_frame(frame) validates
+all supplied fields, writes them and recomputes derived sites/sensors without
+stepping or incrementing counters. Select these fields explicitly from old rows;
+recorded site arrays are derived outputs, not writable inputs.
+
+snapshot()/restore_snapshot() preserve MuJoCo integration state, including time
+and warmstart, for the same model. They do not capture episode/wrapper counters,
+RNG state or randomized model properties. Old partial frames are suitable for
+rerendering, but do not promise bitwise historical trajectory reproduction.
+
+## Wrappers
 
 ```python
-from lucidxr.sim.mujoco_env.wrappers import Camera, CameraWrapper
-
-env = CameraWrapper(
-    make_env("pick_block", control=MocapControl()),
-    [
-        Camera("wrist", width=320, height=240, products=("rgb", "depth", "segmentation")),
-    ],
+from lucidxr.sim.mujoco_env import make_env
+from lucidxr.sim.mujoco_env.wrappers import (
+    Camera,
+    CameraWrapper,
+    CameraRandomization,
+    LightingRandomization,
+    TextureRandomization,
 )
+
+env = make_env("pick_block")
+env = CameraRandomization(env, names=("wrist",), position=0.01, rotation=0.05, fovy=3.0)
+env = LightingRandomization(env, position=0.1, color=0.1)
+env = TextureRandomization(env, color=0.2, textures=False)
+env = CameraWrapper(env, [Camera("wrist", products=("rgb", "depth", "segmentation"))])
 try:
     obs, info = env.reset(seed=7)
     frame = env.unwrapped.frame()
     env.unwrapped.restore_frame(frame)
-    obs = env.observe()  # all configured image products, no simulation step
-    action = env.unwrapped.current_action()
+    obs = env.observe()  # Same observation path as rollout, no step or resampling.
 finally:
     env.close()
 ```
 
-`frame()` returns portable qpos/qvel/act/ctrl/mocap arrays. For old dataframe rows,
-select those fields explicitly; old site positions/matrices are derived outputs,
-not writable simulator state. `restore_frame` validates every supplied field
-before writing and calls `mj_forward` to update derived quantities. It never
-increments episode counters, advances time, or randomizes the model.
+Each randomizer inherits RandomizationWrapper, which owns baseline restoration,
+reset sampling, explicit randomize()/restore(), rollback on sampling errors, and
+read-only observe(). Each subclass owns its parameters and sampling:
 
-`snapshot()` / `restore_snapshot()` use MuJoCo's full integration-state API,
-including time and warmstart. These are for continuation with the **same model**;
-they do not include Episode state, wrapper counters, RNG state or randomized model
-parameters. Portable old frames omit some integration inputs, so they are suitable
-for rerendering but cannot promise bitwise historical trajectory reproduction.
-For wrappers outside this package, use `env.get_wrapper_attr("observe")()`.
+- CameraRandomization: selected camera positions (meters), rotations (radians),
+  and FOV (degrees). Intrinsic/orthographic cameras require fovy=0.
+- LightingRandomization: selected light positions and ambient/diffuse/specular RGB.
+- TextureRandomization: geometry/material color offsets and optional texture-pixel
+  tints; opacity is preserved. textures=True copies baseline pixels and reloads
+  GPU resources when changed, so it is opt-in for large asset collections.
 
-## Image products and randomization
+Every sample starts from captured defaults. Camera/light names default to all;
+only selected rows are owned/restored. Stacks use env.np_random in inner-to-outer
+order, so a fixed seed and fixed stack reproduce sampling. Overlapping randomizers
+assign their shared properties in that order; outer assignments win. A direct
+randomize()/restore() call changes only that wrapper's owned properties. Put
+randomizers inside observation wrappers so images are captured after sampling.
 
-One `CameraWrapper` accepts multiple `Camera` configurations. Outputs use
-`<camera>/<product>` keys and declare their actual observation spaces:
+CameraWrapper is only observation composition. CameraView binds each configuration
+to model IDs, declares spaces and captures products. Each Camera supports:
 
-| Product | Format |
+| Product | Output |
 | --- | --- |
-| rgb | H x W x 3 uint8 |
-| depth | H x W float32, optical-axis distance in meters |
-| rgbd | H x W x 4 float32: RGB 0–255 and metric depth |
-| segmentation | H x W int32 geometry IDs, background/non-geometry -1 |
-| semantic | H x W int32 classes from exact geom-name mapping; unmatched -1 |
-| inverse_depth | H x W float32 in [0,1], using configured near/far |
-| masked_inverse_depth | inverse depth retained inside the configured masks |
-| overlay | RGB inside the union of masks, white elsewhere |
-| mask/name | H x W boolean mask for named body subtrees |
-| K, C2W | float64 pinhole calibration and OpenCV camera-to-world pose |
+| rgb / overlay | H x W x 3 uint8; overlay keeps masks, white elsewhere |
+| depth | H x W float32 metric optical-axis depth |
+| rgbd | H x W x 4 float32, RGB 0–255 plus metric depth |
+| segmentation | H x W int32 geom IDs; background/non-geoms -1 |
+| semantic | H x W int32 from exact geom-name → class mapping; unmatched -1 |
+| inverse_depth / masked_inverse_depth | H x W float32 [0,1], configured near/far |
+| mask/name | H x W boolean body-subtree mask |
+| K / C2W | Pinhole calibration and OpenCV camera-to-world pose |
 
-Set `masks={"robot": ("robot_root_body",)}` and/or
-`semantic={"geom_name": 12}`. `hide_bodies=("robot_root_body",)` removes entire
-subtrees from rendered images without changing model geometry. Use two Camera configurations with distinct `key="full"` / `key="background"`
-output prefixes if you need both full and robot-free views from one camera. Prefix-based
-selection, 8-bit ID truncation, packed masks and implicit ADE class tables are
-replaced by explicit names and mappings. Pinhole calibration rejects orthographic
-cameras; metric depth products are intended for perspective cameras.
+Use masks={"robot": ("robot_body",)}, semantic={"geom_name": 12}, and
+hide_bodies=("robot_body",) as needed. Hidden geometry affects visualization only.
+key="background" changes the output prefix so multiple configurations can share
+one camera. Calibration defaults on; disable it for orthographic cameras. Metric
+depth products are intended for perspective cameras.
 
-`DomainRandomization(env, VisualRandomization(...))` samples camera pose/FOV,
-lighting position/colors, geometry/material colors, and optional texture tints.
-Wrap it **inside** Proprioception/CameraWrapper. It samples at reset using the
-environment RNG; call `randomize()` explicitly for another offline variant.
-Every sample starts from captured defaults. `observe()` never resamples.
-Textures are opt-in to avoid copying large texture buffers unnecessarily.
-Model dynamics are not randomized (the old wrapper also refused that mode).
+## Performance boundaries
 
-## Old-to-new mapping
+Adjacent compatible observation wrappers execute in one iterative pass. Built-in
+camera wrappers add fields to one owned dictionary rather than copying a growing
+dictionary per wrapper. Adjacent randomizers reset/sample in one pass with one
+model refresh; step() bypasses their otherwise empty forwarding chain. Fusion
+stops at third-party wrappers and custom lifecycle overrides, preserving their
+behavior. Keep randomizers together, followed by observation wrappers.
 
-| Original | Replacement |
-| --- | --- |
-| SimplePhysics + dm_control Environment + LucidEnv/DMCEnv | MujocoEnv(Scene) |
-| JointSpaceTask | ActuatorControl + explicit Proprioception sites |
-| MocapTask / MocapHandTask | MocapControl, with named relative_to mapping for hands |
-| PlaybackTask initialization/reward/success | Episode hooks, separate from physical Scene |
-| get_prev_action | current_action (accurately describes its behavior) |
-| set_to_frame / get_obs / get_ordi | restore_frame, observe, Episode.evaluate separately |
-| CameraWrapper / DepthWrapper / RGBDWrapper | Camera.products |
-| SegmentationWrapper / SegmentationRGBWrapper | segmentation / semantic products; colorize class IDs downstream |
-| MaskWrapper / OverlayWrapper | Camera.masks / overlay |
-| MidasDepthWrapper / MaskedMidasDepthWrapper | inverse_depth / masked_inverse_depth; these never loaded a MiDaS model |
-| create_multiview_env | CameraWrapper with multiple Camera configurations |
-| DomainRandomizationWrapper + large mjmod helper | DomainRandomization + VisualRandomization |
+Identical image/calibration requests across the observation pass are computed
+once; returned arrays remain independently writable. The cache ends with that
+observation, so replay edits and later simulation steps cannot reuse stale images.
+A bounded pool retains four render resolutions. Geometry IDs, masks and semantic
+lookup tables are resolved once at construction. These optimizations do not make
+100 distinct high-resolution renders free: real image computation and output
+memory still scale with what is requested.
 
-This is an API redesign, not a drop-in adapter for deprecated training workers.
-Texture checker/noise synthesis, ADE palette visualization, Gaussian-splat model
-loading (`neverwhere`), and offline real-camera passthrough are not ported into
-this native simulator layer. Existing learned weights need their original
-observation/action preprocessing when migrating. Real-robot implementations and
-old_info_wrappers are excluded.
+Run the manual microbenchmark with:
+`uv run python lucidxr/tests/benchmark_wrappers.py`.
+It compares the same small scene with no wrappers, 100 identity wrappers,
+100 randomizers, and 1 versus 100 identical camera requests. Focused tests also
+assert one render per observation for 100 cameras and one refresh per reset for
+100 randomizers; timing thresholds are deliberately not unit-test assertions.
 
-Rendering is lazy; physics-only workers do not create a graphics context.
-Call `close()` or use a context manager. Human rendering uses MuJoCo's passive
-viewer; on macOS run it with `uv run mjpython ...`. Offscreen RGB/depth/segmentation
-were exercised on macOS OpenGL, which reports limited depth precision without
-ARB_clip_control; RGB can differ by one intensity unit across rendering modes.
-Human viewer interaction and GPU cluster rendering have not been exercised here.
+## Migration boundaries
 
-See [the dependency and behavior audit](DESIGN.md) for the evidence behind these
-boundaries and the original failure modes.
+This replaces SimplePhysics/dm_control/gym_dmc/LucidEnv with native MuJoCo and
+Gymnasium. Old training workers need command/observation adapters. get_prev_action
+becomes current_action; set_to_frame/get_ordi become explicit restore_frame,
+observe and Episode.evaluate operations. Camera/depth/segmentation/mask/overlay
+wrappers become camera products. MidasDepth wrappers were inverse-depth
+normalization, not learned depth models. DomainRandomizationWrapper is replaced
+by the three independently composable randomizers above.
+
+Real robots, old_info_wrappers, external Gaussian-splat loading, ADE palette
+visualization and procedural checker/noise textures are not ported. Human viewer
+interaction and cluster GPU rendering have not been tested. Physics-only workers
+create no graphics context; close() releases render resources. On macOS use
+`uv run mjpython ...` for human rendering. Offscreen tests exercise macOS OpenGL,
+which reports limited depth precision without ARB_clip_control; RGB comparisons
+allow one intensity unit of render-mode rounding variation.
+
+See [the original dependency and behavior audit](DESIGN.md).

@@ -205,10 +205,16 @@ collection and offline rendering callers, and upstream gym_dmc/dm_control base
 implementations. The detailed contract and exclusions are recorded in
 [mujoco_env/DESIGN.md](mujoco_env/DESIGN.md).
 
-Reviewed all eight new runtime Python modules in mujoco_env. Seven focused tests
-pass (four schema and three environment), including real offscreen camera
-products. All 32 default scenes compile/reset and pass a 10-control-step rollout
-with held mocap targets. sort_shapes additionally passes 100 control steps after
-restoring the mesh scales from its original generated XML. This is a smoke check,
-not a policy-success or long-horizon stability benchmark. Human viewer interaction
+Reviewed every runtime Python module in mujoco_env, including the native command
+interface and each observation/randomization wrapper. Eight focused tests pass
+(four schema and four environment), including real offscreen image products,
+native dictionary commands, atomic validation, and simulator continuation.
+A 100-camera stack renders an identical image once per observation, and a
+100-randomizer stack refreshes the model once per reset. The manual benchmark
+in tests/benchmark_wrappers.py records hot-path overhead separately from rendering.
+
+All 32 default scenes compile/reset and pass a 10-control-step rollout using native
+held-command dictionaries. sort_shapes additionally passed 100 control steps after
+restoring mesh scales from its original generated XML. This is a smoke check, not
+a policy-success or long-horizon stability benchmark. Human viewer interaction
 and cluster GPU rendering were not tested.
