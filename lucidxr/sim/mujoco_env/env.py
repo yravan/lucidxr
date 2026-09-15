@@ -223,11 +223,11 @@ class MujocoEnv(gym.Env):
             self._rendering = Rendering(self.model, self.data)
         return self._rendering
 
-    def refresh_model(self, *, textures_changed=False):
+    def refresh_model(self, *, texture_ids=()):
         """Refresh derived state and invalidate uploaded textures after model edits."""
         mujoco.mj_forward(self.model, self.data)
-        if textures_changed and self._rendering is not None:
-            self._rendering.invalidate_images()
+        if texture_ids and self._rendering is not None:
+            self._rendering.update_textures(texture_ids)
 
     def render(self):
         if self.render_mode is None:

@@ -74,47 +74,34 @@ rerendering, but do not promise bitwise historical trajectory reproduction.
 
 ## Wrappers
 
+Each randomizer now has a dedicated parameter dataclass and shares the lifecycle
+in RandomizationWrapper. CameraRandomization and LightingRandomization compose
+shared PositionRandomization/RotationRandomization samplers. MaterialRandomization
+handles surface properties; TextureRandomization handles role-aware pixel edits.
+
 ```python
-from lucidxr.sim.mujoco_env import make_env
 from lucidxr.sim.mujoco_env.wrappers import (
-    Camera,
-    CameraWrapper,
-    CameraRandomization,
-    LightingRandomization,
-    TextureRandomization,
+    Camera, CameraWrapper, CameraRandomization, CameraRandomizationParams,
+    LightingRandomization, LightingRandomizationParams, PositionRandomization,
 )
 
 env = make_env("pick_block")
-env = CameraRandomization(env, names=("wrist",), position=0.01, rotation=0.05, fovy=3.0)
-env = LightingRandomization(env, position=0.1, color=0.1)
-env = TextureRandomization(env, color=0.2, textures=False)
+env = CameraRandomization(env, CameraRandomizationParams(
+    names=("wrist",), position=PositionRandomization(.01), fovy=3.,
+))
+env = LightingRandomization(env, LightingRandomizationParams(active_probability=.75))
 env = CameraWrapper(env, [Camera("wrist", products=("rgb", "depth", "segmentation"))])
 try:
     obs, info = env.reset(seed=7)
-    frame = env.unwrapped.frame()
-    env.unwrapped.restore_frame(frame)
-    obs = env.observe()  # Same observation path as rollout, no step or resampling.
+    env.unwrapped.restore_frame(env.unwrapped.frame())
+    obs = env.observe()
 finally:
     env.close()
 ```
 
-Each randomizer inherits RandomizationWrapper, which owns baseline restoration,
-reset sampling, explicit randomize()/restore(), rollback on sampling errors, and
-read-only observe(). Each subclass owns its parameters and sampling:
-
-- CameraRandomization: selected camera positions (meters), rotations (radians),
-  and FOV (degrees). Intrinsic/orthographic cameras require fovy=0.
-- LightingRandomization: selected light positions and ambient/diffuse/specular RGB.
-- TextureRandomization: geometry/material color offsets and optional texture-pixel
-  tints; opacity is preserved. textures=True copies baseline pixels and reloads
-  GPU resources when changed, so it is opt-in for large asset collections.
-
-Every sample starts from captured defaults. Camera/light names default to all;
-only selected rows are owned/restored. Stacks use env.np_random in inner-to-outer
-order, so a fixed seed and fixed stack reproduce sampling. Overlapping randomizers
-assign their shared properties in that order; outer assignments win. A direct
-randomize()/restore() call changes only that wrapper's owned properties. Put
-randomizers inside observation wrappers so images are captured after sampling.
+See [the complete randomization guide](RANDOMIZATION.md) for parameter tables,
+light-pool counts, texture types/roles and patterns, material properties, scheduling,
+GPU uploads, performance boundaries and coverage against the original wrappers.
 
 CameraWrapper is only observation composition. CameraView binds each configuration
 to model IDs, declares spaces and captures products. Each Camera supports:
@@ -141,7 +128,7 @@ depth products are intended for perspective cameras.
 Adjacent compatible observation wrappers execute in one iterative pass. Built-in
 camera wrappers add fields to one owned dictionary rather than copying a growing
 dictionary per wrapper. Adjacent randomizers reset/sample in one pass with one
-model refresh; step() bypasses their otherwise empty forwarding chain. Fusion
+model refresh; step() bypasses their forwarding chain when periodic sampling is disabled. Fusion
 stops at third-party wrappers and custom lifecycle overrides, preserving their
 behavior. Keep randomizers together, followed by observation wrappers.
 
@@ -168,10 +155,10 @@ becomes current_action; set_to_frame/get_ordi become explicit restore_frame,
 observe and Episode.evaluate operations. Camera/depth/segmentation/mask/overlay
 wrappers become camera products. MidasDepth wrappers were inverse-depth
 normalization, not learned depth models. DomainRandomizationWrapper is replaced
-by the three independently composable randomizers above.
+by the independently composable randomizers above.
 
 Real robots, old_info_wrappers, external Gaussian-splat loading, ADE palette
-visualization and procedural checker/noise textures are not ported. Human viewer
+visualization are not ported. Human viewer
 interaction and cluster GPU rendering have not been tested. Physics-only workers
 create no graphics context; close() releases render resources. On macOS use
 `uv run mjpython ...` for human rendering. Offscreen tests exercise macOS OpenGL,

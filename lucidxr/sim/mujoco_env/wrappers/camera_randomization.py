@@ -1,39 +1,79 @@
-"""Randomize camera calibration and local pose."""
+"""Camera pose and calibration randomization."""
+
+from dataclasses import dataclass, field
 
 import mujoco
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from .randomization import RandomizationWrapper
+from .randomization import RandomizationParams, RandomizationWrapper
+from .sampling import PositionRandomization, RotationRandomization, Uniform, check_range, select_ids
+
+
+@dataclass(frozen=True)
+class CameraRandomizationParams(RandomizationParams):
+    names: tuple[str, ...] | None = None
+    position: PositionRandomization = field(default_factory=PositionRandomization)
+    rotation: RotationRandomization = field(default_factory=RotationRandomization)
+    fovy: float = 5.0  # symmetric offset in degrees, only for fovy cameras
+    focal_scale: Uniform | None = None  # scale calibrated fx/fy together
+    principal_offset: float = 0.0  # symmetric fraction of sensor width/height
+
+    def __post_init__(self):
+        super().__post_init__()
+        RandomizationWrapper.validate_scales(fovy=self.fovy, principal_offset=self.principal_offset)
+        check_range(self.focal_scale, low=np.finfo(float).eps, name="focal_scale")
+        if not isinstance(self.position, PositionRandomization) or not isinstance(
+            self.rotation, RotationRandomization
+        ):
+            raise TypeError("position/rotation require their sampling dataclasses")
 
 
 class CameraRandomization(RandomizationWrapper):
-    """Uniform local position (meters), rotation-vector (radians) and FOV (degrees).
+    """Sample selected camera-local poses and projection-aware calibration."""
 
-    names=None selects all cameras. FOV randomization is supported for perspective
-    fovy cameras; calibrated intrinsic/orthographic cameras require fovy=0.
-    """
-
-    def __init__(self, env, *, names=None, position=0.01, rotation=0.087, fovy=5.0):
-        self.validate_scales(position=position, rotation=rotation, fovy=fovy)
+    def __init__(self, env, params: CameraRandomizationParams | None = None):
+        self.params = params = self.parameters(params, CameraRandomizationParams)
         model = env.unwrapped.model
-        self.ids = np.array(
-            [model.camera(name).id for name in names] if names is not None else list(range(model.ncam)),
-            dtype=int,
-        )
-        if fovy and (
-            np.any(model.cam_sensorsize[self.ids, 1] > 0)
-            or np.any(model.cam_projection[self.ids] != mujoco.mjtProjection.mjPROJ_PERSPECTIVE)
+        self.ids = select_ids(model, "cam", params.names)
+        self._intrinsic = model.cam_sensorsize[self.ids, 1] > 0
+        self._perspective = model.cam_projection[self.ids] == mujoco.mjtProjection.mjPROJ_PERSPECTIVE
+        if (params.focal_scale or params.principal_offset) and not np.all(
+            self._intrinsic & self._perspective
         ):
-            raise ValueError("Use fovy=0 for intrinsic or orthographic cameras")
-        self.position, self.rotation, self.fovy = position, rotation, fovy
-        super().__init__(env, fields={name: self.ids for name in ("cam_pos", "cam_quat", "cam_fovy")})
+            raise ValueError("Focal/principal sampling requires intrinsic perspective cameras")
+        if params.rotation.max_angle and np.any(
+            model.cam_mode[self.ids] >= int(mujoco.mjtCamLight.mjCAMLIGHT_TARGETBODY)
+        ):
+            raise ValueError("Target-tracking cameras derive orientation; set rotation.max_angle=0")
+        super().__init__(
+            env,
+            params=self.params,
+            fields={name: self.ids for name in ("cam_pos", "cam_quat", "cam_fovy", "cam_intrinsic")},
+        )
 
     def sample(self, rng):
-        self.perturb(rng, "cam_pos", self.position)
-        if self.fovy:
-            self.perturb(rng, "cam_fovy", self.fovy, bounds=(1, 179))
-        if len(self.ids) and self.rotation:
-            delta = Rotation.from_rotvec(rng.uniform(-self.rotation, self.rotation, (len(self.ids), 3)))
+        params, model = self.params, self.base.model
+        model.cam_pos[self.ids] = params.position.sample(rng, self._defaults["cam_pos"])
+        if len(self.ids) and params.rotation.max_angle:
             baseline = Rotation.from_quat(self._defaults["cam_quat"], scalar_first=True)
-            self.base.model.cam_quat[self.ids] = (baseline * delta).as_quat(scalar_first=True)
+            model.cam_quat[self.ids] = (baseline * params.rotation.sample(rng, len(self.ids))).as_quat(
+                scalar_first=True
+            )
+        # Orthographic extents and explicit intrinsics are never treated as fovy.
+        fovy_ids = np.flatnonzero(self._perspective & ~self._intrinsic)
+        if params.fovy and len(fovy_ids):
+            model.cam_fovy[self.ids[fovy_ids]] = np.clip(
+                self._defaults["cam_fovy"][fovy_ids] + rng.uniform(-params.fovy, params.fovy, len(fovy_ids)),
+                1,
+                179,
+            )
+        intrinsic = self._defaults["cam_intrinsic"].copy()
+        if params.focal_scale:
+            intrinsic[:, :2] *= params.focal_scale.sample(rng, (len(self.ids), 1))
+        if params.principal_offset:
+            intrinsic[:, 2:] += (
+                rng.uniform(-params.principal_offset, params.principal_offset, (len(self.ids), 2))
+                * model.cam_sensorsize[self.ids]
+            )
+        model.cam_intrinsic[self.ids] = intrinsic

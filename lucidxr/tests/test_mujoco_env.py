@@ -8,8 +8,10 @@ from lucidxr.sim.mujoco_env import Episode, MujocoEnv
 from lucidxr.sim.mujoco_env.wrappers import (
     Camera,
     CameraRandomization,
+    CameraRandomizationParams,
     CameraWrapper,
     LightingRandomization,
+    PositionRandomization,
     TextureRandomization,
 )
 from lucidxr.sim.scenes.base import Scene
@@ -92,7 +94,10 @@ def test_episode_reads_do_not_advance_bookkeeping():
 
 def test_camera_products_and_seeded_randomization():
     base = MujocoEnv(MiniScene())
-    randomizer = CameraRandomization(LightingRandomization(TextureRandomization(base)), position=0.02)
+    randomizer = CameraRandomization(
+        LightingRandomization(TextureRandomization(base)),
+        CameraRandomizationParams(position=PositionRandomization(0.02)),
+    )
     env = CameraWrapper(
         randomizer,
         [

@@ -206,8 +206,8 @@ implementations. The detailed contract and exclusions are recorded in
 [mujoco_env/DESIGN.md](mujoco_env/DESIGN.md).
 
 Reviewed every runtime Python module in mujoco_env, including the native command
-interface and each observation/randomization wrapper. Eight focused tests pass
-(four schema and four environment), including real offscreen image products,
+interface and each observation/randomization wrapper. Fifteen focused checks pass
+(four schema, four environment and seven randomization cases), including real offscreen image products,
 native dictionary commands, atomic validation, and simulator continuation.
 A 100-camera stack renders an identical image once per observation, and a
 100-randomizer stack refreshes the model once per reset. The manual benchmark
@@ -218,3 +218,10 @@ held-command dictionaries. sort_shapes additionally passed 100 control steps aft
 restoring mesh scales from its original generated XML. This is a smoke check, not
 a policy-success or long-horizon stability benchmark. Human viewer interaction
 and cluster GPU rendering were not tested.
+
+The randomization follow-up rechecked current MuJoCo texture types, channel counts,
+material roles, native light fields and GPU upload interfaces. It added independent
+parameter dataclasses, shared pose distributions, active-light counts, schedules,
+role-aware texture patterns and separate material sampling. See
+[mujoco_env/RANDOMIZATION.md](mujoco_env/RANDOMIZATION.md) for complete coverage,
+backend limitations and the native compiler fixture issue found during validation.

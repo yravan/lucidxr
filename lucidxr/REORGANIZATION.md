@@ -256,3 +256,21 @@ cache identical renders only within one observation, and preserve third-party
 wrapper boundaries. Add operation-count regressions for duplicated work; keep
 machine-dependent timings in a manual benchmark. A hundred duplicate image
 requests need one render, but a hundred distinct images still have a real cost.
+
+### Extend coverage without rebuilding the monolith
+
+Use a dedicated parameter dataclass per wrapper and share validated, model-independent
+distributions by composition. Position sampling can serve cameras and lights without
+a generic wrapper that knows every model field. Separate texture asset selection,
+pixel transforms and lifecycle; material properties are a separate wrapper.
+
+Read both current dependency documentation and old executable behavior. A texture's
+shape does not establish its role: RGB, normals and ORM may all have three channels.
+Resolve shared material references before editing pixels, preserve non-color channels,
+and define explicit behavior for unsupported or conflicting roles. Count active
+resources in an existing scene pool instead of changing topology in reset.
+
+Keep a feature coverage table, test representative type/role combinations and verify
+actual GPU updates, not just model array changes. A narrow compatibility bridge is
+preferable to copying a renderer when an otherwise supported low-level upload API
+needs access to its context; isolate and test that bridge, document the fallback.

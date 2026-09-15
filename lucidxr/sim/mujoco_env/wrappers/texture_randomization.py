@@ -1,36 +1,76 @@
-"""Randomize surface appearance without altering dynamics or opacity."""
+"""Role-aware pixel randomization, separate from material properties."""
+
+from dataclasses import dataclass
 
 import numpy as np
 
-from .randomization import RandomizationWrapper
+from .randomization import RandomizationParams, RandomizationWrapper
+from .texture_assets import KINDS, select_textures
+from .texture_patterns import MODES, paint
+
+
+@dataclass(frozen=True)
+class TextureRandomizationParams(RandomizationParams):
+    names: tuple[str, ...] | None = None
+    kinds: tuple[str, ...] = ("2d", "cube")  # explicitly include skybox to modify it
+    modes: tuple[str, ...] = ("tint",)
+    strength: float = 0.2  # tint offset in normalized color units
+    checker_tiles: int = 2
+    gradient_axis: str = "random"
+    noise_probability: float = 0.9
+    blend: float = 1.0  # interpolate the sampled result with the original RGB
+
+    def __post_init__(self):
+        super().__post_init__()
+        RandomizationWrapper.validate_scales(strength=self.strength)
+        if type(self.checker_tiles) is not int or self.checker_tiles < 1:
+            raise ValueError("checker_tiles must be a positive integer")
+        if self.gradient_axis not in {"x", "y", "random"}:
+            raise ValueError("gradient_axis must be x, y or random")
+        if not np.isfinite(self.noise_probability) or not 0 <= self.noise_probability <= 1:
+            raise ValueError("noise_probability must be in [0,1]")
+        if self.strength > 1:
+            raise ValueError("strength must be in [0,1]")
+        if not np.isfinite(self.blend) or not 0 <= self.blend <= 1:
+            raise ValueError("blend must be in [0,1]")
+        if isinstance(self.kinds, str) or not self.kinds or set(self.kinds) - KINDS.keys():
+            raise ValueError("kinds must contain 2d, cube and/or skybox")
+        if isinstance(self.modes, str) or not self.modes or set(self.modes) - MODES:
+            raise ValueError(f"modes must contain values from {sorted(MODES)}")
+        if self.names is not None and (
+            isinstance(self.names, str) or len(set(self.names)) != len(self.names)
+        ):
+            raise ValueError("names must be a sequence of distinct texture names")
 
 
 class TextureRandomization(RandomizationWrapper):
-    """Tint geometry/material colors and optionally the actual texture pixels.
+    """Sample each selected color texture once, retaining alpha/exposure and PBR maps.
 
-    color is a uniform per-channel offset in [0,1] units. Texture pixels are
-    opt-in because keeping their baseline can require substantial memory.
-    Geometries/materials/textures are shared model resources, sampled once each.
+    Each selected asset owns an RGB-only baseline. Pixel edits are the purpose of
+    this wrapper; use MaterialRandomization for inexpensive surface-color changes.
     """
 
-    def __init__(self, env, *, color=0.2, textures=False):
-        self.validate_scales(color=color)
-        self.color, self.textures = color, textures
-        fields = {name: (slice(None), slice(0, 3)) for name in ("geom_rgba", "mat_rgba")}
-        if textures:
-            fields["tex_data"] = slice(None)
-        super().__init__(env, fields=fields, textures_changed=textures)
+    def __init__(self, env, params: TextureRandomizationParams | None = None):
+        self.params = self.parameters(params, TextureRandomizationParams)
+        self.assets = select_textures(env.unwrapped.model, self.params.names, self.params.kinds)
+        self.texture_ids = tuple(asset.id for asset in self.assets)
+        super().__init__(env, params=self.params, fields={}, texture_ids=self.texture_ids)
+
+    def _restore_model(self):
+        for asset in self.assets:
+            asset.restore()
 
     def sample(self, rng):
-        for field in ("geom_rgba", "mat_rgba"):
-            self.perturb(rng, field, self.color, bounds=(0, 1))
-        if not self.textures:
-            return
-        model = self.base.model
-        for index in range(model.ntex):
-            start = model.tex_adr[index]
-            channels = model.tex_nchannel[index]
-            count = model.tex_width[index] * model.tex_height[index] * channels
-            pixels = model.tex_data[start : start + count].reshape(-1, channels)
-            shift = rng.uniform(-self.color, self.color, min(3, channels)) * 255
-            pixels[:, : len(shift)] = np.clip(pixels[:, : len(shift)].astype(float) + shift, 0, 255)
+        for asset in self.assets:
+            paint(
+                asset.pixels,
+                rng,
+                mode=rng.choice(self.params.modes),
+                strength=self.params.strength,
+                face_height=asset.face_height,
+                baseline=asset.baseline,
+                blend=self.params.blend,
+                checker_tiles=self.params.checker_tiles,
+                gradient_axis=self.params.gradient_axis,
+                noise_probability=self.params.noise_probability,
+            )

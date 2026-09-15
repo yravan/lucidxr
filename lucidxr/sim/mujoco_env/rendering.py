@@ -147,6 +147,28 @@ class Rendering:
         if self._viewer.is_running():
             self._viewer.sync()
 
+    def update_textures(self, texture_ids):
+        """Upload changed assets once per existing context, without rebuilding renderers.
+
+        MuJoCo 3.13 Renderer doesn't expose its context publicly. This isolated
+        bridge uses its current context fields with the documented upload API;
+        rebuild lazily if a future Renderer changes those fields.
+        """
+        if self._batch_cache is not None:
+            self._batch_cache.clear()
+        for renderer in self._renderers.values():
+            context = getattr(renderer, "_mjr_context", None)
+            if context is None or not hasattr(renderer, "_gl_context"):
+                self.invalidate_images()
+                break
+            if renderer._gl_context is not None:
+                renderer._gl_context.make_current()
+            for index in texture_ids:
+                mujoco.mjr_uploadTexture(self.model, context, index)
+        if self._viewer is not None and self._viewer.is_running():
+            for index in texture_ids:
+                self._viewer.update_texture(index)
+
     def invalidate_images(self):
         """Reload GPU resources on the next image without closing the human viewer."""
         for renderer in self._renderers.values():
