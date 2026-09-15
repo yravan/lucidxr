@@ -54,7 +54,7 @@ furniture presets may require caller-provided resources.
 | `scenes/robosuite_nutassembly.py` | `e5b11008012a` |
 | `scenes/robosuite_pickplace.py` | `9efb348568f9` |
 | `scenes/robosuite_stack.py` | `9ae150904a4d` |
-| `scenes/sort_shapes.py` | `dc783cd9dd7d` |
+| `scenes/sort_shapes.py` | `f6fd62798a02` |
 | `scenes/stack_blocks.py` | `56149196d29c` |
 | `scenes/teddy_bear_table.py` | `d4e31f1e50b6` |
 | `scenes/tie_knot.py` | `90c1e25ee320` |
@@ -196,3 +196,19 @@ furniture presets may require caller-provided resources.
 | `xml_schema/utils/path_rewrite.py` | `ad0ce20a1609` |
 | `xml_schema/utils/tree_merge.py` | `11daca309049` |
 | `xml_schema/utils/whitener.py` | `60d333a37023` |
+
+## Native environment follow-up
+
+Reviewed the original environment/task base classes, environment factory,
+new observation/randomization wrappers and their helper dependencies, recording
+collection and offline rendering callers, and upstream gym_dmc/dm_control base
+implementations. The detailed contract and exclusions are recorded in
+[mujoco_env/DESIGN.md](mujoco_env/DESIGN.md).
+
+Reviewed all eight new runtime Python modules in mujoco_env. Seven focused tests
+pass (four schema and three environment), including real offscreen camera
+products. All 32 default scenes compile/reset and pass a 10-control-step rollout
+with held mocap targets. sort_shapes additionally passes 100 control steps after
+restoring the mesh scales from its original generated XML. This is a smoke check,
+not a policy-success or long-horizon stability benchmark. Human viewer interaction
+and cluster GPU rendering were not tested.

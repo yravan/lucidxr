@@ -16,16 +16,20 @@ class SortShapes(Scene):
         from lucidxr.sim.xml_schema.objects.sort_shapes import HexBlock
 
         table = ConcreteSlab(pos=[0, 0, 0.6], rgba="0.8 0.8 0.8 1")
-        ibox = LeBox(attributes={"name": "insertion-box"}, assets="objects/sort_shape", pos=[0, 0, 0.7])
+        ibox = LeBox(
+            attributes={"name": "insertion-box"}, assets="objects/sort_shape", pos=[0, 0, 0.7], scale=0.1
+        )
         square_block = SquareBlock(
-            attributes={"name": "square"}, assets="objects/sort_shape", pos=[0.2, -0.1, 0.7]
+            attributes={"name": "square"}, assets="objects/sort_shape", pos=[0.2, -0.1, 0.7], scale=0.095
         )
         triangle_block = TriangleBlock(
-            attributes={"name": "triangle"}, assets="objects/sort_shape", pos=[0.4, -0.1, 0.7]
+            attributes={"name": "triangle"}, assets="objects/sort_shape", pos=[0.4, -0.1, 0.7], scale=0.095
         )
-        hex_block = HexBlock(attributes={"name": "hex"}, assets="objects/sort_shape", pos=[0.2, 0.1, 0.7])
+        hex_block = HexBlock(
+            attributes={"name": "hex"}, assets="objects/sort_shape", pos=[0.2, 0.1, 0.7], scale=0.095
+        )
         circle_block = CircleBlock(
-            attributes={"name": "circle"}, assets="objects/sort_shape", pos=[0.4, 0.1, 0.7]
+            attributes={"name": "circle"}, assets="objects/sort_shape", pos=[0.4, 0.1, 0.7], scale=0.095
         )
         work_area = ForcePlate(
             name="start-area",

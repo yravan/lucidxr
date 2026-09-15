@@ -208,3 +208,32 @@ Python modules and their source hashes are listed in `sim/AUDIT.md`.
 The primitive layer is named `simple_components/`; `scene_components/` retains
 composed layouts and rigs. Build staging and `.egg-info` are generated, ignored
 packaging outputs. Assets remain ordinary tracked Git files, without LFS.
+
+### Environment migration: investigate contracts before replacing dependencies
+
+Trace both directions: read base classes in external dependencies, then read
+real consumers (collection, offline replay, policy evaluation). Record the
+behavioral contract before designing a smaller replacement. Names alone can be
+misleading: get_prev_action encoded current targets; MidasDepthWrapper did not
+run a learned depth model; termination in dm_control returned a discount rather
+than a boolean. Preserve the intended behavior and explicitly document changed
+APIs rather than cloning these accidents.
+
+Separate physical composition (Scene), simulation ownership (MujocoEnv), action
+encoding (Control), episode rules (Episode), and observation augmentation
+(wrappers). Share the observation path between replay and rollouts. A read must
+not silently step physics, alter success counters or resample model properties.
+Use explicit body/site names and declared spaces instead of array-position
+assumptions and hidden wrapper nesting. Keep partial recording restoration
+separate from full simulator continuation, documenting what each captures.
+
+Use a few meaningful checks: Gymnasium's checker on a small composed scene,
+relative-pose roundtrip with out-of-order targets and zero actuators, snapshot
+continuation, real image-space validation and seeded randomization. Then sweep
+existing scene definitions with short rollouts. This found a real geometry-scale
+problem that compile-only checks missed: sort_shapes used unit-scale meshes;
+its original generated XML specifies box scale 0.1 and block scale 0.095. Restore
+those explicit scene scales rather than hiding instability in the environment.
+
+See sim/mujoco_env/DESIGN.md for the dependency audit and
+sim/mujoco_env/README.md for the migration map and validation boundaries.
