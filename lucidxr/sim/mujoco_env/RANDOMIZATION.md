@@ -8,29 +8,54 @@ are shared through composition rather than another inheritance layer.
 ```python
 from lucidxr.sim.mujoco_env import make_env
 from lucidxr.sim.mujoco_env.wrappers import (
-    CameraRandomization, CameraRandomizationParams,
-    LightingRandomization, LightingRandomizationParams,
-    MaterialRandomization, MaterialRandomizationParams,
-    TextureRandomization, TextureRandomizationParams,
-    PositionRandomization, RotationRandomization, Uniform,
+    CameraRandomization,
+    CameraRandomizationParams,
+    LightingRandomization,
+    LightingRandomizationParams,
+    MaterialRandomization,
+    MaterialRandomizationParams,
+    TextureRandomization,
+    TextureRandomizationParams,
+    PositionRandomization,
+    RotationRandomization,
+    Uniform,
 )
 
 env = make_env("pick_block")
-env = CameraRandomization(env, CameraRandomizationParams(
-    position=PositionRandomization(offset=(.01, .01, .005)),
-    rotation=RotationRandomization(max_angle=.05), fovy=3.,
-))
-env = LightingRandomization(env, LightingRandomizationParams(
-    position=PositionRandomization(offset=.1),
-    rotation=RotationRandomization(max_angle=.35),
-    ambient=.05, diffuse=.15, specular=.1, active_probability=.75,
-))
-env = MaterialRandomization(env, MaterialRandomizationParams(
-    color=.15, specular=Uniform(.1, .6), shininess=Uniform(.1, .5),
-))
-env = TextureRandomization(env, TextureRandomizationParams(
-    modes=("tint", "checker", "gradient", "noise"), blend=.25,
-))
+env = CameraRandomization(
+    env,
+    CameraRandomizationParams(
+        position=PositionRandomization(offset=(0.01, 0.01, 0.005)),
+        rotation=RotationRandomization(max_angle=0.05),
+        fovy=3.0,
+    ),
+)
+env = LightingRandomization(
+    env,
+    LightingRandomizationParams(
+        position=PositionRandomization(offset=0.1),
+        rotation=RotationRandomization(max_angle=0.35),
+        ambient=0.05,
+        diffuse=0.15,
+        specular=0.1,
+        active_probability=0.75,
+    ),
+)
+env = MaterialRandomization(
+    env,
+    MaterialRandomizationParams(
+        color=0.15,
+        specular=Uniform(0.1, 0.6),
+        shininess=Uniform(0.1, 0.5),
+    ),
+)
+env = TextureRandomization(
+    env,
+    TextureRandomizationParams(
+        modes=("tint", "checker", "gradient", "noise"),
+        blend=0.25,
+    ),
+)
 try:
     obs, info = env.reset(seed=7)
     obs, reward, terminated, truncated, info = env.step(env.unwrapped.current_action())

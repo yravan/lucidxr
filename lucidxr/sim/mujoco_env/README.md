@@ -81,15 +81,25 @@ handles surface properties; TextureRandomization handles role-aware pixel edits.
 
 ```python
 from lucidxr.sim.mujoco_env.wrappers import (
-    Camera, CameraWrapper, CameraRandomization, CameraRandomizationParams,
-    LightingRandomization, LightingRandomizationParams, PositionRandomization,
+    Camera,
+    CameraWrapper,
+    CameraRandomization,
+    CameraRandomizationParams,
+    LightingRandomization,
+    LightingRandomizationParams,
+    PositionRandomization,
 )
 
 env = make_env("pick_block")
-env = CameraRandomization(env, CameraRandomizationParams(
-    names=("wrist",), position=PositionRandomization(.01), fovy=3.,
-))
-env = LightingRandomization(env, LightingRandomizationParams(active_probability=.75))
+env = CameraRandomization(
+    env,
+    CameraRandomizationParams(
+        names=("wrist",),
+        position=PositionRandomization(0.01),
+        fovy=3.0,
+    ),
+)
+env = LightingRandomization(env, LightingRandomizationParams(active_probability=0.75))
 env = CameraWrapper(env, [Camera("wrist", products=("rgb", "depth", "segmentation"))])
 try:
     obs, info = env.reset(seed=7)
