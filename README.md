@@ -1,50 +1,101 @@
-# vuer MuJoCo Environments for Lucid-XR
+# LucidXR
 
-## Setting Up
+MuJoCo scene building for robot manipulation. The active package lives in `lucidxr/`. The old project remains in Git history;
+`deprecated/` is an ignored local reference copy and is not included in new clones.
 
-```shell
-# place it directly under home.
-mkdir ~/fortyfive
-cd fortyfive
-git clone https://github.com/vuer-ai/lucidxr.git
+```sh
+uv sync --locked
+uv run python -m lucidxr.sim.scenes list
+uv run python -m lucidxr.sim.scenes build stack_blocks /tmp/stack_blocks.xml --seed 7
+uv run python -m lucidxr.sim.scenes check
 ```
 
-Now you can go into this repo and install it (and dependencies)
+Python 3.14.7 and dependency versions are pinned by `.python-version` and `uv.lock`.
+The active package has four runtime dependencies: MuJoCo, NumPy, SciPy, and lxml.
+It does not need credentials, a cluster connection, or a logging/launch service.
 
-```shell
-conda create -n lucidxr python=3.11
-pip install -e '.[dev]'
+```python
+import mujoco
+from lucidxr.sim.scenes import build_xml, compile_model
+
+xml = build_xml("mug_tree")
+model = compile_model("stack_blocks", seed=7)
+data = mujoco.MjData(model)
+mujoco.mj_step(model, data)
 ```
 
-The key things to note are: dm_control version needs to be up to date.
-MuJoCo should be `3.3.4`. cloudpickle should be `3.1.1`.
+## Layout
 
-### Downloading Assets
+```text
+lucidxr/
+  sim/
+    xml_schema/
+      base.py          # Raw, Xml, XmlTemplate: XML composition
+      schema.py        # MjNode, Body, FreeBody, Composite, Replicate, Mjcf
+      document.py      # asset resolution for complete MJCF documents
+      simple_components/     # cameras, lights, surfaces, particle grids
+      robots/         # arms/, grippers/, hands/
+      objects/        # reusable rigid and deformable objects
+      scene_components/ # reusable rooms, tables, camera/light and robot rigs
+      adapters/       # RoboSuite and RoboHive XML conventions
+      transforms/     # vectors, quaternions, rotation representations
+      utils/          # XML formatting, merging, and file helpers
+    assets/           # robots/, objects/, rooms/, textures/, adapters/
+    scenes/           # Scene base class, 32 scene definitions, catalogue and CLI
+  tests/              # four focused regression checks
+ deprecated/          # optional local reference copy, ignored by Git
+```
 
-> Need to write this up when we onboard new people.
+See [the schema design guide](lucidxr/sim/xml_schema/README.md) for extension points
+and [asset provenance](lucidxr/sim/assets/README.md) for storage details.
+The [cleanup instruction and decision log](lucidxr/REORGANIZATION.md) records the
+reorganization method for reuse on other codebases. The [source review record](lucidxr/sim/AUDIT.md)
+identifies the reviewed modules and validation boundaries.
 
-### Scripts:
+## Assets and reproducibility
 
-For detailed notes on how to collect data and how to run experiments, refer to the notes on each of these scripts.
+Assets are bundled for this migration so every retained scene builds offline after
+installation. File references use one asset root, independent of source locations
+and the current directory. To use a copied asset tree:
 
-- **`collect-demo`**: this one fires up a vuer server, that allows you to
-  collect demonstrations. You can call via
-    ```shell
-    collect-demo --name pick_block
-    ```
-- **`visualize-demo`**: this one visualizes the demonstrations you have
-  collected. You can call via
-    ```shell
-    visualize-demo --name pick_block
-    ```
-- **`lucidxr-launch`**: This one launches on the cluster. You can call via
+```python
+xml = build_xml("stack_blocks", assets="/data/lucidxr-assets", seed=7)
+```
 
-    ```shell
-    lucidxr-launch --sweep some_exp.jsonl 
-    ```
+The CLI accepts the same `--assets` argument. Generated XML records the chosen
+absolute root; rebuild with a new root when moving it to another machine.
+`lucidxr.sim.assets.verify()` checks the bundled checksum manifest, and accepts an
+alternate asset root too. Dataset/checkpoint hosting and Dropbox downloads are
+separate follow-up work; they are not required by these scene builders.
 
-Training life-cycle
+The catalogue consolidates demo/export/camera and robot-specific copies into scene
+families. Existing configurable builders keep their meaningful options. Legacy
+Gym environment registration, rewards, teleoperation, training, and launch scripts
+remain in Git history (and the local `deprecated/` copy); this PR ports scene
+construction, not those runtimes.
 
-1. run render worker
-2. run h5_worker
-3. now you can run train. This is a bit too much.
+## Compatibility and validation
+
+All 32 default scenes compile and advance one step on MuJoCo 3.13. The full robot
+schema catalogue also compiles, including both hands where supplied upstream.
+This is a build/portability smoke check, not a claim of validated policies or
+identical trajectories across MuJoCo versions.
+
+Current MuJoCo uses native SDF geometry and native flex elasticity. The port replaces
+the removed SdfLib/shell plugins, replaces particle composites with explicit free
+bodies, and uses the current orthographic-camera attribute. Poncho uses the discrete
+integrator required by native bending elasticity. Push-T's redundant, massless free
+joint and several incomplete robot definitions were repaired. The original versions
+remain available in Git history and the local `deprecated/` copy.
+
+```sh
+uv run pytest -q
+uv run ruff check lucidxr
+uv build --wheel
+```
+
+Generic mesh/evaluation adapters still require the caller to supply their own input
+assets. Unused legacy furniture presets may likewise require their original external
+asset packs; they are not advertised in the runnable scene catalogue. Tensor-specific
+rotation helpers work when PyTorch is installed by a downstream training project;
+NumPy versions do not require it.
