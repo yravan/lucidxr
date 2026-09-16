@@ -12,3 +12,6 @@ dist/
 .secret.yml
 
 /deprecated/
+
+# Native MuJoCo diagnostic output
+MUJOCO_LOG.TXT

@@ -1,6 +1,6 @@
 # LucidXR
 
-MuJoCo scene building for robot manipulation. The active package lives in `lucidxr/`. The old project remains in Git history;
+MuJoCo scene building and Gymnasium environments for robot manipulation. The active package lives in `lucidxr/`. The old project remains in Git history;
 `deprecated/` is an ignored local reference copy and is not included in new clones.
 
 ```sh
@@ -11,7 +11,7 @@ uv run python -m lucidxr.sim.scenes check
 ```
 
 Python 3.14.7 and dependency versions are pinned by `.python-version` and `uv.lock`.
-The active package has four runtime dependencies: MuJoCo, NumPy, SciPy, and lxml.
+The active package has five direct runtime dependencies: MuJoCo, Gymnasium, NumPy, SciPy, and lxml.
 It does not need credentials, a cluster connection, or a logging/launch service.
 
 ```python
@@ -23,6 +23,10 @@ model = compile_model("stack_blocks", seed=7)
 data = mujoco.MjData(model)
 mujoco.mj_step(model, data)
 ```
+
+For rollouts, playback, camera observations and episode rules, see the
+[environment guide](lucidxr/sim/mujoco_env/README.md) and
+[dependency audit](lucidxr/sim/mujoco_env/DESIGN.md).
 
 ## Layout
 
@@ -42,7 +46,8 @@ lucidxr/
       utils/          # XML formatting, merging, and file helpers
     assets/           # robots/, objects/, rooms/, textures/, adapters/
     scenes/           # Scene base class, 32 scene definitions, catalogue and CLI
-  tests/              # four focused regression checks
+    mujoco_env/       # native Gymnasium environment, controls, playback and wrappers
+  tests/              # focused schema and runtime regression checks
  deprecated/          # optional local reference copy, ignored by Git
 ```
 

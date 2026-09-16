@@ -208,3 +208,87 @@ Python modules and their source hashes are listed in `sim/AUDIT.md`.
 The primitive layer is named `simple_components/`; `scene_components/` retains
 composed layouts and rigs. Build staging and `.egg-info` are generated, ignored
 packaging outputs. Assets remain ordinary tracked Git files, without LFS.
+
+### Environment migration: investigate contracts before replacing dependencies
+
+Trace both directions: read base classes in external dependencies, then read
+real consumers (collection, offline replay, policy evaluation). Record the
+behavioral contract before designing a smaller replacement. Names alone can be
+misleading: get_prev_action encoded current targets; MidasDepthWrapper did not
+run a learned depth model; termination in dm_control returned a discount rather
+than a boolean. Preserve the intended behavior and explicitly document changed
+APIs rather than cloning these accidents.
+
+Separate physical composition (Scene), simulation ownership (MujocoEnv), policy-side action
+encoding, episode rules (Episode), and observation augmentation
+(wrappers). Share the observation path between replay and rollouts. A read must
+not silently step physics, alter success counters or resample model properties.
+Use explicit body/site names and declared spaces instead of array-position
+assumptions and hidden wrapper nesting. Keep partial recording restoration
+separate from full simulator continuation, documenting what each captures.
+
+Use a few meaningful checks: Gymnasium's checker on a small composed scene,
+native command validation with multiple targets and zero actuators, snapshot
+continuation, real image-space validation and seeded randomization. Then sweep
+existing scene definitions with short rollouts. This found a real geometry-scale
+problem that compile-only checks missed: sort_shapes used unit-scale meshes;
+its original generated XML specifies box scale 0.1 and block scale 0.095. Restore
+those explicit scene scales rather than hiding instability in the environment.
+
+See sim/mujoco_env/DESIGN.md for the dependency audit and
+sim/mujoco_env/README.md for the migration map and validation boundaries.
+
+### Keep representation and wrapper responsibilities explicit
+
+Return native physical dictionaries from the runtime. Rotation6d, flat vectors,
+normalization and relative coordinate choices belong with policy adapters, not
+simulator classes. Keep recording independent of the policy representation.
+
+Review each wrapper for a single responsibility. CameraWrapper composes
+observations; CameraView resolves configuration and captures images. Camera,
+lighting and texture randomization are separate wrappers sharing a small
+RandomizationWrapper lifecycle. Capture only each randomizer's owned rows so
+restoring one camera does not erase another camera's randomization.
+
+Measure wrapper overhead separately from actual requested work. Fuse adjacent
+compatible lifecycle passes, refresh the model once per randomization reset,
+cache identical renders only within one observation, and preserve third-party
+wrapper boundaries. Add operation-count regressions for duplicated work; keep
+machine-dependent timings in a manual benchmark. A hundred duplicate image
+requests need one render, but a hundred distinct images still have a real cost.
+
+### Extend coverage without rebuilding the monolith
+
+Use a dedicated parameter dataclass per wrapper and share validated, model-independent
+distributions by composition. Position sampling can serve cameras and lights without
+a generic wrapper that knows every model field. Separate texture asset selection,
+pixel transforms and lifecycle; material properties are a separate wrapper.
+
+Read both current dependency documentation and old executable behavior. A texture's
+shape does not establish its role: RGB, normals and ORM may all have three channels.
+Resolve shared material references before editing pixels, preserve non-color channels,
+and define explicit behavior for unsupported or conflicting roles. Count active
+resources in an existing scene pool instead of changing topology in reset.
+
+Keep a feature coverage table, test representative type/role combinations and verify
+actual GPU updates, not just model array changes. A narrow compatibility bridge is
+preferable to copying a renderer when an otherwise supported low-level upload API
+needs access to its context; isolate and test that bridge, document the fallback.
+
+### Port optional rendering by separating data contracts from execution
+
+Read both the old wrapper and its downstream consumers before deciding something
+is covered. A file named Lucid may prepare conditioning inputs without invoking a
+generative model. Preserve that distinction: keep camera/label/depth products in
+small observation wrappers and put checkpoint loading and GPU execution behind an
+explicit renderer interface. Define mask polarity, units, coordinate conventions,
+normalization and output types in the interface rather than inferring them from
+key strings. Resolve names once, but refresh camera calibration after randomization.
+
+Keep optional GPU dependencies out of core imports, share heavyweight renderers,
+and cache identical requests only for one observation. Verify image preparation
+and composition locally with real simulator renders plus a recording backend;
+report CUDA execution separately. A mock backend proves the integration contract,
+not checkpoint compatibility or GPU kernel execution. Supply a small cluster smoke
+entry point for the latter. Channel ownership follows the same principle: RGB,
+opacity and emissive exposure have separate semantics and independent restoration.

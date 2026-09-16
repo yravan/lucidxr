@@ -54,7 +54,7 @@ furniture presets may require caller-provided resources.
 | `scenes/robosuite_nutassembly.py` | `e5b11008012a` |
 | `scenes/robosuite_pickplace.py` | `9efb348568f9` |
 | `scenes/robosuite_stack.py` | `9ae150904a4d` |
-| `scenes/sort_shapes.py` | `dc783cd9dd7d` |
+| `scenes/sort_shapes.py` | `f6fd62798a02` |
 | `scenes/stack_blocks.py` | `56149196d29c` |
 | `scenes/teddy_bear_table.py` | `d4e31f1e50b6` |
 | `scenes/tie_knot.py` | `90c1e25ee320` |
@@ -196,3 +196,39 @@ furniture presets may require caller-provided resources.
 | `xml_schema/utils/path_rewrite.py` | `ad0ce20a1609` |
 | `xml_schema/utils/tree_merge.py` | `11daca309049` |
 | `xml_schema/utils/whitener.py` | `60d333a37023` |
+
+## Native environment follow-up
+
+Reviewed the original environment/task base classes, environment factory,
+new observation/randomization wrappers and their helper dependencies, recording
+collection and offline rendering callers, and upstream gym_dmc/dm_control base
+implementations. The detailed contract and exclusions are recorded in
+[mujoco_env/DESIGN.md](mujoco_env/DESIGN.md).
+
+Reviewed every runtime Python module in mujoco_env, including the native command
+interface and each observation/randomization wrapper. Nineteen focused checks pass
+(four schema, four environment, eight randomization and three conditioning cases), including real offscreen image products,
+native dictionary commands, atomic validation, and simulator continuation.
+A 100-camera stack renders an identical image once per observation, and a
+100-randomizer stack refreshes the model once per reset. The manual benchmark
+in tests/benchmark_wrappers.py records hot-path overhead separately from rendering.
+
+All 32 default scenes compile/reset and pass a 10-control-step rollout using native
+held-command dictionaries. sort_shapes additionally passed 100 control steps after
+restoring mesh scales from its original generated XML. This is a smoke check, not
+a policy-success or long-horizon stability benchmark. Human viewer interaction
+and cluster GPU rendering were not tested.
+
+The randomization follow-up rechecked current MuJoCo texture types, channel counts,
+material roles, native light fields and GPU upload interfaces. It added independent
+parameter dataclasses, shared pose distributions, active-light counts, schedules,
+role-aware texture patterns and separate material sampling. See
+[mujoco_env/RANDOMIZATION.md](mujoco_env/RANDOMIZATION.md) for complete coverage,
+backend limitations and the native compiler fixture issue found during validation.
+
+Opacity follow-up: explicit material alpha and role-specific texture scalar channels
+have seeded restoration and shared-role conflict checks. Lucid conditioning and
+ADE colors run against real MuJoCo images. Gaussian-splat integration tests verify
+alignment, live calibration, mask composition and one backend call for 100 identical
+requests. The CUDA backend and optional dependencies resolve but remain untested
+on GPU; tests/smoke_gsplat.py is the cluster validation entry point.
