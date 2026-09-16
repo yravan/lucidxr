@@ -1,9 +1,9 @@
 # Personal infrastructure
 
-This directory owns machine-specific storage configuration. Simulation and demo
-files do not import it. It currently does one thing: resolve a configured name to
-an ordinary filesystem path. There are no cluster schedulers, transfer services,
-model registries, training abstractions, credentials or unused backend classes.
+This directory owns personal storage configuration and remote job launching.
+Simulation and recording formats do not import it. Scripts resolve ordinary paths
+here and use Jaynes to capture code, transfer it and submit work to MIT Slurm.
+Model, policy and dataloader implementations belong outside infra.
 
 Copy `infra/example.toml` to `~/.config/lucidxr/infra.toml` and edit the demos path:
 
@@ -19,8 +19,8 @@ there is no fallback to an unexpected save location.
 
 The configured root can be a local Dropbox sync directory, an already-mounted
 filesystem, or a cluster path when running there. Use the actual path visible to
-that process. An SSH hostname is not a filesystem path; remote access, syncing and
-cluster job submission will be added only when a real workflow needs them. Dropbox
+that process. An SSH hostname is not a filesystem path; use the cluster profile below for
+remote job submission. Dropbox
 sync completion and remote durability are not guaranteed by a local file write.
 
 The boundary is deliberately narrow: infra supplies a root; the application owns
@@ -28,3 +28,40 @@ its recording format and file naming. Later checkpoint and dataset code can use
 other configured roots without moving policy/model/dataloader code into infra.
 Keep personal configurations outside Git and do not embed host paths or tokens in
 scene definitions, scripts, or recording metadata.
+
+## Remote rendering with Jaynes
+
+Install `uv sync --extra rendering --extra launch`, configure `[clusters.engaging]`
+using `example.toml`, and authenticate once with `ssh engaging`. Then launch:
+
+```sh
+uv run python -m lucidxr.scripts.launch_render /path/to/demo.npz \
+  --cluster engaging --cameras wrist
+```
+
+`--infra-config PATH` selects another profile file. `--dry-run` freezes the code
+and writes generated scripts without contacting the cluster. New files require
+`git add`; tracked working-tree edits are included without changing your real Git
+index, branch or HEAD. Personal config and `.env` are not captured unless tracked.
+
+Jaynes SSHCode creates and uploads a tar of the frozen source and explicit inputs.
+Its Slurm runner serializes a call to the normal worker CLI. Each worker uses a
+job-local uv environment from the captured lockfile, with matched Python/cloudpickle
+versions. No manually maintained remote checkout, Docker, ml-logger, params-proto,
+Zaku or persistent launcher server is required. SSH uses your normal host alias
+and authenticated connection. GNU rsync is required by SSHCode's progress option.
+
+`concurrency` bounds the number of GPU worker jobs. Each processes a fixed partition
+of recordings, reports each failure and exits nonzero if any assigned item failed.
+Completed content IDs are verified and skipped on repetition. The last successful
+worker publishes a collection record only after verifying the whole requested set.
+
+The command prints a local `launch.json` receipt. It records code-tree and archive
+hashes, resolved profile, remote paths, confirmed Slurm IDs and submission state.
+Generated scripts remain beside it. Remote `worker-N.submission` files record
+accepted job IDs, and `worker-N-JOBID.log` holds ordinary stdout/stderr. After a lost
+connection, inspect those records before submitting again. `infra.launch.status`
+queries Slurm accounting using the receipt. Rendering progress/completion lives in
+render records, rather than being inferred from scheduler state or directory names.
+
+See [JAYNES.md](JAYNES.md) for the source review and small compatibility correction.
