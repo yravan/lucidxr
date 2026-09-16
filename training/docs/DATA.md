@@ -19,7 +19,7 @@ render, download or mutate a dataset as a side effect of fetching a batch.
 | Representation | Owner | Purpose |
 | --- | --- | --- |
 | Raw demo | `lucidxr.sim.demos` | Preserve captured physical state and provenance |
-| Prepared episode | `training.data` | Explicit aligned labels, selected observations and images |
+| Prepared episode | `lucidxr.rendering` | Explicit aligned labels, selected observations and images |
 | Policy batch | `training.policy` contract | History/chunk tensors for loss or sampling |
 
 Raw recordings remain immutable. Rebuilding rendered observations never edits the
@@ -67,7 +67,15 @@ split excessive gaps using a recorded threshold. Images and state must refer to
 the same selected boundary; selecting a future frame for a past observation is
 not an acceptable resampling shortcut.
 
-## Prepared storage: one HDF5 file per episode/visual variant
+## Prepared storage: decision belongs to the first rendering PR
+
+The HDF5 layout below is the earlier proposal, **not a locked requirement**. Compare
+it with typed Parquet tables plus per-camera MP4 before implementing the exporter.
+RGB video, exact timestamp/frame mapping, and lossless depth/segmentation need
+separate treatment. Training will consume the chosen export contract rather than
+owning a competing writer. See the [rendering plan](../../lucidxr/rendering/README.md).
+
+### Earlier HDF5 proposal
 
 Use one format initially. HDF5 gives named, typed, sliceable and chunked arrays in
 one file; it avoids both decompressing an entire NPZ for every window and creating
@@ -122,12 +130,13 @@ Do not bake a giant all-episode memory cache into Dataset. Completed files may b
 staged onto node-local scratch by infra once an actual cluster workflow needs it;
 that is an explicit operation before DataLoader construction.
 
-## Rendering stays with simulation
+## Rendering owns a separate package
 
-`lucidxr.sim.render_demo` should own frame restoration, CameraWrapper and optional
-visual wrappers. A thin `lucidxr/scripts/prepare_dataset.py` composes it with the
-prepared-episode writer. `training.data` owns the file schema, window sampling and
-stats; its Dataset never imports MuJoCo, Vuer or gsplat.
+`lucidxr.rendering` owns replay, render products, export schema and writing. It
+reuses `lucidxr.sim` environments and wrappers. A thin rendering CLI resolves infra
+setup and invokes it. `training.data` later owns window sampling and statistics;
+its Dataset never initializes MuJoCo, Vuer or gsplat. The rendering package must be
+usable without installing training dependencies.
 
 For each source episode and visual variant:
 
@@ -150,9 +159,9 @@ with model/seed provenance. Do not revive a Zaku queue or assume a generator exi
 merely because LucidWrapper exists.
 
 GPU/offscreen contexts are created inside rendering workers, not inherited through
-fork. Begin with a single-process preparer; add process-level episode parallelism
-when preparation measurements justify it. Splat checkpoint loading is reused across
-episodes handled by a worker. No rendering service or scheduler is needed to define
+fork. Establish a single-process reference in rendering PR A; distributed episode/variant
+execution is required in PR B, followed by staging and recovery in PR C. Splat
+checkpoint loading is reused across episodes handled by a worker. No rendering service or scheduler is needed to define
 this API.
 
 ## Window sampling and splits

@@ -1,38 +1,40 @@
 # Training ownership and implementation sequence
 
-Status: design for review. The paths below are planned modules, not empty packages
-or claims that an implementation exists.
+Status: deferred training design. Complete the three rendering slices in
+[lucidxr/rendering/README.md](../../lucidxr/rendering/README.md) first. The paths below are planned modules,
+not empty packages or claims that an implementation exists.
 
 ## Module ownership
 
 ```text
-infra/                           # existing: personal filesystem roots
+infra/                           # shared deployment setup; grow with rendering callers
 lucidxr/
   sim/
     demos.py                     # existing: raw recording format
     teleop/                      # existing: browser collection
     mujoco_env/                  # existing: native environment and render wrappers
-    render_demo.py               # planned: restore/capture source frames
     policy_adapter.py            # planned: names -> native observations/commands
+  rendering/                     # replay, render products, dataset export and workers
   scripts/
     record_demo.py               # existing
     playback_demo.py             # existing
     view_scene.py                # existing
-    prepare_dataset.py           # planned: compose rendering and episode writing
+    render_dataset.py            # planned: resolve infra setup and run rendering
     train.py                     # planned: parse config and call training loop
     evaluate_policy.py           # planned: checkpoint + environment + chunk execution
 training/
+  models/
+    vision.py                    # visual encoder
+    unet.py                      # conditional temporal U-Net
+    mot.py                       # observation/action experts and attention/cache
   policy/
     policy.py                    # ChunkPolicy; three named recipe constructors
     diffusion.py                 # diffusion objective and scheduler adapter
     flow_matching.py             # flow objective and Euler sampler
-    vision.py                    # one visual feature implementation
-    unet.py                      # conditional temporal U-Net
-    mot.py                       # observation/action experts and attention/cache
     actions.py                   # explicit ActionSpec and ActionCodec
     normalization.py             # fitted transforms shared with inference
   data/
-    episodes.py                  # prepared HDF5 schema, reader and writer
+    episodes.py                  # read completed rendering exports
     dataset.py                   # read-only history/chunk windows and sampling
     statistics.py                # training-split statistics
   train.py                       # shared training loop
@@ -50,12 +52,21 @@ Avoid three copied trainers or a family of base classes with one implementation.
 
 Allowed dependency direction:
 
-- policy: torch/vision/scheduler primitives and its own specs; no sim, data or infra.
-- data: episode files and shared policy representation specs; no rendering or infra.
+- models: tensor operations and architecture configuration; no deployment setup.
+- policy: models + objectives/sampling and representation specs; no host paths.
+- data: read completed export files and apply policy representation specs; no renderer execution.
 - training loop: policy + data + optimizer/logging/checkpoint utilities; no simulator.
 - simulation policy adapter: native sim plus the shared policy I/O representation.
-- scripts: compose the required pieces and pass explicit paths/configuration.
-- infra: supply locations now; add host staging or scheduling only with a caller.
+- scripts: resolve shared infra configuration once, then pass paths and runtime settings.
+- infra: own storage roots, scratch, cluster resources and staging/submission setup.
+  Add these with their rendering callers; training later reuses the same setup.
+- rendering: own replay, output schema, frame alignment and export publication; use
+  infra through launch/staging entry points, not inside per-frame rendering.
+
+Use one resolved infra configuration per invocation, saved with the job/run. Do not
+read configuration or contact storage at import time or per sample. Machine settings
+are shared through infra; model dimensions, action conventions and dataset schema
+constants stay with their owners. Explicit overrides are recorded, not hidden globals.
 
 The same root-level `training/` package contains deployable policy code, matching
 the requested repository split. It is not a second environment or a vendored
@@ -63,7 +74,8 @@ upstream training framework. Add it to packaging only when Python modules exist.
 
 ## Dependencies
 
-Use PyTorch, torchvision, Diffusers schedulers and h5py for the first working slice.
+Use PyTorch, torchvision and Diffusers schedulers for the first training slice.
+Choose reader dependencies from the completed rendering export contract.
 Use existing NumPy and TOML support. Keep them in an optional training dependency
 set so sim-only and teleop-only installations remain lightweight. Add W&B when the
 trainer's metric calls exist. Verify current package/Python 3.14 compatibility
@@ -167,24 +179,27 @@ No pretrained-language benefit or π0.5 benchmark claims apply to this experimen
 This PR is the research/design slice. The following slices should add working
 paths, not speculative scaffolding:
 
-1. **Data semantics and one prepared episode.** Establish an authoritative transition
-   recording contract, pure action/observation transforms and an offline preparer.
-   Render one pick_block episode, reload a window and verify alignment. Support
-   legacy approximations only with explicit provenance. No full trainer yet.
-2. **Diffusion Policy end to end.** Add the vision encoder, conditional U-Net,
-   scheduler adapter and one trainer. Overfit a tiny known-alignment dataset,
-   save/resume, and run decoded actions in the environment. This forces every
-   initial abstraction to have a real caller.
-3. **Flow Matching on the same network.** Add the velocity objective and Euler
-   sampling loop. Reuse the existing loader, transforms, trainer and evaluator.
-   Test the time/sign convention against a known vector field.
-4. **Language-free MoT.** Add separate expert parameters, the block mask and adaptive
-   time conditioning. Verify no observation dependency on noisy action tokens,
-   gradients into both experts, padding behavior, and cached/uncached equivalence.
-   Use the existing flow loss and sampling loop without copying either.
-5. **MIT run and measured improvements.** Run the three recipes with comparable
-   data/control settings, then add only the staging/launch/distribution operations
-   that the actual run needs. Keep GPU execution results distinct from CPU tests.
+Rendering comes first: local export, distributed execution, then staging/recovery.
+See the separate rendering plan for acceptance criteria. Do not implement a trainer
+or a second export format while these boundaries are still being established.
+
+After rendering, build training one responsibility at a time:
+
+1. **Model code.** Add the visual encoder and temporal U-Net with explicit tensor
+   contracts and a small forward/backward check; no trainer or cluster imports.
+2. **Policy code.** Add Diffusion Policy's loss/sampling, representation and
+   normalization around the model. Use a known synthetic batch as the first caller.
+3. **Dataloader code.** Read the completed rendering exports, implement aligned
+   history/action windows, source-group splits and train-only statistics.
+4. **One training path.** Compose the above, reuse infra setup for data/run paths,
+   overfit a tiny dataset, save/resume and execute decoded actions in the environment.
+5. **Flow Matching, then language-free MoT.** Add the flow objective on the same
+   U-Net first, then the MoT architecture using that same objective and loader.
+   Verify flow direction and MoT masks/gradients/cache equivalence.
+
+These are implementation stages, not permission to create unused skeletons. Add
+only the modules exercised by each stage. Keep CUDA validation distinct from CPU
+checks and preserve the no-language-input/no-language-weights requirement.
 
 Meaningful tests are a small number of contracts: codec round trip, window alignment
 and split isolation, scheduler/flow sign sanity, finite loss/gradients for each

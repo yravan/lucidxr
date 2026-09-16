@@ -2,11 +2,13 @@
 
 **Design proposal, stacked on PR #3.** This change specifies the architecture and
 implementation sequence; it does not add placeholder policies, a trainer, new
-runtime dependencies, or claim trained results. The three implementations should
-be built against this shared contract after review.
+runtime dependencies, or claim trained results. Training implementation is deferred until the three
+[rendering PRs](../lucidxr/rendering/README.md) establish the data pipeline.
+Then build model code, policy code and dataloader code in separate stages.
 
 The user requirement is explicit: **no language inputs and no language-model
-weights**, including for the π0.5-style policy. Infrastructure remains separate.
+weights**, including for the π0.5-style policy. Training and rendering share deployment setup from `infra`; mathematical model
+and policy configuration remains in `training`.
 
 The proposed system has two action-generation objectives and two architectures:
 
@@ -30,9 +32,9 @@ pretraining mixture, scale, or published performance.
 
 ```mermaid
 flowchart LR
-    I[infra: filesystem roots] --> C[CLI arguments]
+    I[infra: shared storage and cluster setup] --> C[CLI arguments]
     R[Raw recordings] --> P[Explicit preparation and alignment]
-    S[Simulation renderers] --> P
+    S[lucidxr/rendering: distributed dataset generation] --> P
     P --> D[Immutable prepared episodes]
     D --> L[Read-only window dataset]
     L --> T[Shared trainer]

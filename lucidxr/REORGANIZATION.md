@@ -331,3 +331,15 @@ clean-looking rewrite incorrect. Mark missing evidence and proposed contracts in
 design PR; do not fill uncertain boundaries with unused implementations. Pin research
 sources, distinguish paper claims from local choices, and implement bounded end-to-end
 slices after the interface is concrete.
+
+### Build the data-producing workflow before its consumers
+
+When distributed rendering is a concrete requirement, give it an application-level
+home and bounded delivery stages: local correctness, distributed execution, then
+staging/recovery. Let that real workflow drive infra's configuration and operations.
+Keep scheduler submission and transfers outside renderer logic, and reuse its worker
+locally. Stable work identities, immutable attempt outputs and validated completion
+records make retries inspectable without a bespoke queue service. Defer training
+until the export contract exists; retain research without building unused scaffolds.
+Shared infra setup means one source of deployment settings, not a global constants
+module containing model mathematics and dataset semantics.
