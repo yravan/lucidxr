@@ -103,3 +103,7 @@ smoke. A browser/headset was unavailable for interactive visual validation; hand
 tracking, button interaction and browser-side physics remain to be checked there.
 The adapter uses the installed Vuer 0.1.6 API and follows its
 [MuJoCo interaction examples](https://github.com/vuer-ai/vuer/blob/main/docs/tutorials/mujoco_interactive_simulator.md).
+
+Offline replay rendering: `python -m lucidxr.scripts.render_demo DEMO --output DIR
+--cameras wrist`. Install the `rendering` extra. See
+[rendering](../rendering/README.md) for paired HDF5/video output and completion records.

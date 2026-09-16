@@ -24,6 +24,10 @@ splat = [
     "torch>=2.14.0; sys_platform == 'linux'",
     "gsplat>=1.5.3; sys_platform == 'linux'",
 ]
+rendering = [
+    "av>=18.1.0",
+    "h5py>=3.16.0",
+]
 
 [dependency-groups]
 dev = ["pytest>=9.1.1", "build>=1.6.1", "ruff>=0.16.7"]

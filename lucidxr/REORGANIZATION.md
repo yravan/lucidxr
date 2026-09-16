@@ -310,3 +310,13 @@ writes and replay, not just happy-path serialization. Temporary browser exports
 must preserve implicit asset names when filenames are rewritten. Test the exported
 XML as a standalone model. Distinguish server-event verification from actual VR
 interaction and keep that verification gap visible.
+
+### Replace path conventions with explicit artifact identity
+
+Keep human names as metadata, not a protocol encoded in directory names. Bind an
+operation to input content, settings and implementation; store explicit references
+between products. Validate closed outputs before publishing one immutable completion
+record. Separate attempts from accepted work so interruptions and competing retries
+cannot advertise partial results. Preserve source timing rather than interpreting
+video playback rate as a label alignment contract. Reuse capture code already tested
+by simulation and exercise a real write failure in the new orchestration layer.
