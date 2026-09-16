@@ -77,3 +77,9 @@ is not a promise of identical trajectories across different scenes or engine ver
 
 Only the current recording format is supported. Collection, not a migration shim,
 must supply simulation time and the named control contract.
+
+Distributed workers use the same renderer through `infra.rendering`, which owns
+scratch placement and worker allocation. `output.copy_result` owns the format-aware
+publication protocol: transfer all verified artifacts, then atomically publish the
+completion record. Core rendering accepts ordinary paths and does not import infra.
+See [remote launch and recovery](../../infra/README.md) for cluster commands.

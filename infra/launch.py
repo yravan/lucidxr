@@ -12,6 +12,7 @@ import tempfile
 from pathlib import Path
 from uuid import uuid4
 
+from .files import atomic_json
 from .snapshot import code_tree
 
 logger = logging.getLogger(__name__)
@@ -70,7 +71,7 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
     receipt = local / "launch.json"
 
     def save():
-        receipt.write_text(json.dumps(record, indent=2))
+        atomic_json(receipt, record)
 
     save()
     # Materialize the frozen Git tree so SSHCode packages only reviewed tracked files.
@@ -103,7 +104,7 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
             startup = "; ".join(
                 [
                     f"cd {code}",
-                    "export MUJOCO_GL=egl PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1",
+                    "export MUJOCO_GL=egl PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 UV_LINK_MODE=copy",
                     f"export OMP_NUM_THREADS={cluster.cpus}",
                     'export UV_PROJECT_ENVIRONMENT="${SLURM_TMPDIR:-/tmp}/lucidxr-venv-${SLURM_JOB_ID}"',
                     shlex.join(
@@ -150,12 +151,10 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
                     str(index),
                 ],
             )
-            # Persist each accepted ID before submitting another; a broken connection can be reconciled.
-            script = (
-                "{\n" + runner.run_script + "\n} | tee " + str(destination / f"worker-{index}.submission")
-            )
+            script = "set -euo pipefail\n" + runner.run_script
             scripts.append(script)
-            (local / f"worker-{index}.sh").write_text("set -euo pipefail\n" + script)
+            (local / f"worker-{index}.sh").write_text(script)
+        record["script_sha256"] = [hashlib.sha256(s.encode()).hexdigest() for s in scripts]
         if dryrun:
             record["state"] = "prepared"
             save()
@@ -174,15 +173,10 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
             record["state"] = "submitting"
             save()
             for index, script in enumerate(scripts):
-                stdout = remote(cluster, script)
-                ids = [
-                    line.split(";")[0] for line in stdout.splitlines() if re.fullmatch(r"\d+(;[^\s]+)?", line)
-                ]
-                if len(ids) != 1:
-                    raise RuntimeError(f"Ambiguous submission for worker {index}: {stdout}")
-                record["jobs"].append(ids[0])
+                job = submit(cluster, script, destination / f"worker-{index}.submission")
+                record["jobs"].append(job)
                 save()
-                logger.info("Worker submitted index=%d job=%s", index, ids[0])
+                logger.info("Worker submitted index=%d job=%s", index, job)
             record["state"] = "submitted"
             save()
         except BaseException as exc:
@@ -207,3 +201,12 @@ def status(receipt):
     return remote(
         profile, shlex.join(["sacct", "-j", jobs, "-P", "--format=JobID,State,ExitCode,Elapsed,NodeList"])
     )
+
+
+def submit(cluster, script, submission):
+    """Save Slurm's response remotely before acknowledging a submitted worker."""
+    stdout = remote(cluster, "{\n" + script + "\n} | tee " + shlex.quote(str(submission)))
+    ids = [line.split(";")[0] for line in stdout.splitlines() if re.fullmatch(r"\d+(;[^\s]+)?", line)]
+    if len(ids) != 1:
+        raise RuntimeError(f"Ambiguous submission; inspect {submission}: {stdout}")
+    return ids[0]

@@ -339,3 +339,18 @@ checks. A real Mac/Linux run exposed last-bit differences in seeded positions.
 Serializing computed numeric XML attributes at 12 significant digits makes the
 scene itself portable; names and literal text remain untouched. Fingerprints can
 then stay strict about both the emitted XML and asset bytes.
+
+### Study dependencies before replacing them
+
+Read the installed version's implementation alongside its docs and examples. Separate
+obsolete example dependencies from actual runtime requirements. Exercise a small real
+success and deliberate failure before choosing a replacement. Here Jaynes already
+provided code capture, transfer and Slurm submission; its small adapter needed failure
+propagation and receipts, not a new scheduler. Record source versions and the precise
+compatibility correction (`infra/JAYNES.md`) so future upgrades can revisit it.
+
+Keep orchestration and data semantics separate: infra chooses hosts, scratch and
+allocations; the renderer defines valid artifacts and publishes their completion
+record last. Test interrupted publication and retry behavior rather than adding broad
+mock-heavy coverage of every helper. Explicit failure is preferable to an automatic
+fallback that can silently submit duplicate jobs or overwrite corrupt output.

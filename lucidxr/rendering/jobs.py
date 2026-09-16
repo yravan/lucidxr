@@ -71,23 +71,3 @@ def collect(manifest, output):
     )
     logger.info("Collection complete items=%d record=%s", len(results), path)
     return path
-
-
-def run_worker(manifest, worker_index, workers, output):
-    """Bound process count; handle many episodes per allocation and keep failures visible."""
-    items = load_plan(manifest)["items"]
-    if not 0 <= worker_index < workers <= len(items):
-        raise ValueError("Invalid worker partition")
-    failed = []
-    for index in range(worker_index, len(items), workers):
-        try:
-            run_item(manifest, index, output)
-        except Exception:
-            logger.exception("Work failed index=%d work=%s", index, items[index]["work_id"])
-            failed.append(items[index]["work_id"])
-    if failed:
-        raise RuntimeError(f"{len(failed)} render requests failed: {failed}")
-    try:
-        collect(manifest, output)
-    except FileNotFoundError:
-        logger.info("Worker complete; waiting for the rest of the work set")

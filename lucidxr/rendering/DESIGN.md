@@ -1,8 +1,23 @@
 # Rendering before training
 
-Status: design only. This package will own offline dataset rendering and export.
-Implement the following three PRs before training. A/B/C are sequencing labels,
-not allocated GitHub PR numbers. PR #4 retains the deferred policy research.
+Status: the implementation follows three stacked slices: local replay (#5),
+Jaynes/MIT execution (#6), and scratch/recovery. PR #4 retains deferred policy
+research. The original plan below is retained with these scope decisions:
+
+- HDF5 plus paired MP4 is the current replay format. Dataset export and the
+  Parquet/history-window benchmark are deferred at the user's request.
+- Native MuJoCo/EGL is exercised locally and on Engaging GPUs. The distributed
+  path does not yet expose gsplat, Lucid generation or randomized visual variants.
+- Jaynes submits a bounded set of independent Slurm workers, each handling a
+  deterministic partition. There is no job array or second scheduling service.
+- Resume reuses uploaded source/assets and inputs. Per-item input/output work uses
+  node-local scratch; assets remain in the shared source snapshot. A separate
+  asset cache and sustained GPU-utilization benchmarks remain future work.
+- Job failures are visible through durable worker logs and Slurm state. Accepted
+  completion records are authoritative; ambiguous submissions require inspection.
+
+See [README.md](README.md) and [infra](../../infra/README.md) for the implemented
+commands and storage contract. A/B/C below describe the original sequencing.
 
 ## Ownership
 

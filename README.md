@@ -47,8 +47,11 @@ lucidxr/
     assets/           # robots/, objects/, rooms/, textures/, adapters/
     scenes/           # Scene base class, 32 scene definitions, catalogue and CLI
     mujoco_env/       # native Gymnasium environment, controls, playback and wrappers
+  rendering/          # offline replay, paired HDF5/video and verified completion
+  scripts/            # recording, playback, rendering and remote launch entry points
   tests/              # focused schema and runtime regression checks
- deprecated/          # optional local reference copy, ignored by Git
+infra/                # personal locations, Jaynes/MIT launch, scratch and recovery
+deprecated/          # optional local reference copy, ignored by Git
 ```
 
 See [the schema design guide](lucidxr/sim/xml_schema/README.md) for extension points
@@ -74,10 +77,10 @@ alternate asset root too. Dataset/checkpoint hosting and Dropbox downloads are
 separate follow-up work; they are not required by these scene builders.
 
 The catalogue consolidates demo/export/camera and robot-specific copies into scene
-families. Existing configurable builders keep their meaningful options. Legacy
-Gym environment registration, rewards, teleoperation, training, and launch scripts
-remain in Git history (and the local `deprecated/` copy); this PR ports scene
-construction, not those runtimes.
+families. Existing configurable builders keep their meaningful options. The original
+implementations remain in Git history and the local `deprecated/` copy. Active
+runtime entry points and their validation boundaries are documented in the guides
+linked here.
 
 ## Compatibility and validation
 
@@ -106,5 +109,7 @@ rotation helpers work when PyTorch is installed by a downstream training project
 NumPy versions do not require it.
 
 Demo collection and playback entry points live in [lucidxr/scripts](lucidxr/scripts/README.md).
-Optional personal storage configuration lives in [infra](infra/README.md); scripts
-accept filesystem paths and do not depend on that package.
+Offline replay produces paired HDF5/video files; see [rendering](lucidxr/rendering/README.md).
+Personal storage configuration and Jaynes/MIT launching, scratch staging and retry
+commands live in [infra](infra/README.md). Core simulation and rendering accept
+ordinary paths without importing deployment configuration.

@@ -142,3 +142,8 @@ message arrival delays. Saved state times matched the engine clock, with 20 ms
 intervals. Headset interaction
 itself still requires a headset; this check covers the real physics/frame transport
 and save path. Only newly collected format-2 recordings are supported.
+
+Remote rendering: `python -m lucidxr.scripts.launch_render DEMO --cluster engaging
+--cameras wrist`. Install the `rendering` and `launch` extras and configure a cluster
+profile. The worker CLI is shared by captured Jaynes jobs; status and retry commands
+are documented in [infra](../../infra/README.md).
