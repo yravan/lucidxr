@@ -12,7 +12,8 @@ from .sampling import Uniform, check_range
 class MaterialRandomizationParams(RandomizationParams):
     names: tuple[str, ...] | None = None
     geom_names: tuple[str, ...] | None = None  # default: geoms without a material
-    color: float = 0.2  # symmetric RGB offsets, alpha unchanged
+    color: float = 0.2  # symmetric RGB offsets
+    alpha: Uniform | None = None  # absolute opacity; unchanged unless configured
     emission: Uniform | None = None
     specular: Uniform | None = None
     shininess: Uniform | None = None
@@ -24,7 +25,7 @@ class MaterialRandomizationParams(RandomizationParams):
     def __post_init__(self):
         super().__post_init__()
         RandomizationWrapper.validate_scales(color=self.color)
-        for name in ("emission", "specular", "shininess", "reflectance", "metallic", "roughness"):
+        for name in ("alpha", "emission", "specular", "shininess", "reflectance", "metallic", "roughness"):
             check_range(getattr(self, name), high=1, name=name)
         check_range(self.texrepeat, low=np.finfo(float).eps, name="texrepeat")
         for names in (self.names, self.geom_names):
@@ -49,7 +50,8 @@ class MaterialRandomization(RandomizationWrapper):
             if params.geom_names is not None
             else np.flatnonzero(model.geom_matid < 0)
         )
-        fields = {"mat_rgba": (self.ids, slice(0, 3)), "geom_rgba": (geoms, slice(0, 3))}
+        channels = slice(0, 4 if params.alpha is not None else 3)
+        fields = {"mat_rgba": (self.ids, channels), "geom_rgba": (geoms, channels)}
         self.properties = tuple(
             name
             for name in (
@@ -68,7 +70,17 @@ class MaterialRandomization(RandomizationWrapper):
 
     def sample(self, rng):
         for field in ("geom_rgba", "mat_rgba"):
-            self.perturb(rng, field, self.params.color, bounds=(0, 1))
+            target = getattr(self.base.model, field)
+            indices = self._indices[field]
+            values = self._defaults[field].copy()
+            values[..., :3] = np.clip(
+                values[..., :3] + rng.uniform(-self.params.color, self.params.color, values[..., :3].shape),
+                0,
+                1,
+            )
+            if self.params.alpha is not None:
+                values[..., 3] = self.params.alpha.sample(rng, values[..., 3].shape)
+            target[indices] = values
         for name in self.properties:
             target = getattr(self.base.model, f"mat_{name}")
             target[self.ids] = getattr(self.params, name).sample(rng, target[self.ids].shape)

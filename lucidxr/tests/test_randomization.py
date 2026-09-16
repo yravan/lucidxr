@@ -200,3 +200,53 @@ def test_intrinsic_camera_material_and_live_texture_upload(tmp_path):
         assert np.allclose(base.rendering.image("view", 64, 48), before, atol=1)
     finally:
         texture.close()
+
+
+def test_explicit_alpha_scalar_roles_and_independent_restore(tmp_path):
+    from lucidxr.sim.mujoco_env.wrappers import TextureScalarRandomization, TextureScalarRandomizationParams
+
+    base = MujocoEnv(appearance_scene(tmp_path))
+    model = base.model
+    original_pixels = model.tex_data.copy()
+    original_material = model.mat_rgba.copy()
+    original_geoms = model.geom_rgba.copy()
+    material = MaterialRandomization(base, MaterialRandomizationParams(color=0, alpha=Uniform(0.25, 0.25)))
+    color = TextureRandomization(material, TextureRandomizationParams(modes=("flat",)))
+    alpha = TextureScalarRandomization(color, TextureScalarRandomizationParams(values=Uniform(0.5, 0.5)))
+    opacity = TextureScalarRandomization(
+        alpha, TextureScalarRandomizationParams(channel="opacity", values=Uniform(0.1, 0.9), per_pixel=True)
+    )
+    exposure = TextureScalarRandomization(
+        opacity, TextureScalarRandomizationParams(channel="exposure_weight", values=Uniform(0.75, 0.75))
+    )
+    try:
+        exposure.reset(seed=5)
+        first = model.tex_data.copy()
+        assert np.allclose(model.mat_rgba[:, 3], 0.25)
+        assert np.allclose(model.geom_rgba[model.geom_matid < 0, 3], 0.25)
+        assert np.array_equal(model.mat_rgba[:, :3], original_material[:, :3])
+        assert np.all(pixels(model, "rgba")[..., 3] == 128)
+        assert np.all(pixels(model, "emissive")[..., 3] == 191)
+        assert np.unique(pixels(model, "opacity")).size > 1
+        exposure.reset(seed=5)
+        assert np.array_equal(model.tex_data, first)
+        alpha.restore()
+        assert np.all(pixels(model, "rgba")[..., 3] == 90)
+        assert np.all(pixels(model, "emissive")[..., 3] == 191)
+        color.restore()
+        assert np.all(pixels(model, "emissive")[..., 3] == 191)
+        for wrapper in (opacity, exposure, material):
+            wrapper.restore()
+        assert np.array_equal(model.tex_data, original_pixels)
+        assert np.array_equal(model.mat_rgba, original_material)
+        assert np.array_equal(model.geom_rgba, original_geoms)
+        with pytest.raises(ValueError, match="exclusively alpha"):
+            TextureScalarRandomization(base, TextureScalarRandomizationParams(names=("emissive",)))
+        # A shared fourth channel cannot mean both alpha and exposure weight.
+        model.mat_texid[
+            model.material("mat_emissive").id, int(__import__("mujoco").mjtTextureRole.mjTEXROLE_EMISSIVE)
+        ] = model.texture("rgba").id
+        with pytest.raises(ValueError, match="exclusively alpha"):
+            TextureScalarRandomization(base, TextureScalarRandomizationParams(names=("rgba",)))
+    finally:
+        exposure.close()

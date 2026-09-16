@@ -167,8 +167,9 @@ wrappers become camera products. MidasDepth wrappers were inverse-depth
 normalization, not learned depth models. DomainRandomizationWrapper is replaced
 by the independently composable randomizers above.
 
-Real robots, old_info_wrappers, external Gaussian-splat loading, ADE palette
-visualization are not ported. Human viewer
+Lucid conditioning (including ADE colors) and optional Gaussian-splat rendering
+are described in [CONDITIONING.md](CONDITIONING.md). Real robots and
+old_info_wrappers are not ported. Human viewer
 interaction and cluster GPU rendering have not been tested. Physics-only workers
 create no graphics context; close() releases render resources. On macOS use
 `uv run mjpython ...` for human rendering. Offscreen tests exercise macOS OpenGL,

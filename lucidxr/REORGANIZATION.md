@@ -274,3 +274,21 @@ Keep a feature coverage table, test representative type/role combinations and ve
 actual GPU updates, not just model array changes. A narrow compatibility bridge is
 preferable to copying a renderer when an otherwise supported low-level upload API
 needs access to its context; isolate and test that bridge, document the fallback.
+
+### Port optional rendering by separating data contracts from execution
+
+Read both the old wrapper and its downstream consumers before deciding something
+is covered. A file named Lucid may prepare conditioning inputs without invoking a
+generative model. Preserve that distinction: keep camera/label/depth products in
+small observation wrappers and put checkpoint loading and GPU execution behind an
+explicit renderer interface. Define mask polarity, units, coordinate conventions,
+normalization and output types in the interface rather than inferring them from
+key strings. Resolve names once, but refresh camera calibration after randomization.
+
+Keep optional GPU dependencies out of core imports, share heavyweight renderers,
+and cache identical requests only for one observation. Verify image preparation
+and composition locally with real simulator renders plus a recording backend;
+report CUDA execution separately. A mock backend proves the integration contract,
+not checkpoint compatibility or GPU kernel execution. Supply a small cluster smoke
+entry point for the latter. Channel ownership follows the same principle: RGB,
+opacity and emissive exposure have separate semantics and independent restoration.

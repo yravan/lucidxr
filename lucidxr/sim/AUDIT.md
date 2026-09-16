@@ -206,8 +206,8 @@ implementations. The detailed contract and exclusions are recorded in
 [mujoco_env/DESIGN.md](mujoco_env/DESIGN.md).
 
 Reviewed every runtime Python module in mujoco_env, including the native command
-interface and each observation/randomization wrapper. Fifteen focused checks pass
-(four schema, four environment and seven randomization cases), including real offscreen image products,
+interface and each observation/randomization wrapper. Nineteen focused checks pass
+(four schema, four environment, eight randomization and three conditioning cases), including real offscreen image products,
 native dictionary commands, atomic validation, and simulator continuation.
 A 100-camera stack renders an identical image once per observation, and a
 100-randomizer stack refreshes the model once per reset. The manual benchmark
@@ -225,3 +225,10 @@ parameter dataclasses, shared pose distributions, active-light counts, schedules
 role-aware texture patterns and separate material sampling. See
 [mujoco_env/RANDOMIZATION.md](mujoco_env/RANDOMIZATION.md) for complete coverage,
 backend limitations and the native compiler fixture issue found during validation.
+
+Opacity follow-up: explicit material alpha and role-specific texture scalar channels
+have seeded restoration and shared-role conflict checks. Lucid conditioning and
+ADE colors run against real MuJoCo images. Gaussian-splat integration tests verify
+alignment, live calibration, mask composition and one backend call for 100 identical
+requests. The CUDA backend and optional dependencies resolve but remain untested
+on GPU; tests/smoke_gsplat.py is the cluster validation entry point.

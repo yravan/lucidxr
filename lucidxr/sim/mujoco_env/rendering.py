@@ -26,6 +26,16 @@ class Rendering:
         finally:
             self._batch_cache = None
 
+    def external(self, key, capture):
+        """Share external image products within this observation; return owned arrays."""
+        key = ("external", key)
+        cache = self._batch_cache
+        if cache is None:
+            return {name: value.copy() for name, value in capture().items()}
+        if key not in cache:
+            cache[key] = {name: value.copy() for name, value in capture().items()}
+        return {name: value.copy() for name, value in cache[key].items()}
+
     def image(self, camera, width, height, *, mode="rgb", hide=(), hide_sites=True):
         key = (camera, width, height, mode, tuple(hide), hide_sites)
         cache = self._batch_cache

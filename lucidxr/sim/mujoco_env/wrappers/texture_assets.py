@@ -25,7 +25,7 @@ class TextureAsset:
     face_height: int
 
     def restore(self):
-        self.pixels[..., :3] = self.baseline
+        self.pixels[...] = self.baseline
 
 
 def select_textures(model, names, kinds):
@@ -50,5 +50,5 @@ def select_textures(model, names, kinds):
         height, width = int(model.tex_height[index]), int(model.tex_width[index])
         pixels = model.tex_data[start : start + height * width * channels].reshape(height, width, channels)
         face_height = height if kind == mujoco.mjtTexture.mjTEXTURE_2D else width
-        assets.append(TextureAsset(index, pixels, pixels[..., :3].copy(), face_height))
+        assets.append(TextureAsset(index, pixels[..., :3], pixels[..., :3].copy(), face_height))
     return tuple(assets)

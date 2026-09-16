@@ -144,7 +144,9 @@ texture pixels. `names` selects materials and `geom_names` selects geom RGB rows
 By default, materials are all selected and only geoms without a material receive
 independent color offsets, avoiding an unintended override of material appearance.
 
-`color` controls symmetric RGB offsets, leaving alpha unchanged. Optional Uniform
+`color` controls symmetric RGB offsets. Alpha stays unchanged unless an explicit
+`alpha=Uniform(low, high)` in [0,1] is supplied; then each selected material/geom
+receives an independently sampled opacity. Optional Uniform
 ranges set emission, specular, shininess, reflectance, metallic, roughness and
 texrepeat. Color-like material scalars are constrained to [0,1]; texrepeat must
 stay positive. Shared materials are sampled once, affecting every referencing
@@ -188,13 +190,50 @@ skyboxes are identified separately from material roles.
 [MuJoCo texture/material layers](https://mujoco.readthedocs.io/en/stable/XMLreference.html#material-layer)
 [Compiled texture/material fields](https://mujoco.readthedocs.io/en/stable/APIreference/APItypes.html#mjmodel)
 
-Changing scalar PBR maps or surface-normal maps would need a role-specific sampler;
+Opacity maps have a dedicated scalar operation below. Changing other PBR scalar
+maps or surface-normal maps would need a role-specific sampler;
 this RGB wrapper does not claim to randomize them. UV coordinates, texture source
 files, pixel dimensions and material topology are also preserved.
 
+## TextureScalarRandomizationParams
+
+Use a separate operation for scalar channels so RGB patterns never inadvertently
+change transparency. Defaults in TextureRandomization still preserve all fourth
+channels and non-color maps. Explicit scalar operations use:
+
+```python
+from lucidxr.sim.mujoco_env.wrappers import (
+    TextureScalarRandomization,
+    TextureScalarRandomizationParams,
+    Uniform,
+)
+
+env = TextureScalarRandomization(
+    env,
+    TextureScalarRandomizationParams(channel="alpha", values=Uniform(0.6, 1.0)),
+)
+```
+
+| channel | Eligible material role | Edited channel |
+| --- | --- | --- |
+| alpha | RGBA only | Fourth channel, opacity |
+| opacity | Opacity only | Single-channel opacity map |
+| exposure_weight | Emissive only | Fourth channel, exposure weight |
+
+Values are absolute normalized [0,1], rounded to the nearest stored byte. By
+default one coherent value is sampled per asset; `per_pixel=True` explicitly
+requests independent pixel noise, processed in bounded row chunks. `names` and
+`kinds` select assets as for RGB, and reset/step scheduling uses the same lifecycle.
+Only the selected channel is saved/restored, so scalar and RGB wrappers compose.
+An asset used in conflicting roles is skipped automatically or rejected when
+explicitly named. Unreferenced images are skipped. Emissive exposure weight is
+not interpreted as opacity or RGB intensity. Rendering of texture roles depends
+on the active renderer; array edits do not add PBR support to classic OpenGL.
+Material alpha is the direct control for coherent object transparency.
+
 ## Uploads and performance
 
-Only selected RGB baselines are copied. Tint arithmetic uses int16 row chunks,
+Only selected channel baselines are copied. Tint arithmetic uses int16 row chunks,
 and patterns avoid full-texture float64 temporary arrays. Each shared texture is
 sampled once; identical IDs from a wrapper stack upload once per render context.
 Existing offscreen contexts use `mjr_uploadTexture`; the passive viewer uses
@@ -231,8 +270,8 @@ time and memory; a hundred wrappers cannot make those operations free.
 
 The original dynamics flag raised NotImplementedError; physics dynamics are still
 outside these visual wrappers. Real robots and old_info_wrappers remain excluded.
-External Gaussian-splat model loading and ADE color-palette visualization remain
-separate integrations. This is functional coverage, not identical historical
+Gaussian-splat rendering and Lucid conditioning, including ADE colors, are
+covered in [CONDITIONING.md](CONDITIONING.md). This is functional coverage, not identical historical
 sampling distributions or an adapter for old training-worker APIs.
 
 Validation includes seeded pattern/type/channel tests, untouched non-color/shared
