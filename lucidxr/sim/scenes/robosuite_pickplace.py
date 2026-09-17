@@ -22,7 +22,7 @@ class RobosuitePickPlace(Scene):
         bin1 = RobosuiteBin(attributes=dict(name="bin1", pos="0.1 -0.25 0.6"))
         bin2 = RobosuiteBin(attributes=dict(name="bin2", pos="0.1 0.28 0.6"))
         milk = Body(
-            attributes=dict(name="milk-1", pos=f"{x1} {y1} 0.8"),
+            attributes=dict(name="milk-1", pos=(x1, y1, 0.8)),
             rgba=f"{r} {g} {b} 1.0",
             _preamble="""
         <asset>
@@ -39,7 +39,7 @@ class RobosuitePickPlace(Scene):
         """,
         )
         bread = Body(
-            attributes=dict(name="bread-1", pos=f"{x2} {y2} 0.85"),
+            attributes=dict(name="bread-1", pos=(x2, y2, 0.85)),
             rgba=f"{r} {g} {b} 1.0",
             _preamble="""
         <asset>
@@ -56,7 +56,7 @@ class RobosuitePickPlace(Scene):
          """,
         )
         cereal = Body(
-            attributes=dict(name="cereal-1", pos=f"{x3} {y3} 0.9"),
+            attributes=dict(name="cereal-1", pos=(x3, y3, 0.9)),
             rgba=f"{r} {g} {b} 1.0",
             _preamble="""
         <asset>
@@ -73,7 +73,7 @@ class RobosuitePickPlace(Scene):
         """,
         )
         can = Body(
-            attributes=dict(name="can-1", pos=f"{x4} {y4} 0.86"),
+            attributes=dict(name="can-1", pos=(x4, y4, 0.86)),
             rgba=f"{r} {g} {b} 1.0",
             _preamble="""
         <asset>

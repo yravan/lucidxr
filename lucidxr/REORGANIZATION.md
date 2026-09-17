@@ -310,3 +310,32 @@ writes and replay, not just happy-path serialization. Temporary browser exports
 must preserve implicit asset names when filenames are rewritten. Test the exported
 XML as a standalone model. Distinguish server-event verification from actual VR
 interaction and keep that verification gap visible.
+
+### Replace path conventions with explicit artifact identity
+
+Keep human names as metadata, not a protocol encoded in directory names. Bind an
+operation to input content, settings and implementation; store explicit references
+between products. Validate closed outputs before publishing one immutable completion
+record. Separate attempts from accepted work so interruptions and competing retries
+cannot advertise partial results. Preserve source timing rather than interpreting
+video playback rate as a label alignment contract. Reuse capture code already tested
+by simulation and exercise a real write failure in the new orchestration layer.
+
+### Verify timing at the producer
+
+Do not substitute receipt time for a simulator's clock or infer event semantics
+from a field name. Trace the producer, wire payload, consumer and saved artifact.
+Here the existing WASM clock was made observable through MuJoCo's built-in clock
+sensor, which Vuer already serializes as sensor data. Inspect the installed client,
+not merely a nearby checkout: sensor evaluation can precede state integration,
+and clients differ in whether they refresh sensors before publishing. Pin the
+verified boundary and test its exact step/emit order with actual engine samples
+and irregular network arrival times. Keep state replay and command replay
+in one simulation-level implementation shared by viewers and renderers; generated
+images must be paired with the states actually simulated in the target scene.
+
+Verify reproducibility on both execution platforms before weakening identity
+checks. A real Mac/Linux run exposed last-bit differences in seeded positions.
+Serializing computed numeric XML attributes at 12 significant digits makes the
+scene itself portable; names and literal text remain untouched. Fingerprints can
+then stay strict about both the emitted XML and asset bytes.

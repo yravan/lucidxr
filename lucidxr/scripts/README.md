@@ -62,9 +62,10 @@ uv run mjpython -m lucidxr.scripts.view_scene pick_block
 ```
 
 On macOS, use `mjpython` for native viewer windows. On Linux, ordinary Python works
-with a suitable display. Playback validates the recording and restores frames
-without stepping physics or episode rules. Timing follows recorded server receive
-intervals, scaled by `--speed`. `--headless` validates all frames without waiting or
+with a suitable display. Playback validates the recording. `--mode state` restores frames without advancing
+physics. `--mode commands` replays mocap/ctrl through physics, optionally in a
+different `--scene` with its own `--seed` and `--scene-options`. Display timing follows
+recorded simulation intervals, scaled by `--speed`; physics timing stays unchanged. `--headless` validates all frames without waiting or
 opening graphics. `--assets` can point to the same asset content in a different
 location. A changed scene XML or asset file fails the fingerprint check; use the
 matching source/assets rather than silently changing the recorded scene.
@@ -80,15 +81,19 @@ publication does not guarantee Dropbox upload or remote backup completion.
 The NPZ contains:
 
 - `metadata`: JSON with format version, scene name/options/seed, reference MuJoCo
-  version, source, field shapes and a SHA256 fingerprint of XML plus asset content.
-- `elapsed`: increasing server receive timestamps, relative to the first frame.
+  version, source, field shapes, named actuator/mocap layout, command alignment,
+  physics timestep and a SHA256 fingerprint of XML plus asset content.
+- `simulation_time`: exact captured MuJoCo simulation seconds.
+- `elapsed`: simulation time relative to the first recorded frame.
 - `qpos`, `qvel`, `act`, `ctrl`, `mocap_pos`, `mocap_quat`: float64 arrays with a
   leading frame dimension, including empty dimensions where appropriate.
 
 There is no pickle, Python object deserialization, policy encoding or training
-batch format. ctrl and mocap are commands present at each captured state; they are
-not automatically shifted into action labels. Browser frame emission may skip
-physics steps. A later training adapter must choose alignment/resampling explicitly.
+batch format. Each sample contains the state after its control interval and the
+commands held during that interval. Thus command i belongs to the transition from
+state i-1 to state i. Frame 0 initializes playback. Physics runs multiple substeps
+per sample; command replay uses the recorded simulation schedule, not wall-clock
+arrival intervals. A future training loader must preserve this explicit alignment.
 Derived observations and camera images can be regenerated during playback instead
 of being duplicated in every file. Runtime visual randomization is not captured
 by this version; the recorder uses the unwrapped scene without randomizers.
@@ -103,3 +108,37 @@ smoke. A browser/headset was unavailable for interactive visual validation; hand
 tracking, button interaction and browser-side physics remain to be checked there.
 The adapter uses the installed Vuer 0.1.6 API and follows its
 [MuJoCo interaction examples](https://github.com/vuer-ai/vuer/blob/main/docs/tutorials/mujoco_interactive_simulator.md).
+
+Offline replay rendering: `python -m lucidxr.scripts.render_demo DEMO --output DIR
+--cameras wrist`. Install the `rendering` extra. See
+[rendering](../rendering/README.md) for paired HDF5/video output and completion records.
+
+## Browser clock
+
+Collection adds a reserved `lucidxr_recording_clock` sensor to the exported browser
+bundle and requests `sensordata` in Vuer frame events. MuJoCo computes this sensor
+before the final integration step. Vuer 0.1.6's bundled client emits after that
+step without calling `mj_forward`, so collection adds one physics timestep to
+obtain the saved state's time. No network timing estimate or custom Vuer build
+is needed. The sensor is observational and does not change the
+scene's physical model. Missing/invalid/nonincreasing clocks stop recording with an
+explicit error. Direct mouse force dragging is disabled because its applied forces
+are outside the mocap/ctrl replay contract.
+
+The original collector preserved `keyFrame` but omitted the outer `ts`/`dt` event
+fields. Neither browser wall time nor the version-dependent event `dt` should be
+used as a substitute for the simulator clock. See MuJoCo's
+[clock sensor](https://mujoco.readthedocs.io/en/stable/XMLreference.html#sensor-clock).
+
+Use the client served by `record_demo`. The teleop dependency is pinned because
+older Vuer clients call `mj_forward` before emitting and therefore have a different
+sensor sampling phase. Upgrading requires reviewing and testing that boundary.
+The recording identifies the client and browser engine versions separately from
+the native MuJoCo reference used to build its metadata.
+
+Validation includes the actual bundled MuJoCo 3.3.6 WASM model loaded from the
+exported bundle, sent through the Vuer 0.1.6 websocket collector with irregular
+message arrival delays. Saved state times matched the engine clock, with 20 ms
+intervals. Headset interaction
+itself still requires a headset; this check covers the real physics/frame transport
+and save path. Only newly collected format-2 recordings are supported.

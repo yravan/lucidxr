@@ -2,6 +2,8 @@
 
 from typing import NamedTuple
 
+from ..base import attribute_value
+
 
 class Vector3(NamedTuple):
     """
@@ -13,7 +15,7 @@ class Vector3(NamedTuple):
     z: float
 
     def __str__(self):
-        return f"{self.x} {self.y} {self.z}"
+        return attribute_value(tuple(self))
 
     def __add__(self, other: "Vector3"):
         x, y, z = other

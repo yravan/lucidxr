@@ -22,7 +22,7 @@ class PickBlock(Scene):
         )
         floor = TileFloor()
         box = Body(
-            attributes=dict(name="box-1", pos=f"{x} {y} 0.8"),
+            attributes=dict(name="box-1", pos=(x, y, 0.8)),
             rgba=f"{r} {g} {b} 1.0",
             _children_raw="""
         <joint type="free" name="{name}"/>

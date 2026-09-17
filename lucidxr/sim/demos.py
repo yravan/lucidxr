@@ -16,9 +16,10 @@ import numpy as np
 from lxml import etree
 
 from .mujoco_env.env import FRAME_FIELDS
+from .playback import control_layout
 from .scenes import make_scene
 
-FORMAT_VERSION = 1
+FORMAT_VERSION = 2
 
 
 def scene_fingerprint(scene):
@@ -50,9 +51,9 @@ def scene_fingerprint(scene):
 class DemoRecorder:
     """Validate incoming physical frames and save bounded episodes without pickle.
 
-    elapsed is server receive time relative to the first frame, not simulation
-    time. ctrl/mocap are commands at each captured state, not a shifted policy
-    action/observation pair. A browser may emit frames less often than physics steps.
+    Timestamps are simulation seconds. Each frame holds the state after an
+    interval and the ctrl/mocap commands applied during that interval. State 0
+    initializes replay; its preceding interval is outside the recording.
     """
 
     def __init__(self, env, scene_name, *, max_frames=30000, source="vuer-browser"):
@@ -68,7 +69,10 @@ class DemoRecorder:
             "scene_fingerprint": scene_fingerprint(env.scene),
             "reference_mujoco_version": mujoco.__version__,
             "source": source,
-            "timing": "server-receive-seconds",
+            "timing": "simulation-seconds",
+            "command_alignment": "interval-ending-at-frame",
+            "simulation_timestep": float(env.model.opt.timestep),
+            "controls": control_layout(env.model),
             "fields": {name: list(shape) for name, shape in self.shapes.items()},
         }
         json.dumps(self.metadata, allow_nan=False)
@@ -108,7 +112,8 @@ class DemoRecorder:
         path = directory / f"{now:%Y%m%dT%H%M%S}-{uuid4().hex}.npz"
         metadata = {**self.metadata, "created_at": now.isoformat(), "frame_count": len(self.frames)}
         arrays = {name: np.stack([frame[name] for frame in self.frames]) for name in FRAME_FIELDS}
-        arrays["elapsed"] = np.asarray(self.timestamps) - self.timestamps[0]
+        arrays["simulation_time"] = np.asarray(self.timestamps)
+        arrays["elapsed"] = arrays["simulation_time"] - self.timestamps[0]
         arrays["metadata"] = np.array(json.dumps(metadata, allow_nan=False))
         temp_path = None
         try:
@@ -138,11 +143,23 @@ class Demo:
                 raise ValueError("Unsupported recording format version")
             self.frames = {name: data[name].copy() for name in FRAME_FIELDS}
             self.elapsed = data["elapsed"].copy()
+            self.times = data["simulation_time"].copy()
+        if (
+            self.metadata.get("timing") != "simulation-seconds"
+            or self.metadata.get("command_alignment") != "interval-ending-at-frame"
+        ):
+            raise ValueError("Recording must specify simulation time and command alignment")
         count = self.metadata["frame_count"]
         if type(count) is not int or count < 1 or self.elapsed.shape != (count,):
             raise ValueError("Invalid frame count")
         if not np.isfinite(self.elapsed).all() or self.elapsed[0] != 0 or np.any(np.diff(self.elapsed) <= 0):
             raise ValueError("Invalid recording timestamps")
+        if (
+            self.times.shape != (count,)
+            or not np.isfinite(self.times).all()
+            or not np.allclose(self.times - self.times[0], self.elapsed, rtol=0, atol=1e-9)
+        ):
+            raise ValueError("Invalid simulation timestamps")
         for name, values in self.frames.items():
             shape = (count, *self.metadata["fields"][name])
             if values.dtype != np.float64 or values.shape != shape or not np.isfinite(values).all():

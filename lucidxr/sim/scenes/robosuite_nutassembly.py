@@ -42,7 +42,7 @@ class RobosuiteNutAssembly(Scene):
              """,
         )
         square_nut = Body(
-            attributes=dict(name="square-nut", pos=f"{x1} {y1} 0.85"),
+            attributes=dict(name="square-nut", pos=(x1, y1, 0.85)),
             _preamble="""
             <asset>
               <texture type="cube" name="SquareNut_brass-metal" file="textures/brass-ambra.png"/>
@@ -67,7 +67,7 @@ class RobosuiteNutAssembly(Scene):
              """,
         )
         round_nut = Body(
-            attributes=dict(name="round-nut", pos=f"{x2} {y2} 0.85"),
+            attributes=dict(name="round-nut", pos=(x2, y2, 0.85)),
             _preamble="""
             <asset>
               <texture type="cube" name="RoundNut_steel-metal" file="textures/steel-scratched.png"/>
