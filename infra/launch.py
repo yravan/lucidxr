@@ -59,7 +59,7 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
     remote_tar = destination / "snapshot.tar.gz"
     workers = min(count, cluster.concurrency)
     record = {
-        "version": 1,
+        "version": 2,
         "run_id": run_id,
         "git_tree": tree,
         "cluster": cluster.to_dict(),
@@ -169,7 +169,8 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
             record["archive_sha256"] = checksum
             # Verify even when an upstream upload error was printed instead of raised.
             check = f'printf "%s  %s\\n" {checksum} {remote_tar} | sha256sum -c -\n'
-            remote(cluster, check + mount.host_setup)
+            ready = shlex.quote(str(destination / "snapshot.sha256"))
+            remote(cluster, check + mount.host_setup + f'\nprintf "%s\\n" {checksum} > {ready}\n')
             record["state"] = "submitting"
             save()
             for index, script in enumerate(scripts):
@@ -205,7 +206,11 @@ def status(receipt):
 
 def submit(cluster, script, submission):
     """Save Slurm's response remotely before acknowledging a submitted worker."""
-    stdout = remote(cluster, "{\n" + script + "\n} | tee " + shlex.quote(str(submission)))
+    claim = shlex.quote(str(submission) + ".claim")
+    stdout = remote(
+        cluster,
+        f"mkdir {claim}\n" + "{\n" + script + "\n} | tee " + shlex.quote(str(submission)),
+    )
     ids = [line.split(";")[0] for line in stdout.splitlines() if re.fullmatch(r"\d+(;[^\s]+)?", line)]
     if len(ids) != 1:
         raise RuntimeError(f"Ambiguous submission; inspect {submission}: {stdout}")

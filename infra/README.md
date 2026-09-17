@@ -84,24 +84,31 @@ captured source and input bundle, not from leftover scratch files.
 
 ```sh
 uv run python -m infra status ~/.cache/lucidxr/launches/RUN_ID/launch.json
+uv run python -m infra reconcile ~/.cache/lucidxr/launches/RUN_ID/launch.json
 uv run python -m infra resume ~/.cache/lucidxr/launches/RUN_ID/launch.json
 ```
 
 Resume uses the original frozen code and saved worker commands without uploading
-again. It verifies script hashes, checks that every previous job is terminal, and
-refuses missing accounting information or an incomplete submission. An atomic
+again. It verifies script hashes and, for a fully submitted run, checks that every
+previous job is terminal. Missing accounting information blocks retry. An atomic
 shared claim prevents two clients from retrying the same generation. Submission
 history and remote receipts are retained. Accepted outputs are checksum-verified
 and skipped; missing outputs are rendered again. Corrupt accepted output is an
 explicit error requiring inspection, never silently overwritten.
 
-If a connection drops during submission, inspect `submission_directory` (or
-`remote_run` for the initial launch), its `worker-N.submission` files, worker logs,
-and Slurm accounting. The receipt is deliberately blocked from automated resume
-until every accepted job has been accounted for. A claimed retry directory must
-not be removed casually: it protects against duplicate submission from another
-client. Status and retry commands require the `launch` extra; storage-path lookup
-does not import Jaynes.
+If a connection drops during submission, run `reconcile` first. It verifies the
+source bundle's ready marker, recovers accepted job IDs from remote receipts, and
+identifies workers that have never been claimed. It submits nothing. `resume` can
+then finish that partial submission while previously accepted workers continue.
+Every submission has its own atomic claim, so concurrent clients cannot submit the
+same worker twice. These commands require launch receipt version 2.
+
+A claim without a saved job ID remains ambiguous: Slurm may have accepted the job
+before the connection failed. Reconciliation stops instead of guessing. Inspect
+`submission_directory` (or `remote_run`), its `worker-N.submission` files, worker
+logs and Slurm accounting. Do not remove a claim until every accepted job has been
+accounted for. Status and recovery commands require the `launch` extra;
+storage-path lookup does not import Jaynes.
 
 Assets are still included in each new frozen source archive. The current archive
 is about 229 MB compressed; uploads cost considerably more than tiny smoke renders.

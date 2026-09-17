@@ -1,4 +1,4 @@
-"""Retry a completed allocation set using its exact saved source and worker scripts."""
+"""Reconcile submissions and retry work using the exact captured source and scripts."""
 
 import hashlib
 import json
@@ -48,28 +48,37 @@ def require_terminal(profile, jobs):
 def resume(receipt):
     receipt = Path(receipt).resolve()
     record = json.loads(receipt.read_text())
-    if record["state"] != "submitted" or len(record["jobs"]) != record["workers"]:
-        raise ValueError("Submission is incomplete or uncertain; inspect remote submission records first")
+    if record["state"] not in ("submitted", "partial"):
+        raise ValueError("Submission is uncertain; run infra reconcile before resuming")
+    count = len(record["jobs"])
+    if not 0 <= count <= record["workers"] or (record["state"] == "submitted" and count != record["workers"]):
+        raise ValueError("Receipt job count disagrees with submission state")
     hashes = record.get("script_sha256", [])
     if len(hashes) != record["workers"]:
         raise ValueError("This receipt predates saved-script verification; launch a new run")
     scripts = [(receipt.parent / f"worker-{i}.sh").read_text() for i in range(record["workers"])]
     if [hashlib.sha256(s.encode()).hexdigest() for s in scripts] != hashes:
         raise ValueError("Saved worker scripts changed; refusing to change a captured run")
+    if record["version"] != 2:
+        raise ValueError("This launch predates safe submission recovery; start a new launch")
     profile = Cluster(**record["cluster"])
-    require_terminal(profile, record["jobs"])
-    generation = hashlib.sha256(",".join(record["jobs"]).encode()).hexdigest()[:24]
-    destination = Path(record["remote_run"]) / f"resume-{generation}"
-    # This permanent claim prevents two clients (including copied receipts) from retrying the same jobs.
-    remote(profile, f"mkdir {shlex.quote(str(destination))}")
-    record.setdefault("history", []).append(
-        {"jobs": record["jobs"], "submission_directory": str(destination)}
-    )
-    record.update(jobs=[], state="submitting", submission_directory=str(destination))
+    if record["state"] == "partial":
+        destination = Path(record.get("submission_directory", record["remote_run"]))
+    else:
+        require_terminal(profile, record["jobs"])
+        generation = hashlib.sha256(",".join(record["jobs"]).encode()).hexdigest()[:24]
+        destination = Path(record["remote_run"]) / f"resume-{generation}"
+        # Prevent two clients (including copied receipts) from retrying the same jobs.
+        remote(profile, f"mkdir {shlex.quote(str(destination))}")
+        record.setdefault("history", []).append(
+            {"jobs": record["jobs"], "submission_directory": str(destination)}
+        )
+        record.update(jobs=[], submission_directory=str(destination))
+    record["state"] = "submitting"
     atomic_json(receipt, record)
     try:
-        for index, script in enumerate(scripts):
-            job = submit(profile, script, destination / f"worker-{index}.submission")
+        for index in range(len(record["jobs"]), record["workers"]):
+            job = submit(profile, scripts[index], destination / f"worker-{index}.submission")
             record["jobs"].append(job)
             atomic_json(receipt, record)
             logger.info("Retry submitted worker=%d job=%s", index, job)
@@ -81,4 +90,72 @@ def resume(receipt):
         atomic_json(receipt, record)
         logger.exception("Retry uncertain; inspect %s before any further submission", destination)
         raise
+    return receipt
+
+
+def reconcile(receipt):
+    """Recover accepted IDs and provably unsubmitted workers without launching anything."""
+    receipt = Path(receipt).resolve()
+    record = json.loads(receipt.read_text())
+    if record["state"] not in ("submitting", "incomplete", "partial", "submitted"):
+        raise ValueError("This launch has not reached submission")
+    if record["version"] != 2:
+        raise ValueError("This launch predates safe submission recovery; start a new launch")
+    profile = Cluster(**record["cluster"])
+    destination = record.get("submission_directory", record["remote_run"])
+    script = """
+import json, sys
+from pathlib import Path
+folder, code, count = Path(sys.argv[1]), Path(sys.argv[2]), int(sys.argv[3])
+if (code.parent / 'snapshot.sha256').read_text().strip() != sys.argv[4]:
+    raise SystemExit('Source snapshot has not been verified')
+if not (code / 'render_inputs/plan.json').is_file():
+    raise SystemExit('Verified source/input bundle is unavailable; start a new launch')
+rows = []
+for index in range(count):
+    path = folder / f'worker-{index}.submission'
+    rows.append({'claimed': Path(str(path) + '.claim').is_dir(),
+                 'output': path.read_text() if path.is_file() else None})
+print(json.dumps(rows))
+"""
+    rows = json.loads(
+        remote(
+            profile,
+            shlex.join(
+                [
+                    "python3",
+                    "-c",
+                    script,
+                    destination,
+                    str(Path(record["remote_run"]) / "code"),
+                    str(record["workers"]),
+                    record["archive_sha256"],
+                ]
+            ),
+        )
+    )
+    jobs = []
+    missing = False
+    if len(rows) != record["workers"]:
+        raise ValueError("Remote submission records have an unexpected worker count")
+    for index, row in enumerate(rows):
+        ids = [
+            line.split(";")[0]
+            for line in (row["output"] or "").splitlines()
+            if re.fullmatch(r"\d+(;[^\s]+)?", line)
+        ]
+        if len(ids) == 1 and not missing:
+            jobs.append(ids[0])
+        elif row["claimed"] or row["output"] is not None:
+            raise ValueError(f"Worker {index} submission remains ambiguous; inspect {destination}")
+        else:
+            missing = True
+    if jobs[: len(record["jobs"])] != record["jobs"] or len(set(jobs)) != len(jobs):
+        raise ValueError("Remote submission records disagree with the local receipt")
+    record.update(jobs=jobs, state="submitted" if len(jobs) == record["workers"] else "partial")
+    record.pop("error", None)
+    atomic_json(receipt, record)
+    logger.info(
+        "Reconciled accepted=%d pending=%d receipt=%s", len(jobs), record["workers"] - len(jobs), receipt
+    )
     return receipt

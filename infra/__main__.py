@@ -10,7 +10,7 @@ def main(argv=None):
     paths = commands.add_parser("path", help="Print a configured filesystem location")
     paths.add_argument("name")
     paths.add_argument("--config", help="Override ~/.config/lucidxr/infra.toml")
-    for command in ("status", "resume"):
+    for command in ("status", "resume", "reconcile"):
         commands.add_parser(command).add_argument("receipt", help="Saved launch.json")
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
@@ -23,6 +23,10 @@ def main(argv=None):
             from .launch import status
 
             print(status(args.receipt))
+        elif args.command == "reconcile":
+            from .recovery import reconcile
+
+            print(reconcile(args.receipt))
         else:
             from .recovery import resume
 
