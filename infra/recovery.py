@@ -71,7 +71,10 @@ def resume(receipt):
         # Prevent two clients (including copied receipts) from retrying the same jobs.
         remote(profile, f"mkdir {shlex.quote(str(destination))}")
         record.setdefault("history", []).append(
-            {"jobs": record["jobs"], "submission_directory": str(destination)}
+            {
+                "jobs": record["jobs"],
+                "submission_directory": record.get("submission_directory", record["remote_run"]),
+            }
         )
         record.update(jobs=[], submission_directory=str(destination))
     record["state"] = "submitting"

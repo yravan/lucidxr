@@ -1,123 +1,99 @@
-# Rendering before training
+# Recording and rendering design
 
-Status: the implementation follows three stacked slices: local replay (#5),
-Jaynes/MIT execution (#6), and scratch/recovery. PR #4 retains deferred policy
-research. The original plan below is retained with these scope decisions:
-
-- HDF5 plus paired MP4 is the current replay format. Dataset export and the
-  Parquet/history-window benchmark are deferred at the user's request.
-- Native MuJoCo/EGL is exercised locally and on Engaging GPUs. The distributed
-  path does not yet expose gsplat, Lucid generation or randomized visual variants.
-- Jaynes submits a bounded set of independent Slurm workers, each handling a
-  deterministic partition. There is no job array or second scheduling service.
-- Resume reuses uploaded source/assets and inputs. Per-item input/output work uses
-  node-local scratch; assets remain in the shared source snapshot. A separate
-  asset cache and sustained GPU-utilization benchmarks remain future work.
-- Job failures are visible through durable worker logs and Slurm state. Accepted
-  completion records are authoritative; ambiguous submissions require inspection.
-
-See [README.md](README.md) and [infra](../../infra/README.md) for the implemented
-commands and storage contract. A/B/C below describe the original sequencing.
+Rendering is implemented before training in three stacked PRs: local replay (#5),
+Jaynes/MIT execution (#6), and scratch/publication recovery (#7). The current
+product is a replay result: one HDF5 file and one MP4 per camera. Dataset export,
+models, policies and dataloaders remain separate work.
 
 ## Ownership
 
-- `lucidxr.sim`: scenes, environments and reusable rendering/randomization wrappers.
-- `lucidxr.rendering`: replay, camera products, episode/variant jobs, export schema,
-  writers, validation and completed dataset manifests.
-- `infra`: shared deployment setup, storage roots, scratch, MIT cluster resources,
-  job submission and explicit staging. Build each operation with its first caller.
-- `lucidxr.scripts`: thin launch entry points that resolve infra configuration once.
-- `training`: later, models, policies, read-only window loading and optimization.
+| Module | Responsibility |
+| --- | --- |
+| `lucidxr.sim` | Scene construction, native controls, recordings, shared playback, camera capture |
+| `lucidxr.rendering` | Render identity, plans, streaming output, format validation and completion records |
+| `infra` | Personal paths, MIT resources, captured source, SSH/Slurm, scratch placement and recovery |
+| `lucidxr.scripts` | Parse arguments and connect these boundaries once |
 
-Rendering must work without the training package. Training will reuse the same
-infra configuration for dataset roots, scratch and run/checkpoint locations.
-Infrastructure owns deployment settings, not camera conventions, action schemas,
-model dimensions or learning rates. Pass resolved settings explicitly; avoid
-import-time configuration, per-frame path resolution and mutable global constants.
-No hardcoded hosts, credentials or assumption that old CSAIL machines are reachable.
+Core simulation and rendering accept paths without importing personal configuration.
+Future training scripts can resolve dataset/checkpoint roots through the same infra
+configuration; infra does not own action representations, model sizes or learning
+rates. There are no credentials or implicit cluster paths in scene definitions.
 
-## PR A: one reliable local rendering/export path
+## Recording and playback contract
 
-Deliver one CLI that renders an existing demo into a validated, inspectable output.
+New NPZ recordings contain named physical arrays, simulation timestamps, scene and
+asset fingerprints, and named control metadata. The pinned Vuer client samples a
+clock sensor before its final integration step; collection accounts for that phase
+when saving the state timestamp. Browser engine and native reference versions are
+recorded separately. See [collection details](../scripts/README.md#browser-clock).
+Old recordings are unsupported.
 
-- Reconstruct and fingerprint the scene/assets, compile once per episode/variant,
-  restore recorded states without stepping physics, and capture named cameras.
-- Reuse existing native, gsplat and Lucid-conditioning wrapper contracts. Start with
-  an exercised native backend; validate optional GPU backends in the later MIT run.
-  Lucid conditioning does not imply an implemented generative model.
-- Preserve source IDs, frame indices, timestamps, calibration, render settings,
-  backend versions and seeds. Appearance variants preserve the physical trajectory.
-- Decide the export format here: compare Parquet + per-camera MP4 against the earlier
-  HDF5 proposal using representative history-window reads, storage size and encode/
-  decode cost. Prefer explicit typed tables to a pickled dataframe. Video requires
-  exact frame mapping and deliberate keyframe spacing; depth/segmentation require
-  lossless typed products. Implement one format, not a cache/backend framework.
-- Keep raw demos immutable. Write into a temporary output, validate, then publish
-  an immutable episode/variant result and a completion record.
-- Resolve input/output roots through existing infra configuration at the CLI.
-  Keep direct explicit paths available for local use and record resolved settings.
+State playback restores each recorded state in its original fingerprinted scene.
+Command playback applies sample i's mocap/ctrl over the interval ending at i.
+Same-scene playback starts from recorded state 0; an explicit target scene starts
+from its own reset and maps compatible named controls. Mocap coordinates remain
+world-space. Replay integrates an integer number of target physics steps per
+recorded interval. Display speed and MP4 fps do not determine physics timing.
 
-Acceptance: render/reload a short real demo, verify frame/calibration correspondence,
-exercise a failed write, and confirm rerunning does not overwrite a valid result.
-New recordings capture simulation time through a clock sensor and declare that
-command i drives the interval ending at frame i. Viewer and renderer share state
-and command playback. Training remains deferred; old recordings are unsupported.
+The viewer and renderer share this implementation. Rendered frames are paired with
+the actual target states, controls and calibration. Command playback produces new
+physics; it does not promise identical outcomes across different engine versions or hardware.
 
-## PR B: distributed rendering on MIT
+## Explicit work and publication
 
-Deliver an inspectable job manifest plus a worker command and MIT scheduler launcher.
-Inspect the available scheduler, GPU environment and filesystem before implementing
-its adapter. If the selected cluster exposes Slurm, use job arrays; do not build a
-second scheduling service or a generic scheduler plugin registry.
+A work identity hashes the recording content, replay/camera settings, target scene
+fingerprint, and simulator/renderer code and package versions. Paths locate files;
+they never encode task, camera, split or variant semantics. A plan lists work IDs
+and explicit input references and deduplicates identical requests.
 
-- A work unit is a source episode plus visual variant, not an individual frame.
-  Stable work IDs include input content hashes, settings and render version.
-- Partition the manifest deterministically among workers. Each worker creates its
-  own GPU/context resources after startup and reuses expensive backend/checkpoint
-  state when compatible. Do not fork live GPU contexts or oversubscribe devices.
-- Infra supplies resource requests, environment setup and submission; rendering
-  owns the work specification and worker execution. Use the same worker locally.
-- Produce per-work structured status/errors and ordinary stdout/stderr logs.
-  Commands and manifests are saved and can be rerun without a service connection.
-- Give each attempt a unique output location. A coordinator accepts one validated
-  result per work ID; retries never race to append to a shared dataset file.
-- Publish a dataset manifest only after the requested work set is complete and
-  validated. Failed work remains explicit; do not silently train on partial output.
+Each worker processes a deterministic partition. An attempt owns its HDF5 writer,
+video encoders and MuJoCo context; workers never append to one shared HDF5 file.
+Outputs close and are validated by decoding videos and checking frame counts,
+timestamps and metadata. Artifact hashes and relative references are published in
+an immutable completion record. Competing attempts accept the first valid record.
+A collection is published only after every requested result verifies successfully.
 
-Acceptance: a small actual multi-worker MIT run, deterministic work assignment,
-matching local/distributed results within the backend's documented tolerance,
-visible failure reporting and targeted retry. Report unavailable CUDA/backend
-validation explicitly instead of substituting a mock for a cluster result.
+On MIT, each recording is copied and verified on node-local scratch. Closed local
+results transfer to a new shared attempt and are verified before the shared
+completion record appears. Failed transfers cannot advertise partial success.
+Successful owned scratch is removed; failure diagnostics remain while the node
+permits. Durable retry uses the captured bundle, never temporary scratch survival.
 
-## PR C: staging, recovery and operational use
+## Launch and recovery
 
-Deliver a repeatable cluster workflow that survives interruption and avoids repeated
-large transfers. This is where infra grows beyond location resolution.
+Jaynes supplies code mounts, SSH and Slurm scripts. We freeze a Git tree, package it
+with explicit inputs, verify the uploaded archive, and run uv from the captured
+lockfile. No remote checkout or persistent scheduling service is needed. A bounded
+set of GPU jobs processes the plan; the scheduler owns allocation and termination.
+Worker errors propagate to Slurm and ordinary logs.
 
-- Stage declared immutable inputs to node-local scratch, verify hashes, and reuse
-  matching copies. Keep dataset/export semantics in rendering, transfer mechanics
-  in infra. No downloading or staging from inside a render loop or DataLoader.
-- Render locally, then transfer each complete result into a unique durable attempt
-  directory and validate it there before accepting it. A local rename does not
-  prove a cross-filesystem or remote transfer completed.
-- Resume from accepted completion records; retry missing/failed work without
-  rerendering accepted outputs. Detect stale settings via work fingerprints.
-- Handle preemption and disk-full failures without advertising partial files as
-  complete. Cleanup only owned scratch after verified publication; retain useful
-  failed-attempt logs and diagnostics.
-- Add only the storage path exercised by the first MIT workflow. Dropbox is optional
-  explicit export/sync, not a concurrent job database; no W&B Artifacts.
-- Measure frames/second, transfer time, storage size and GPU utilization so later
-  changes address the actual bottleneck.
+Local receipts retain tree/archive/script hashes, remote paths and accepted IDs.
+A remote per-worker claim prevents duplicate submissions. `infra reconcile` can
+recover saved IDs after a lost acknowledgement and establish which workers were
+never submitted. A claim without an ID is ambiguous and requires inspection.
+`infra resume` finishes a reconciled partial submission or retries a fully terminal
+run using its original scripts. Verified completed work is skipped. See the
+[operating instructions](../../infra/README.md#scratch-and-retry-recovery).
 
-Acceptance: interrupt/resume a small run, inject a staging/publication failure,
-verify no missing/duplicate accepted work, and consume the final manifest from a
-second process using only the documented storage setup.
+## Validation and current limits
 
-## Then training
+Focused checks cover clock sampling, state/command playback, compatible scene
+transfer, source identity, HDF5/video correspondence, interrupted publication,
+lost submission acknowledgements, duplicate claims and Slurm failure propagation.
+Real Engaging GPU runs exercise staging, EGL rendering, cancellation and retry;
+[verification notes](VERIFICATION.md) record the tested boundaries.
 
-Proceed in separate stages: model code, policy code, dataloader code, then their
-first integrated trainer. Diffusion Policy first; flow matching shares its network;
-language-free MoT follows with the same data contract. Preserve the research in
-[policy design PR](https://github.com/yravan/lucidxr/pull/4), updating it to the actual export contract.
-Do not create unused modules or train against guessed command timing in the meantime.
+The distributed backend is native MuJoCo/EGL. Existing gsplat and Lucid wrappers
+are not exposed as distributed render backends. Visual randomization, finalized
+dataset export, an asset cache and sustained GPU-utilization optimization remain
+future work. Assets currently travel with each new source snapshot; resume reuses
+that upload. Retry operates per episode, not per frame. Headset interaction still
+needs hardware validation.
+
+## Training follows
+
+Build model, policy and dataloader code as separate stages after this workflow.
+Training will consume explicit metadata and frame indices without interpreting
+folder names. The deferred [policy research](https://github.com/yravan/lucidxr/pull/4)
+covers diffusion, flow matching and a language-free MoT design; no training runtime
+or W&B artifact store is added here.
