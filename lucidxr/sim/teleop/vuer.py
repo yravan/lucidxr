@@ -2,7 +2,6 @@
 
 import asyncio
 import tempfile
-from time import perf_counter
 
 from ..demos import DemoRecorder
 from .bundle import export_bundle
@@ -52,7 +51,7 @@ def collect(
         )
 
     with tempfile.TemporaryDirectory(prefix="lucidxr-vuer-") as directory:
-        files = export_bundle(env.scene, directory)
+        files = export_bundle(env.scene, directory, recording=True)
         url = (public_url or f"http://localhost:{port}").rstrip("/")
         app = Vuer(workspace=directory, host=host, port=port, free_port=False)
         owner = None
@@ -66,7 +65,8 @@ def collect(
                 key="demo-sim",
                 src=f"{url}/workspace/scene.xml",
                 assets=[f"{url}/workspace/{name}" for name in files if name != "scene.xml"],
-                frameKeys=" ".join(recorder.shapes),
+                frameKeys=" ".join((*recorder.shapes, "sensordata")),
+                useDrag=False,
                 fps=fps,
                 pause=False,
                 **{name: values.ravel().tolist() for name, values in initial.items()},
@@ -95,7 +95,12 @@ def collect(
             if session.CURRENT_WS_ID != owner or not recording:
                 return
             try:
-                recorder.append(event.value["keyFrame"], perf_counter())
+                frame = event.value["keyFrame"]
+                # The bundle appends one clock sensor after the scene's own sensors.
+                sensors = frame["sensordata"]
+                if len(sensors) != env.model.nsensordata + 1:
+                    raise ValueError("Browser frame is missing the recording clock sensor")
+                recorder.append(frame, float(sensors[-1]))
                 if len(recorder.frames) == recorder.max_frames:
                     recording = False
                     save()

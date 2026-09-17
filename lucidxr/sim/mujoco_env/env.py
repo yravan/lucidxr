@@ -173,6 +173,12 @@ class MujocoEnv(gym.Env):
         return self.observe(), {}
 
     def step(self, action):
+        return self.advance(action, steps=self.frame_skip)
+
+    def advance(self, action, *, steps):
+        """Apply native commands for an explicit number of physics steps."""
+        if type(steps) is not int or steps < 1:
+            raise ValueError("steps must be a positive integer")
         if not self._ready:
             raise gym.error.ResetNeeded("Call reset() before step()")
         if not isinstance(action, Mapping) or set(action) != set(self.action_space.spaces):
@@ -190,7 +196,7 @@ class MujocoEnv(gym.Env):
         # Validate the entire command before mutating any simulation state.
         for name, value in commands.items():
             getattr(self.data, name)[:] = value
-        self._advance(self.frame_skip)
+        self._advance(steps)
         mujoco.mj_forward(self.model, self.data)
         if not np.isfinite(self.data.qpos).all() or not np.isfinite(self.data.qvel).all():
             raise FloatingPointError("MuJoCo produced nonfinite state")

@@ -6,13 +6,22 @@ from pathlib import Path
 
 from lxml import etree
 
+CLOCK_SENSOR = "lucidxr_recording_clock"
 
-def export_bundle(scene, directory):
+
+def export_bundle(scene, directory, *, recording=False):
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
     root = etree.fromstring(scene.to_xml().encode())
     for field in ("assetdir", "meshdir", "texturedir"):
         root.find("compiler").set(field, ".")
+    if recording:
+        if root.xpath(f"./sensor/*[@name='{CLOCK_SENSOR}']"):
+            raise ValueError(f"Reserved recording sensor name: {CLOCK_SENSOR}")
+        sensor = root.find("sensor")
+        if sensor is None:
+            sensor = etree.SubElement(root, "sensor")
+        etree.SubElement(sensor, "clock", name=CLOCK_SENSOR)
     files = {}
     for element in root.iter():
         source = element.get("file")

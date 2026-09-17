@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 
 from lucidxr.rendering.spec import RenderSpec
+from lucidxr.scripts.replay_args import add_replay_arguments, replay_spec
 
 
 def main(argv=None):
@@ -20,6 +21,7 @@ def main(argv=None):
     parser.add_argument("--height", type=int, default=360)
     parser.add_argument("--fps", type=int, default=50, help="Video playback rate, not recorded control rate")
     parser.add_argument("--products", nargs="+", default=["rgb"], choices=["rgb", "depth", "segmentation"])
+    add_replay_arguments(parser)
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
     destination = args.output
@@ -32,7 +34,9 @@ def main(argv=None):
     record = render_demo(
         args.demo,
         destination,
-        RenderSpec(tuple(args.cameras), args.width, args.height, args.fps, tuple(args.products)),
+        RenderSpec(
+            tuple(args.cameras), args.width, args.height, args.fps, tuple(args.products), replay_spec(args)
+        ),
         assets=args.assets,
     )
     print(record)

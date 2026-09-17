@@ -320,3 +320,13 @@ record. Separate attempts from accepted work so interruptions and competing retr
 cannot advertise partial results. Preserve source timing rather than interpreting
 video playback rate as a label alignment contract. Reuse capture code already tested
 by simulation and exercise a real write failure in the new orchestration layer.
+
+### Verify timing at the producer
+
+Do not substitute receipt time for a simulator's clock or infer event semantics
+from a field name. Trace the producer, wire payload, consumer and saved artifact.
+Here the existing WASM clock was made observable through MuJoCo's built-in clock
+sensor, which Vuer already serializes as sensor data. Test with actual engine
+samples and irregular network arrival times. Keep state replay and command replay
+in one simulation-level implementation shared by viewers and renderers; generated
+images must be paired with the states actually simulated in the target scene.

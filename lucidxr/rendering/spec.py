@@ -2,11 +2,13 @@
 
 import hashlib
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from importlib.metadata import version
 from pathlib import Path
 
-FORMAT_VERSION = 1
+from lucidxr.sim.playback import ReplaySpec
+
+FORMAT_VERSION = 2
 
 
 def file_hash(path):
@@ -39,8 +41,11 @@ class RenderSpec:
     height: int = 360
     fps: int = 50
     products: tuple[str, ...] = ("rgb",)
+    replay: ReplaySpec = field(default_factory=ReplaySpec)
 
     def __post_init__(self):
+        if isinstance(self.replay, dict):
+            object.__setattr__(self, "replay", ReplaySpec(**self.replay))
         object.__setattr__(self, "cameras", tuple(self.cameras))
         object.__setattr__(self, "products", tuple(self.products))
         if not self.cameras or len(set(self.cameras)) != len(self.cameras):
@@ -60,10 +65,16 @@ class RenderSpec:
         return asdict(self)
 
 
-def request(source, spec):
+def request(source, spec, *, assets=None):
+    target = None
+    if spec.replay.scene is not None:
+        from lucidxr.sim.demos import scene_fingerprint
+
+        target = scene_fingerprint(spec.replay.make_scene(None, assets=assets))
     return {
         "format_version": FORMAT_VERSION,
         "source_sha256": file_hash(source),
         "spec": spec.to_dict(),
+        "target_scene_fingerprint": target,
         "implementation": implementation(),
     }

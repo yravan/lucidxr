@@ -44,9 +44,9 @@ Deliver one CLI that renders an existing demo into a validated, inspectable outp
 
 Acceptance: render/reload a short real demo, verify frame/calibration correspondence,
 exercise a failed write, and confirm rerunning does not overwrite a valid result.
-PR #3 receive timestamps are not authoritative state-before-action labels. Rendering
-those recordings is valid; mark their timing honestly. Exact training labels remain
-a separate recording-contract gate before training, not a reason to block rendering.
+New recordings capture simulation time through a clock sensor and declare that
+command i drives the interval ending at frame i. Viewer and renderer share state
+and command playback. Training remains deferred; old recordings are unsupported.
 
 ## PR B: distributed rendering on MIT
 

@@ -30,9 +30,13 @@ CRF 18, yuv420p, no B frames, a one-second maximum GOP. It is lossy; it is not a
 exact RGB archival format. Video playback fps is explicit and does not resample
 states or establish a control rate. All arrays/video streams preserve source order.
 
-PR #3 timestamps are server-receive times, not simulation/control timestamps.
-Captured commands are preserved without inventing shifted training labels. This
-is a replay result, not a finalized training dataset schema or dataset exporter.
+New recordings use simulation seconds from a MuJoCo clock sensor. Commands at
+frame i drive the interval ending at i; frame 0 supplies an initial condition.
+`simulation_time` records the actual rendered simulation clock, while `elapsed`
+keeps the source episode's relative schedule. HDF5 `frames` always describes the
+rendered scene, including after command replay into a different scene. Metadata
+records the output field shapes and named controls separately from source metadata.
+This remains a replay result, not a finalized training dataset exporter.
 
 Files stream into unique attempt directories, close, then validate by fully decoding
 videos and checking frame counts/timestamps. A completion record is published with
@@ -49,3 +53,27 @@ import or network operation inside the renderer. Failed work retries at episode
 granularity; frame-level resume is deliberately absent.
 
 See [DESIGN.md](DESIGN.md) for the distributed execution/staging sequence.
+
+## Two playback modes
+
+`--mode state` restores every recorded state and requires the original scene/assets.
+`--mode commands` initializes from frame 0, then applies ctrl and mocap targets while
+advancing physics to each recorded sample. The viewer and renderer share
+`lucidxr.sim.playback`; video fps and display speed never set the physics timestep.
+
+```sh
+uv run --extra rendering python -m lucidxr.scripts.render_demo demo.npz \
+  --output /data/renders --cameras wrist --mode commands \
+  --scene pick_sphere --seed 9
+```
+
+An explicit target scene keeps its own reset state and object layout. Controls are
+mapped by actuator and mocap-body names, with actuator transmission/gear/range
+checks. Different robots require retargeting and are rejected; matching array sizes
+are insufficient. Mocap coordinates are world-space and must describe the intended
+workspace in the target scene. Incompatible physics timesteps fail explicitly
+instead of rounding away time. Command replay produces new physics outcomes; it
+is not a promise of identical trajectories across different scenes or engine versions.
+
+Only the current recording format is supported. Collection, not a migration shim,
+must supply simulation time and the named control contract.

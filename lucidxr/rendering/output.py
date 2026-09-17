@@ -11,6 +11,8 @@ import av
 import h5py
 import numpy as np
 
+from lucidxr.sim.playback import control_layout
+
 from .spec import FORMAT_VERSION, digest, file_hash
 
 
@@ -38,8 +40,9 @@ def publish_json(path, value):
 class OutputWriter:
     """Own all writers in one attempt; no shared HDF5 appenders or per-frame files."""
 
-    def __init__(self, directory, demo, spec, identity):
+    def __init__(self, directory, demo, spec, identity, env):
         self.directory, self.demo, self.spec, self.identity = Path(directory), demo, spec, identity
+        self.env = env
         self.stack = ExitStack()
         self.count = 0
         self.videos = []
@@ -54,15 +57,20 @@ class OutputWriter:
                     "recording": self.demo.metadata,
                     "timing": "one-video-frame-per-source-frame; source elapsed is authoritative",
                     "camera_convention": "OpenCV: x right, y down, z forward; C2W",
-                    "commands": "captured command fields, not inferred behavior-cloning targets",
+                    "commands": "command at frame i drives interval ending at i; frame 0 initializes replay",
+                    "playback": self.spec.replay.to_dict(),
+                    "fields": {name: list(value.shape) for name, value in self.env.frame().items()},
+                    "controls": control_layout(self.env.model),
+                    "initialization": "target-scene-reset" if self.spec.replay.scene else "recorded-state-0",
                 },
                 sort_keys=True,
             )
             count = len(self.demo.elapsed)
             self.h5.create_dataset("elapsed", data=self.demo.elapsed)
             self.h5.create_dataset("source_frame", data=np.arange(count, dtype=np.int64))
-            for name, array in self.demo.frames.items():
-                self.h5.create_dataset(f"frames/{name}", data=array)
+            self.h5.create_dataset("simulation_time", (count,), dtype="f8")
+            for name, array in self.env.frame().items():
+                self.h5.create_dataset(f"frames/{name}", (count, *array.shape), dtype="f8")
             for index, name in enumerate(self.spec.cameras):
                 key = f"camera_{index}"
                 group = self.h5.create_group(key)
@@ -92,9 +100,12 @@ class OutputWriter:
             self.stack.close()
             raise
 
-    def append(self, captures):
+    def append(self, captures, frame, simulation_time):
         if len(captures) != len(self.spec.cameras) or self.count >= len(self.demo.elapsed):
             raise ValueError("Camera/frame count mismatch")
+        self.h5["simulation_time"][self.count] = simulation_time
+        for name, values in frame.items():
+            self.h5[f"frames/{name}"][self.count] = values
         for index, (capture, (container, stream)) in enumerate(zip(captures, self.videos, strict=True)):
             key = f"camera_{index}"
             rgb = capture[f"{key}/rgb"]
@@ -128,7 +139,7 @@ def validate_attempt(directory, identity, frame_count):
     with h5py.File(directory / "frames.h5", "r") as h5:
         if digest(json.loads(h5.attrs["metadata"])["request"]) != digest(identity):
             raise ValueError("HDF5 request mismatch")
-        if h5["elapsed"].shape != (frame_count,):
+        if h5["elapsed"].shape != (frame_count,) or h5["simulation_time"].shape != (frame_count,):
             raise ValueError("HDF5 frame count mismatch")
         for index, name in enumerate(spec["cameras"]):
             key = f"camera_{index}"

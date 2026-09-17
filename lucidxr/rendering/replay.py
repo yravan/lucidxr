@@ -1,4 +1,4 @@
-"""Replay recorded states through existing camera views; never advance physics."""
+"""Render shared state or command playback through existing camera views."""
 
 import logging
 import os
@@ -9,6 +9,7 @@ from uuid import uuid4
 from lucidxr.sim.demos import Demo
 from lucidxr.sim.mujoco_env import MujocoEnv
 from lucidxr.sim.mujoco_env.wrappers.camera_view import Camera, CameraView
+from lucidxr.sim.playback import replay_frames
 
 from .output import OutputWriter, publish_json, read_result, validate_attempt
 from .spec import FORMAT_VERSION, digest, request
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 def render_demo(source, output, spec, *, assets=None, expected_request=None):
     """Return a verified completion record; interrupted attempts are never accepted."""
     source, output = Path(source).expanduser().resolve(), Path(output).expanduser().resolve()
-    identity = request(source, spec)
+    identity = request(source, spec, assets=assets)
     if expected_request is not None and digest(identity) != digest(expected_request):
         raise ValueError("Source, code or dependencies changed since planning")
     work_id = digest(identity)
@@ -29,7 +30,7 @@ def render_demo(source, output, spec, *, assets=None, expected_request=None):
         logger.info("Already complete work=%s record=%s", work_id, record)
         return record
     demo = Demo(source)
-    scene = demo.scene(assets=assets)
+    scene = spec.replay.make_scene(demo, assets=assets)
     attempt = output / "attempts" / uuid4().hex
     attempt.mkdir(parents=True)
     started = time.monotonic()
@@ -37,9 +38,6 @@ def render_demo(source, output, spec, *, assets=None, expected_request=None):
     try:
         with MujocoEnv(scene) as env:
             env.reset()
-            for name, values in demo.frames.items():
-                if values.shape[1:] != getattr(env.data, name).shape:
-                    raise ValueError(f"Recorded {name} differs from model shape")
             views = [
                 CameraView(
                     env.model,
@@ -49,12 +47,12 @@ def render_demo(source, output, spec, *, assets=None, expected_request=None):
                 )
                 for i, name in enumerate(spec.cameras)
             ]
-            with OutputWriter(attempt, demo, spec, identity) as writer:
-                for index, elapsed in enumerate(demo.elapsed):
-                    env.data.time = float(elapsed)
-                    env.restore_frame(demo.frame(index))
+            with OutputWriter(attempt, demo, spec, identity, env) as writer:
+                for index in replay_frames(env, demo, spec.replay):
                     with env.rendering.batch():
-                        writer.append([view.capture(env.rendering) for view in views])
+                        writer.append(
+                            [view.capture(env.rendering) for view in views], env.frame(), env.data.time
+                        )
                     if (index + 1) % 100 == 0:
                         logger.info(
                             "Render progress work=%s frames=%d/%d", work_id, index + 1, len(demo.elapsed)
