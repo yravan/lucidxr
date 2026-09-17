@@ -23,13 +23,13 @@ class RobosuiteStack(Scene):
         arena = RobosuiteTableArena()
         camera_rig = make_camera_rig(arena.table_pos_list)
         box_1 = StackingBlock(
-            attributes=dict(name="box-1", pos=f"{x1} {y1} 0.8", quat=q1), rgba="0 1 0 1.0", top_rgba="0 0 1 1"
+            attributes=dict(name="box-1", pos=(x1, y1, 0.8), quat=q1), rgba="0 1 0 1.0", top_rgba="0 0 1 1"
         )
         box_2 = StackingBlock(
-            attributes=dict(name="box-2", pos=f"{x2} {y2} 0.8"), rgba="1 0 0 1.0", top_rgba="0 1 1 1"
+            attributes=dict(name="box-2", pos=(x2, y2, 0.8)), rgba="1 0 0 1.0", top_rgba="0 1 1 1"
         )
         box_3 = StackingBlock(
-            attributes=dict(name="box-3", pos=f"{x3} {y3} 0.8"), rgba="1 1 0 1.0", top_rgba="1 0 1 1"
+            attributes=dict(name="box-3", pos=(x3, y3, 0.8)), rgba="1 1 0 1.0", top_rgba="1 0 1 1"
         )
         scene = Mjcf(
             WorldSettings("pastel"),

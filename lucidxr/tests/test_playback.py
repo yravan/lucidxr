@@ -4,6 +4,7 @@ import h5py
 import mujoco
 import numpy as np
 import pytest
+from lxml import etree
 
 from lucidxr.rendering.output import read_result
 from lucidxr.rendering.replay import render_demo
@@ -14,6 +15,7 @@ from lucidxr.sim.playback import ReplaySpec, replay_frames
 from lucidxr.sim.scenes import make_scene
 from lucidxr.sim.teleop.bundle import CLOCK_SENSOR, export_bundle
 from lucidxr.sim.teleop.vuer import frame_time
+from lucidxr.sim.xml_schema.base import attribute_value
 
 
 def command_demo(directory):
@@ -46,6 +48,17 @@ def test_browser_bundle_clock_does_not_change_physics(tmp_path):
         assert b.sensordata[clock] == pytest.approx(b.time - browser.opt.timestep)
         assert frame_time({"sensordata": b.sensordata}, original) == pytest.approx(b.time)
         np.testing.assert_allclose(a.qpos, b.qpos, atol=1e-12)
+
+
+def test_generated_mjcf_numbers_are_portable_without_rewriting_names():
+    # Observed Mac/Engaging uniform-sampling results for the same seed.
+    left = np.array([0.14809968158803385, -0.18898636683192846])
+    right = np.array([0.14809968158803388, -0.1889863668319285])
+    assert attribute_value(left) == attribute_value(right)
+    assert attribute_value("00123") == "00123"
+    assert attribute_value(123) == "123"
+    tree = etree.fromstring(make_scene("pick_sphere", seed=9).to_xml().encode())
+    assert tree.find(".//body[@name='ball-1']").get("pos") == "0.148099681588 -0.385273116365 0.7"
 
 
 def test_commands_reproduce_motion_and_transfer_by_control_names(tmp_path):

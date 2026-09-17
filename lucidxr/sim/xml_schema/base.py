@@ -1,6 +1,7 @@
 import inspect
 from collections.abc import Iterable
 from html import escape
+from numbers import Integral, Real
 from typing import Tuple
 
 from lucidxr.sim.xml_schema.utils.minimizer import minimize
@@ -10,8 +11,12 @@ def attribute_value(value) -> str:
     """Serialize scalar and vector MJCF values consistently before XML escaping."""
     if isinstance(value, bool):
         return str(value).lower()
+    if isinstance(value, Real) and not isinstance(value, Integral):
+        # Platform arithmetic (notably SIMD uniform sampling) can differ in the
+        # last bits. Emit stable MJCF, not merely a tolerant recording hash.
+        return format(value, ".12g")
     if isinstance(value, Iterable) and not isinstance(value, (str, bytes, dict)):
-        return " ".join(map(str, value))
+        return " ".join(map(attribute_value, value))
     return str(value)
 
 

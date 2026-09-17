@@ -3,6 +3,7 @@ from typing import NamedTuple
 
 import numpy as np
 
+from lucidxr.sim.xml_schema.base import attribute_value
 from lucidxr.sim.xml_schema.transforms.helpers import Pipe
 
 from .vector import Vector3
@@ -21,7 +22,7 @@ class WXYZ(NamedTuple):
     z: float
 
     def __str__(self):
-        return f"{self.w} {self.x} {self.y} {self.z}"
+        return attribute_value(tuple(self))
 
     def __add__(self, other: "WXYZ") -> "WXYZ":
         """Compose WXYZ rotations with Hamilton multiplication."""

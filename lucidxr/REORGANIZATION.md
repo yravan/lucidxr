@@ -333,3 +333,9 @@ verified boundary and test its exact step/emit order with actual engine samples
 and irregular network arrival times. Keep state replay and command replay
 in one simulation-level implementation shared by viewers and renderers; generated
 images must be paired with the states actually simulated in the target scene.
+
+Verify reproducibility on both execution platforms before weakening identity
+checks. A real Mac/Linux run exposed last-bit differences in seeded positions.
+Serializing computed numeric XML attributes at 12 significant digits makes the
+scene itself portable; names and literal text remain untouched. Fingerprints can
+then stay strict about both the emitted XML and asset bytes.

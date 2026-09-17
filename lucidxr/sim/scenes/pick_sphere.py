@@ -17,14 +17,14 @@ class PickSphere(Scene):
         basket = MjSDF(pos=[0, 0.2, 0.67], assets="objects/black_basket", _attributes={"name": "basket"})
         table = Table(pos=[0, 0, 0.6], rgba="0.7 0.65 0.57 1")
         ball = Body(
-            attributes=dict(name="ball-1", pos=f"{x1} {y1} 0.7"),
+            attributes=dict(name="ball-1", pos=(x1, y1, 0.7)),
             _children_raw="""
         <joint type="free" name="{name}"/>
         <geom name="sphere-1" type="sphere" size="0.03" rgba="0.5 0.5 0.5 1" mass="0.1" solref="0.003 1" solimp="0.95 0.99 0.001" friction="2 0.01 0.002"/>
         """,
         )
         can = Body(
-            attributes=dict(name="can-1", pos=f"{x2} {y2} 0.7"),
+            attributes=dict(name="can-1", pos=(x2, y2, 0.7)),
             _children_raw="""
         <joint type="free" name="{name}"/>
         <geom name="can-1" type="cylinder" size="0.03 0.05" rgba="0.5 0.5 0.5 1" mass="0.1" solref="0.003 1" solimp="0.95 0.99 0.001" friction="2 0.01 0.002"/>

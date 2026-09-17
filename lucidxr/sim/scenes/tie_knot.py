@@ -42,7 +42,9 @@ class TieKnot(Scene):
         if robot != "panda":
             raise ValueError(f"Unknown robot: {robot}")
         panda = PandaTomika(
-            name="test_panda", gripper_name="test_gripper", wrist_mount=camera_rig.wrist_camera(name="panda_wrist")
+            name="test_panda",
+            gripper_name="test_gripper",
+            wrist_mount=camera_rig.wrist_camera(name="panda_wrist"),
         )
         rope = MuJoCoRope(
             pos=[x1, y1, 1.1],
