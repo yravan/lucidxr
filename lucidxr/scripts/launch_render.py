@@ -7,6 +7,8 @@ import shutil
 import tempfile
 from pathlib import Path
 
+from lucidxr.scripts.replay_args import add_replay_arguments, replay_spec
+
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
@@ -19,6 +21,7 @@ def main(argv=None):
     parser.add_argument("--fps", type=int, default=50)
     parser.add_argument("--products", nargs="+", default=["rgb"], choices=["rgb", "depth", "segmentation"])
     parser.add_argument("--dry-run", action="store_true")
+    add_replay_arguments(parser)
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
     from infra.cluster import cluster
@@ -27,7 +30,9 @@ def main(argv=None):
     from lucidxr.rendering.spec import RenderSpec
 
     profile = cluster(args.cluster, config=args.infra_config)
-    spec = RenderSpec(tuple(args.cameras), args.width, args.height, args.fps, tuple(args.products))
+    spec = RenderSpec(
+        tuple(args.cameras), args.width, args.height, args.fps, tuple(args.products), replay_spec(args)
+    )
     jobs, inputs = plan(args.demos, spec)
     with tempfile.TemporaryDirectory(prefix="lucidxr-launch-") as temporary:
         payload = Path(temporary) / "render_inputs"

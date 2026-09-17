@@ -36,7 +36,7 @@ using `example.toml`, and authenticate once with `ssh engaging`. Then launch:
 
 ```sh
 uv run python -m lucidxr.scripts.launch_render /path/to/demo.npz \
-  --cluster engaging --cameras wrist
+  --cluster engaging --cameras wrist --mode commands
 ```
 
 `--infra-config PATH` selects another profile file. `--dry-run` freezes the code
@@ -65,3 +65,8 @@ queries Slurm accounting using the receipt. Rendering progress/completion lives 
 render records, rather than being inferred from scheduler state or directory names.
 
 See [JAYNES.md](JAYNES.md) for the source review and small compatibility correction.
+
+The local renderer and remote launcher accept the same `--mode`, `--scene`, `--seed`
+and `--scene-options` arguments. These choices and the target scene fingerprint
+are captured in each work identity. Command replay can therefore be distributed
+without changing its physics or pairing images with the original scene's states.
