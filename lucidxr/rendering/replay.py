@@ -22,7 +22,12 @@ def render_demo(source, output, spec, *, assets=None, expected_request=None):
     source, output = Path(source).expanduser().resolve(), Path(output).expanduser().resolve()
     identity = request(source, spec, assets=assets)
     if expected_request is not None and digest(identity) != digest(expected_request):
-        raise ValueError("Source, code or dependencies changed since planning")
+        changed = sorted(
+            key
+            for key in identity.keys() | expected_request.keys()
+            if digest(identity.get(key)) != digest(expected_request.get(key))
+        )
+        raise ValueError(f"Render request changed since planning: {', '.join(changed)}")
     work_id = digest(identity)
     record = output / "results" / f"{work_id}.json"
     if record.exists():
