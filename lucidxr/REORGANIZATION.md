@@ -326,7 +326,10 @@ by simulation and exercise a real write failure in the new orchestration layer.
 Do not substitute receipt time for a simulator's clock or infer event semantics
 from a field name. Trace the producer, wire payload, consumer and saved artifact.
 Here the existing WASM clock was made observable through MuJoCo's built-in clock
-sensor, which Vuer already serializes as sensor data. Test with actual engine
-samples and irregular network arrival times. Keep state replay and command replay
+sensor, which Vuer already serializes as sensor data. Inspect the installed client,
+not merely a nearby checkout: sensor evaluation can precede state integration,
+and clients differ in whether they refresh sensors before publishing. Pin the
+verified boundary and test its exact step/emit order with actual engine samples
+and irregular network arrival times. Keep state replay and command replay
 in one simulation-level implementation shared by viewers and renderers; generated
 images must be paired with the states actually simulated in the target scene.

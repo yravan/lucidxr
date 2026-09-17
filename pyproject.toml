@@ -19,7 +19,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-teleop = ["vuer>=0.1.6"]
+# The recording adapter follows this release's bundled browser stepping contract.
+teleop = ["vuer==0.1.6"]
 splat = [
     "torch>=2.14.0; sys_platform == 'linux'",
     "gsplat>=1.5.3; sys_platform == 'linux'",

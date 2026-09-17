@@ -531,7 +531,7 @@ requires-dist = [
     { name = "numpy", specifier = ">=2.5.3" },
     { name = "scipy", specifier = ">=1.18.1" },
     { name = "torch", marker = "sys_platform == 'linux' and extra == 'splat'", specifier = ">=2.14.0" },
-    { name = "vuer", marker = "extra == 'teleop'", specifier = ">=0.1.6" },
+    { name = "vuer", marker = "extra == 'teleop'", specifier = "==0.1.6" },
 ]
 provides-extras = ["teleop", "splat", "rendering"]
 

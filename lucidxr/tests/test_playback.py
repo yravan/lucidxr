@@ -13,6 +13,7 @@ from lucidxr.sim.mujoco_env import MujocoEnv
 from lucidxr.sim.playback import ReplaySpec, replay_frames
 from lucidxr.sim.scenes import make_scene
 from lucidxr.sim.teleop.bundle import CLOCK_SENSOR, export_bundle
+from lucidxr.sim.teleop.vuer import frame_time
 
 
 def command_demo(directory):
@@ -41,8 +42,9 @@ def test_browser_bundle_clock_does_not_change_physics(tmp_path):
     for _ in range(12):
         mujoco.mj_step(original, a)
         mujoco.mj_step(browser, b)
-        mujoco.mj_forward(browser, b)
-        assert b.sensordata[clock] == pytest.approx(b.time)
+        # Match the pinned browser loop: emit after mj_step, without mj_forward.
+        assert b.sensordata[clock] == pytest.approx(b.time - browser.opt.timestep)
+        assert frame_time({"sensordata": b.sensordata}, original) == pytest.approx(b.time)
         np.testing.assert_allclose(a.qpos, b.qpos, atol=1e-12)
 
 

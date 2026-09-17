@@ -117,8 +117,10 @@ Offline replay rendering: `python -m lucidxr.scripts.render_demo DEMO --output D
 
 Collection adds a reserved `lucidxr_recording_clock` sensor to the exported browser
 bundle and requests `sensordata` in Vuer frame events. MuJoCo computes this sensor
-from simulation time, so no frontend timestamp conversion, network timing estimate
-or custom Vuer build is needed. The sensor is observational and does not change the
+before the final integration step. Vuer 0.1.6's bundled client emits after that
+step without calling `mj_forward`, so collection adds one physics timestep to
+obtain the saved state's time. No network timing estimate or custom Vuer build
+is needed. The sensor is observational and does not change the
 scene's physical model. Missing/invalid/nonincreasing clocks stop recording with an
 explicit error. Direct mouse force dragging is disabled because its applied forces
 are outside the mocap/ctrl replay contract.
@@ -128,8 +130,15 @@ fields. Neither browser wall time nor the version-dependent event `dt` should be
 used as a substitute for the simulator clock. See MuJoCo's
 [clock sensor](https://mujoco.readthedocs.io/en/stable/XMLreference.html#sensor-clock).
 
-Validation includes an actual MuJoCo 3.3.4 WASM model loaded from the exported
-bundle, sent through the Vuer 0.1.6 websocket collector with irregular message
-arrival delays. The saved simulation intervals remained 20 ms. Headset interaction
+Use the client served by `record_demo`. The teleop dependency is pinned because
+older Vuer clients call `mj_forward` before emitting and therefore have a different
+sensor sampling phase. Upgrading requires reviewing and testing that boundary.
+The recording identifies the client and browser engine versions separately from
+the native MuJoCo reference used to build its metadata.
+
+Validation includes the actual bundled MuJoCo 3.3.6 WASM model loaded from the
+exported bundle, sent through the Vuer 0.1.6 websocket collector with irregular
+message arrival delays. Saved state times matched the engine clock, with 20 ms
+intervals. Headset interaction
 itself still requires a headset; this check covers the real physics/frame transport
 and save path. Only newly collected format-2 recordings are supported.

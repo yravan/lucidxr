@@ -2,9 +2,23 @@
 
 import asyncio
 import tempfile
+from importlib.metadata import version
 
 from ..demos import DemoRecorder
 from .bundle import export_bundle
+
+
+def frame_time(frame, model):
+    """Post-step state time for Vuer 0.1.6's bundled AutoSimLoop.
+
+    mj_step samples the clock before integrating. This client emits immediately
+    after the last step, without mj_forward, so the state is one timestep later.
+    ON_MUJOCO_LOAD and other clients do not share this contract.
+    """
+    sensors = frame["sensordata"]
+    if len(sensors) != model.nsensordata + 1:
+        raise ValueError("Browser frame is missing the recording clock sensor")
+    return float(sensors[-1]) + float(model.opt.timestep)
 
 
 def collect(
@@ -25,8 +39,15 @@ def collect(
         from vuer.schemas import Box, DefaultScene, HandActuator, Html, MuJoCo, span
     except ImportError as exc:
         raise ImportError("Recording requires the teleop extra: uv sync --extra teleop") from exc
+    if version("vuer") != "0.1.6":
+        raise ValueError("Recording requires Vuer 0.1.6 and its bundled browser client; sync the teleop extra")
 
     recorder = DemoRecorder(env, scene_name, max_frames=max_frames)
+    recorder.metadata.update(
+        vuer_version="0.1.6",
+        browser_mujoco_version="3.3.6",
+        clock="pre-integration-sensor-plus-timestep",
+    )
     initial = env.frame()
     controls = []
     for hand, name in (("right", right_actuator), ("left", left_actuator)):
@@ -96,11 +117,7 @@ def collect(
                 return
             try:
                 frame = event.value["keyFrame"]
-                # The bundle appends one clock sensor after the scene's own sensors.
-                sensors = frame["sensordata"]
-                if len(sensors) != env.model.nsensordata + 1:
-                    raise ValueError("Browser frame is missing the recording clock sensor")
-                recorder.append(frame, float(sensors[-1]))
+                recorder.append(frame, frame_time(frame, env.model))
                 if len(recorder.frames) == recorder.max_frames:
                     recording = False
                     save()

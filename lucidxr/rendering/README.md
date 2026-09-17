@@ -23,7 +23,7 @@ No task, camera, split or variant is inferred from directory names. Moving the e
 output root preserves the references. Different requests produce different work IDs;
 repeating a request verifies and reuses its accepted output.
 
-Each attempt owns one HDF5 plus one MP4 per camera. HDF5 stores original physical
+Each attempt owns one HDF5 plus one MP4 per camera. HDF5 stores rendered physical
 fields, source elapsed times/frame indices, explicit camera names, video frame
 mapping, K/C2W calibration and requested lossless depth/segmentation. RGB is H.264
 CRF 18, yuv420p, no B frames, a one-second maximum GOP. It is lossy; it is not an
