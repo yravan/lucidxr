@@ -1,0 +1,3 @@
+# Copy to ~/.config/lucidxr/infra.toml and choose an actual path on this machine.
+[locations]
+demos = "~/lucidxr-data/demos"

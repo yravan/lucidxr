@@ -104,3 +104,7 @@ assets. Unused legacy furniture presets may likewise require their original exte
 asset packs; they are not advertised in the runnable scene catalogue. Tensor-specific
 rotation helpers work when PyTorch is installed by a downstream training project;
 NumPy versions do not require it.
+
+Demo collection and playback entry points live in [lucidxr/scripts](lucidxr/scripts/README.md).
+Optional personal storage configuration lives in [infra](infra/README.md); scripts
+accept filesystem paths and do not depend on that package.

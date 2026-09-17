@@ -292,3 +292,21 @@ report CUDA execution separately. A mock backend proves the integration contract
 not checkpoint compatibility or GPU kernel execution. Supply a small cluster smoke
 entry point for the latter. Channel ownership follows the same principle: RGB,
 opacity and emissive exposure have separate semantics and independent restoration.
+
+### Keep deployment locations outside application workflows
+
+Identify the one infrastructure value a workflow actually needs before adding
+backend abstractions. Recording currently needs an output directory: personal
+configuration resolves it, while the recorder accepts a plain filesystem path.
+Keep the episode format beside simulation code, not inside host-specific infra or
+a future training dataloader. Add transfers and scheduling only when exercised by
+a concrete workflow, with explicit host and credential configuration then.
+
+For recording migrations, inspect timing and control semantics before naming data
+as training actions. Save versioned numeric arrays and explicit source metadata,
+validate shapes before accepting a frame, fingerprint the scene and asset content,
+and publish files without overwriting earlier demonstrations. Exercise failed
+writes and replay, not just happy-path serialization. Temporary browser exports
+must preserve implicit asset names when filenames are rewritten. Test the exported
+XML as a standalone model. Distinguish server-event verification from actual VR
+interaction and keep that verification gap visible.

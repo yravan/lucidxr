@@ -19,6 +19,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+teleop = ["vuer>=0.1.6"]
 splat = [
     "torch>=2.14.0; sys_platform == 'linux'",
     "gsplat>=1.5.3; sys_platform == 'linux'",
@@ -28,7 +29,7 @@ splat = [
 dev = ["pytest>=9.1.1", "build>=1.6.1", "ruff>=0.16.7"]
 
 [tool.setuptools.packages.find]
-include = ["lucidxr*"]
+include = ["lucidxr*", "infra*"]
 exclude = ["*.tests*"]
 namespaces = false
 
