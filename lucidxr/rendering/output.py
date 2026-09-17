@@ -1,11 +1,14 @@
 """Streaming paired video/arrays and verified, immutable completion records."""
 
 import json
+import logging
 import os
+import shutil
 import tempfile
 from contextlib import ExitStack
 from fractions import Fraction
 from pathlib import Path
+from uuid import uuid4
 
 import av
 import h5py
@@ -14,6 +17,8 @@ import numpy as np
 from lucidxr.sim.playback import control_layout
 
 from .spec import FORMAT_VERSION, digest, file_hash
+
+logger = logging.getLogger(__name__)
 
 
 def publish_json(path, value):
@@ -180,3 +185,32 @@ def read_result(path, *, expected_id=None):
         if target.stat().st_size != artifact["bytes"] or file_hash(target) != artifact["sha256"]:
             raise ValueError(f"Artifact is corrupt: {target}")
     return result
+
+
+def copy_result(source, output):
+    """Transfer closed artifacts first; publish their completion record last."""
+    source, output = Path(source).resolve(), Path(output).resolve()
+    result = read_result(source)
+    record = output / "results" / f"{result['work_id']}.json"
+    if record.exists():
+        read_result(record, expected_id=result["work_id"])
+        return record
+    attempt = output / "attempts" / uuid4().hex
+    attempt.mkdir(parents=True)
+    logger.info("Transfer work=%s attempt=%s", result["work_id"], attempt)
+    for artifact in result["artifacts"]:
+        original = source.parent / artifact["path"]
+        destination = attempt / original.name
+        if destination.exists():
+            raise ValueError("Artifact basenames must be unique within an attempt")
+        shutil.copyfile(original, destination)
+        with destination.open("rb") as stream:
+            os.fsync(stream.fileno())
+        if destination.stat().st_size != artifact["bytes"] or file_hash(destination) != artifact["sha256"]:
+            raise ValueError(f"Transferred artifact is corrupt: {destination}")
+        artifact["path"] = os.path.relpath(destination, record.parent)
+    won = publish_json(record, result)
+    read_result(record, expected_id=result["work_id"])
+    if not won:
+        shutil.rmtree(attempt)
+    return record

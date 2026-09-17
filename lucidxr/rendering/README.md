@@ -73,7 +73,13 @@ checks. Different robots require retargeting and are rejected; matching array si
 are insufficient. Mocap coordinates are world-space and must describe the intended
 workspace in the target scene. Incompatible physics timesteps fail explicitly
 instead of rounding away time. Command replay produces new physics outcomes; it
-is not a promise of identical trajectories across different scenes or engine versions.
+is not a promise of identical trajectories across different scenes, engine versions or hardware.
 
 Only the current recording format is supported. Collection, not a migration shim,
 must supply simulation time and the named control contract.
+
+Distributed workers use the same renderer through `infra.rendering`, which owns
+scratch placement and worker allocation. `output.copy_result` owns the format-aware
+publication protocol: transfer all verified artifacts, then atomically publish the
+completion record. Core rendering accepts ordinary paths and does not import infra.
+See [remote launch and recovery](../../infra/README.md) for cluster commands.

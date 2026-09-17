@@ -2,6 +2,8 @@
 
 import argparse
 import logging
+import os
+import tempfile
 from pathlib import Path
 
 
@@ -14,14 +16,19 @@ def main(argv=None):
     action.add_argument("--collect", action="store_true")
     action.add_argument("--worker-index", type=int)
     parser.add_argument("--workers", type=int, default=1)
+    parser.add_argument(
+        "--scratch", type=Path, default=Path(os.environ.get("SLURM_TMPDIR", tempfile.gettempdir()))
+    )
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
-    from lucidxr.rendering.jobs import collect, run_item, run_worker
+    from lucidxr.rendering.jobs import collect, run_item
 
     if args.collect:
         print(collect(args.manifest, args.output))
     elif args.worker_index is not None:
-        run_worker(args.manifest, args.worker_index, args.workers, args.output)
+        from infra.rendering import run_worker
+
+        run_worker(args.manifest, args.worker_index, args.workers, args.output, args.scratch)
     else:
         if args.index < 0:
             parser.error("index must be nonnegative")
