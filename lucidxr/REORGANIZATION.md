@@ -310,3 +310,36 @@ writes and replay, not just happy-path serialization. Temporary browser exports
 must preserve implicit asset names when filenames are rewritten. Test the exported
 XML as a standalone model. Distinguish server-event verification from actual VR
 interaction and keep that verification gap visible.
+
+### Design model families around the actual axes of variation
+
+Read the original papers and reference implementations before deciding that three
+named methods need three independent stacks. Separate mathematical objective,
+network architecture, representation and execution. Here diffusion versus flow
+changes the training target and sampler, while U-Net versus MoT changes the network.
+A shared trainer does not imply identical model internals or identical loss scales.
+
+Specify tensor shapes, physical units, timing, masks and normalization ownership
+before creating base classes. Check where removing a feature also removes an
+input: OpenPI's pi05 language-token path includes proprioception, so a language-free
+adaptation must explicitly restore a state input. Record departures from a reference
+recipe rather than borrowing its name and implying identical behavior.
+
+Trace one real datum from collection through preparation to rollout. Hidden label
+shifts, source-group leakage and training augmentations during validation can make a
+clean-looking rewrite incorrect. Mark missing evidence and proposed contracts in a
+design PR; do not fill uncertain boundaries with unused implementations. Pin research
+sources, distinguish paper claims from local choices, and implement bounded end-to-end
+slices after the interface is concrete.
+
+### Build the data-producing workflow before its consumers
+
+When distributed rendering is a concrete requirement, give it an application-level
+home and bounded delivery stages: local correctness, distributed execution, then
+staging/recovery. Let that real workflow drive infra's configuration and operations.
+Keep scheduler submission and transfers outside renderer logic, and reuse its worker
+locally. Stable work identities, immutable attempt outputs and validated completion
+records make retries inspectable without a bespoke queue service. Defer training
+until the export contract exists; retain research without building unused scaffolds.
+Shared infra setup means one source of deployment settings, not a global constants
+module containing model mathematics and dataset semantics.

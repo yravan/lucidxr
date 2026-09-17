@@ -108,3 +108,7 @@ NumPy versions do not require it.
 Demo collection and playback entry points live in [lucidxr/scripts](lucidxr/scripts/README.md).
 Optional personal storage configuration lives in [infra](infra/README.md); scripts
 accept filesystem paths and do not depend on that package.
+
+The proposed policy/training architecture is documented in [training/README.md](training/README.md).
+It covers Diffusion Policy, Flow Matching and a language-free MoT, with shared
+training/data interfaces; implementations are not included in that design change.
