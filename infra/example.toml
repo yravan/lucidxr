@@ -1,6 +1,8 @@
 # Copy to ~/.config/lucidxr/infra.toml and choose an actual path on this machine.
 [locations]
 demos = "~/lucidxr-data/demos"
+training_cache = "~/lucidxr-data/training-cache"
+training_runs = "~/lucidxr-data/training-runs"
 
 # Fill in values from your MIT allocation and SSH configuration.
 # [clusters.engaging]
@@ -10,7 +12,7 @@ demos = "~/lucidxr-data/demos"
 # partition = "mit_normal_gpu"
 # account = "YOUR_SLURM_ACCOUNT"
 # uv = "/home/YOUR_USERNAME/.local/bin/uv"
-# cpus = 2
-# memory_gb = 4
-# minutes = 10
+# cpus = 4
+# memory_gb = 16
+# minutes = 20
 # concurrency = 2

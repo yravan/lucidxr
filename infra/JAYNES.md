@@ -31,6 +31,13 @@ failing entry command returned zero; foreground execution returned nonzero.
 It checks the expected fragment so a future upstream change cannot silently bypass
 review. Test the generated shell, not just the template string.
 
+The shared launcher uses `exec` for the final Python entry command. This preserves
+the worker's exit status and PID: training requests Slurm's `B:USR1@60` warning,
+which targets the batch process. Python must replace that shell to receive it.
+A focused process test sends USR1 to the batch PID and verifies the worker handler
+and nonzero exit status. The meaning of `B:` follows the
+[Slurm sbatch signal documentation](https://slurm.schedmd.com/sbatch.html#OPT_signal).
+
 SSH's blocking API returns stdout/stderr but no return code. Our adapter appends an
 unpredictable success marker under strict shell execution and requires it. Each
 submission persists its output remotely before returning, so an interrupted client

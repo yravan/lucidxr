@@ -354,3 +354,47 @@ allocations; the renderer defines valid artifacts and publishes their completion
 record last. Test interrupted publication and retry behavior rather than adding broad
 mock-heavy coverage of every helper. Explicit failure is preferable to an automatic
 fallback that can silently submit duplicate jobs or overwrite corrupt output.
+
+### Split learning algorithms from execution and representation
+
+Define a small tensor contract before implementing several policies. Share a
+backbone when the comparison is between objectives; keep genuinely different
+architectures explicit. Cache work that is invariant across sampling iterations.
+Test that the cached computation retains gradients and matches an independent
+reference. Put action encoding at the learning boundary, leaving the simulator's
+physical command vocabulary unchanged. Resolve robot state by explicit joint
+names and types rather than flattening an environment-dependent state vector.
+
+Benchmark the actual access pattern before introducing storage machinery. Here
+random windows from compressed video were much slower than decoded uint8 maps;
+an explicit derived cache keeps decoding out of workers without changing the
+authoritative render format. Preserve label timing, split by supplied collection
+groups, and sample a physical trajectory before its visual variant. Fit statistics
+only on training data and make padding masks part of the contract.
+
+Implement one trainer around these contracts. Tie resume to consumed batches,
+not a prefetch queue or an in-flight worker's RNG. Save optimizer, moving average,
+normalization, sampling RNG and data/code identity together. Verify an interrupted
+run against an uninterrupted reference, and inject a failed checkpoint write.
+Reuse existing code capture and launch recovery rather than copying a launcher
+into the training package. Keep machine locations and scheduling at script/infra
+boundaries. Separate successful execution checks from demonstrated task quality:
+a decreasing loss on a static fixture does not establish a usable closed-loop policy.
+
+### Validate the actual execution boundary
+
+Use the real dependency lock, scheduler and target hardware before declaring a
+runtime complete. Exercise all implementations with the same tensor contract,
+then distinguish loader-only throughput, steady training updates, batch-one
+sampling and launch overhead. Synchronize CUDA when timing inference. Measure
+precision choices: BF16 training can help while batch-one BF16 inference is slower.
+Record workload size, warmup, hardware and excluded costs with each result.
+
+Treat checkpoint publication as authoritative and status files as repairable views.
+Test a stop that arrives after the periodic-checkpoint decision, including during
+validation. Compare resumed weights, optimizer, EMA and RNG against a reference;
+state whether deterministic kernels were required. Separately exercise scheduler
+signal delivery and resubmission of the captured job. A successful process exit
+after a cooperative stop means a checkpoint was saved, not that training finished.
+Keep operational test helpers separate from the product API, and do not mistake a
+helper's failed coordination for a failure of the implementation under test.

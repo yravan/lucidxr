@@ -51,6 +51,7 @@ lucidxr/
   scripts/            # recording, playback, rendering and remote launch entry points
   tests/              # focused schema and runtime regression checks
 infra/                # personal locations, Jaynes/MIT launch, scratch and recovery
+training/             # shared models, three policies, data preparation/loaders and trainer
 deprecated/          # optional local reference copy, ignored by Git
 ```
 
@@ -81,6 +82,11 @@ families. Existing configurable builders keep their meaningful options. The orig
 implementations remain in Git history and the local `deprecated/` copy. Active
 runtime entry points and their validation boundaries are documented in the guides
 linked here.
+
+For language-free Diffusion Policy, Flow Matching and observation/action MoT,
+see [the training guide](training/README.md). Training is an optional install:
+`uv sync --extra training`. Its models, policies and loaders are independent of
+personal storage and launch configuration; scripts connect them to `infra`.
 
 ## Compatibility and validation
 
