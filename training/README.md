@@ -5,8 +5,12 @@ accept tensors and paths; scripts resolve personal locations and MIT resources
 through `infra`. No language inputs or pretrained language/vision weights are used.
 
 Implementation is stacked after rendering PR #7, in four reviewable slices:
-models, policies, data, then the trainer and MIT integration. This first slice adds
-working neural networks; later slices supply objectives and their actual callers.
+models, policies, data, then the trainer and MIT integration.
+
+The completion criteria are working training and sampling for all three policies,
+timing-correct data windows with group-isolated splits, measured loader throughput,
+reproducible checkpoint resume, a decoded simulation rollout, and a real MIT GPU
+run using the same training entry point. CPU checks do not establish GPU performance.
 
 ## Models
 
@@ -58,3 +62,30 @@ References reviewed at the same commits as the earlier design PR #4:
   [conditional U-Net](https://github.com/real-stanford/diffusion_policy/blob/5ba07ac6661db573af695b419a7947ecb704690f/diffusion_policy/model/diffusion/conditional_unet1d.py).
 - [OpenPI flow objective/cache](https://github.com/Physical-Intelligence/openpi/blob/215abfb217dbac7d5f1273282331b9b1866c0479/src/openpi/models/pi0.py)
   and [expert attention](https://github.com/Physical-Intelligence/openpi/blob/215abfb217dbac7d5f1273282331b9b1866c0479/src/openpi/models/gemma.py).
+
+## Policies
+
+`ChunkPolicy(PolicySpec(kind, model))` supports `diffusion`, `flow` and `mot`.
+Diffusion and flow use the same U-Net. Diffusion trains epsilon prediction with
+a cosine DDPM schedule and samples with deterministic DDIM; flow and MoT regress
+noise minus data along a straight interpolation and use backward Euler sampling
+from t=1 (noise) to t=0 (data). The inference step count is explicit.
+
+`policy.loss(batch)` returns a differentiable `loss`; `policy.sample(obs)` returns
+physical encoded action chunks. The observation dictionary has `images`, `state`
+and boolean `valid` entries. A training batch adds `actions` and `action_valid`;
+padded targets do not contribute to the loss. Vision and the observation condition
+are evaluated once per sampling call, independent of the denoising step count.
+
+`ActionCodec` owns the policy representation: native actuator controls followed
+by world position and two rotation-matrix columns for each named mocap body.
+Decoding produces the simulator's native dictionary, bounds actuator controls to
+model limits, and orthogonalizes rotations with finite, deterministic fallbacks.
+Neither action chunks nor 6D rotations change the environment API.
+
+The normalizer is part of the policy state dict. Its bounds must come only from
+training data. Constant channels retain unit scale; action rotation channels keep
+their known [-1,1] domain. Observations and generated actions are not clipped to
+training extrema. The focused policy checks cover native rotation round trips,
+the flow integration direction, tiny-batch learning by all three policies,
+seeded sampling, and one vision evaluation per sampled chunk.
