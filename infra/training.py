@@ -38,7 +38,7 @@ def stage_cache(cluster, cache):
         subprocess.run(
             [
                 "rsync",
-                "-a",
+                "-az",
                 "--from0",
                 f"--files-from={inventory.name}",
                 "--protect-args",
