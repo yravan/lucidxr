@@ -23,6 +23,10 @@ throughput or manipulation success.
   optimizer state and noise RNG exactly. A deliberately failed checkpoint write
   preserved the previous checkpoint. A real USR1 stopped the MoT smoke run at a
   complete batch boundary and saved step 521.
+- The resume regression also sends a real USR1 during validation between periodic
+  checkpoints. It exposed and fixed an exit that could return without a checkpoint;
+  the interrupted update now saves and resumes exactly. Completed-run resume repairs
+  a missing status file from the authoritative checkpoint.
 - W&B offline logging ran successfully with ordinary scalar metrics and no
   Artifacts. JSONL and local checkpoint files remain authoritative.
 - Native EMA MoT rollout completed 100 control steps / 2.0 simulation seconds in

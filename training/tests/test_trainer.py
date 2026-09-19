@@ -1,6 +1,8 @@
 """Real optimizer/EMA/checkpoint resume must reproduce an uninterrupted run."""
 
 import json
+import os
+import signal
 from dataclasses import replace
 
 import pytest
@@ -15,7 +17,7 @@ from training.tests.test_data import cache  # noqa: E402, F401
 from training.trainer import train  # noqa: E402
 
 
-def test_checkpoint_resume_reproduces_training_and_ema(cache, tmp_path):  # noqa: F811
+def test_checkpoint_resume_reproduces_training_and_ema(cache, tmp_path, monkeypatch):  # noqa: F811
     manifest = json.loads((cache / "manifest.json").read_text())
     manifest["contract"]["rotation_indices"] = []
     manifest["statistics"] = {
@@ -38,14 +40,26 @@ def test_checkpoint_resume_reproduces_training_and_ema(cache, tmp_path):  # noqa
         batch_size=2,
         workers=0,
         cpu_threads=2,
-        checkpoint_every=3,
+        checkpoint_every=6,
         validation_every=3,
         validation_batches=2,
         log_every=3,
         device="cpu",
     )
     full = train(cache, tmp_path / "full", config)
-    partial = train(cache, tmp_path / "resumed", config, stop_after=3)
+    import training.trainer as runtime
+
+    original_validate = runtime.validate
+
+    def interrupt_validation(*args, **kwargs):
+        value = original_validate(*args, **kwargs)
+        # The stop arrives after the loop has already decided whether to checkpoint.
+        os.kill(os.getpid(), signal.SIGUSR1)
+        return value
+
+    with monkeypatch.context() as patch:
+        patch.setattr(runtime, "validate", interrupt_validation)
+        partial = train(cache, tmp_path / "resumed", config)
     assert load_checkpoint(partial)["step"] == 3
     assert json.loads((partial.parent / "status.json").read_text())["state"] == "interrupted"
     resumed = train(cache, tmp_path / "resumed", config, resume=True)
@@ -58,6 +72,10 @@ def test_checkpoint_resume_reproduces_training_and_ema(cache, tmp_path):  # noqa
             torch.testing.assert_close(value, b["optimizer"]["state"][parameter][name], rtol=0, atol=0)
     assert a["step"] == b["step"] == 6
     torch.testing.assert_close(a["noise_rng"], b["noise_rng"])
+    # Repair the derived status after a crash between checkpoint and status writes.
+    (resumed.parent / "status.json").unlink()
+    assert train(cache, tmp_path / "resumed", config, resume=True) == resumed
+    assert json.loads((resumed.parent / "status.json").read_text())["state"] == "complete"
     with pytest.raises(ValueError, match="same config"):
         train(cache, tmp_path / "resumed", replace(config, batch_size=3), resume=True)
     with pytest.raises(FileExistsError, match="resume explicitly"):

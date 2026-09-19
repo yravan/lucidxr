@@ -63,8 +63,8 @@ def validate(policy, batches, device, precision, seed):
     return torch.stack(losses).mean().item()
 
 
-def train(cache, output, config, *, resume=False, wandb_mode="disabled", project="lucidxr", stop_after=None):
-    """stop_after cooperatively checkpoints at a batch boundary for recovery rehearsals."""
+def train(cache, output, config, *, resume=False, wandb_mode="disabled", project="lucidxr"):
+    """Own one run; checkpoint completed updates on cooperative process signals."""
     output = Path(output).resolve()
     output.mkdir(parents=True, exist_ok=True)
     with (output / ".writer.lock").open("a") as lock:
@@ -72,12 +72,10 @@ def train(cache, output, config, *, resume=False, wandb_mode="disabled", project
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as exc:
             raise RuntimeError(f"Another trainer owns {output}") from exc
-        return _train(cache, output, config, resume, wandb_mode, project, stop_after)
+        return _train(cache, output, config, resume, wandb_mode, project)
 
 
-def _train(cache, output, config, resume, wandb_mode, project, stop_after):
-    if stop_after is not None and (type(stop_after) is not int or not 1 <= stop_after <= config.steps):
-        raise ValueError("stop_after must be a positive step within the configured run")
+def _train(cache, output, config, resume, wandb_mode, project):
     torch.set_num_threads(config.cpu_threads)
     random.seed(config.seed)
     np.random.seed(config.seed % (2**32))
@@ -153,7 +151,14 @@ def _train(cache, output, config, resume, wandb_mode, project, stop_after):
         if type(step) is not int or not 0 <= step <= config.steps:
             raise ValueError("Checkpoint has an invalid consumed-step count")
         logger.info("Resumed consumed_steps=%d checkpoint=%s", step, last)
+    saved_step = step
+
+    def write_status(state):
+        atomic_save(output / "status.json", {"step": step, "steps": config.steps, "state": state})
+
     if step == config.steps:
+        # A crash can occur after publishing the checkpoint but before its status view.
+        write_status("complete")
         logger.info("Run already complete: %s", last)
         return last
     train_data = Windows(cache, "train", observation_steps=config.observation_steps, horizon=config.horizon)
@@ -164,7 +169,9 @@ def _train(cache, output, config, resume, wandb_mode, project, stop_after):
             cache, "validation", observation_steps=config.observation_steps, horizon=config.horizon
         )
         # Short periodic validation does not need a second persistent worker pool.
-        validation = loader(validation_data, config, steps=config.validation_batches, seed=config.seed + 1, workers=0)
+        validation = loader(
+            validation_data, config, steps=config.validation_batches, seed=config.seed + 1, workers=0
+        )
     else:
         logger.info("No held-out episodes supplied; validation metrics will be absent")
     metrics = Metrics(output, record["run_id"], identity, wandb_mode=wandb_mode, project=project)
@@ -179,6 +186,7 @@ def _train(cache, output, config, resume, wandb_mode, project, stop_after):
     previous = {sig: signal.signal(sig, request_stop) for sig in signals}
 
     def save():
+        nonlocal saved_step
         atomic_save(
             last,
             {
@@ -198,14 +206,8 @@ def _train(cache, output, config, resume, wandb_mode, project, stop_after):
             },
             tensor=True,
         )
-        atomic_save(
-            output / "status.json",
-            {
-                "step": step,
-                "steps": config.steps,
-                "state": "complete" if step == config.steps else "interrupted" if interrupted else "running",
-            },
-        )
+        write_status("complete" if step == config.steps else "interrupted" if interrupted else "running")
+        saved_step = step
         logger.info("Checkpoint saved step=%d path=%s", step, last)
 
     failed = True
@@ -235,7 +237,6 @@ def _train(cache, output, config, resume, wandb_mode, project, stop_after):
             step += 1
             iteration_count += 1
             losses.append(loss.detach())
-            interrupted = interrupted or (stop_after is not None and step >= stop_after)
             boundary = step == config.steps or interrupted
             validate_now = (
                 validation is not None
@@ -278,6 +279,10 @@ def _train(cache, output, config, resume, wandb_mode, project, stop_after):
                 interval_start = time.perf_counter()
             if interrupted:
                 break
+        # Signals may arrive during reporting/validation, after checkpoint_now was
+        # computed. Every normal exit must publish the last consumed update.
+        if saved_step != step:
+            save()
         failed = False
         return last
     except BaseException:
