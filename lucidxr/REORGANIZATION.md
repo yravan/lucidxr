@@ -380,3 +380,21 @@ Reuse existing code capture and launch recovery rather than copying a launcher
 into the training package. Keep machine locations and scheduling at script/infra
 boundaries. Separate successful execution checks from demonstrated task quality:
 a decreasing loss on a static fixture does not establish a usable closed-loop policy.
+
+### Validate the actual execution boundary
+
+Use the real dependency lock, scheduler and target hardware before declaring a
+runtime complete. Exercise all implementations with the same tensor contract,
+then distinguish loader-only throughput, steady training updates, batch-one
+sampling and launch overhead. Synchronize CUDA when timing inference. Measure
+precision choices: BF16 training can help while batch-one BF16 inference is slower.
+Record workload size, warmup, hardware and excluded costs with each result.
+
+Treat checkpoint publication as authoritative and status files as repairable views.
+Test a stop that arrives after the periodic-checkpoint decision, including during
+validation. Compare resumed weights, optimizer, EMA and RNG against a reference;
+state whether deterministic kernels were required. Separately exercise scheduler
+signal delivery and resubmission of the captured job. A successful process exit
+after a cooperative stop means a checkpoint was saved, not that training finished.
+Keep operational test helpers separate from the product API, and do not mistake a
+helper's failed coordination for a failure of the implementation under test.

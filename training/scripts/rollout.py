@@ -12,11 +12,14 @@ def main(argv=None):
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--steps", type=int, default=100)
     parser.add_argument("--execute-steps", type=int, default=4)
+    parser.add_argument(
+        "--settle-steps", type=int, default=0, help="Physics warmup before the first observation"
+    )
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
     parser.add_argument("--video", type=Path)
     args = parser.parse_args(argv)
-    if args.steps < 1:
-        parser.error("steps must be positive")
+    if args.steps < 1 or args.settle_steps < 0:
+        parser.error("steps must be positive and settle-steps nonnegative")
     from contextlib import ExitStack
     from fractions import Fraction
 
@@ -31,7 +34,7 @@ def main(argv=None):
 
     torch.set_num_threads(2)
     saved = load_checkpoint(args.checkpoint)
-    env = MujocoEnv(make_scene(args.scene, seed=args.seed))
+    env = MujocoEnv(make_scene(args.scene, seed=args.seed), settle_steps=args.settle_steps)
     period = saved["data"]["control_period"]
     frame_skip = round(period / env.model.opt.timestep)
     if frame_skip < 1 or not np.isclose(frame_skip * env.model.opt.timestep, period, rtol=0, atol=1e-9):

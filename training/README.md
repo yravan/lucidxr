@@ -53,8 +53,8 @@ tokenizer, vocabulary, text input or weight download.
 
 Install `uv sync --extra training` for model work; `uv run pytest -q training/tests`
 checks forward/backward behavior, prefix gradients, mask isolation and cached/joint
-attention agreement. CUDA performance and integrated training are verified in the
-later runtime slice, not inferred from CPU model checks.
+attention agreement. The runtime slice includes measured MIT CUDA training and
+sampling; see [the verification record](VERIFICATION.md) for configurations and limits.
 
 References reviewed at the same commits as the earlier design PR #4:
 
@@ -207,6 +207,8 @@ The controller loads EMA weights and the saved representation, verifies joint an
 control semantics, and executes the first K actions of each predicted chunk. It
 collects observations at every control interval, including while executing a chunk,
 so history spacing matches training. Reset clears both history and pending actions.
+Use `--settle-steps N` when collection used physics warmup before recording; this
+passes through the environment's existing settling behavior (default zero).
 Camera captures and resizing match preparation. Missing cameras, incompatible
 controls/timing, nonfinite commands and unstable physics fail explicitly. Generated
 positions are not silently workspace-clipped. Video captures are reused with the
@@ -230,9 +232,9 @@ Infra owns the SSH alias, allocation, shared storage and scratch. The launcher
 requires a CUDA config whose worker/thread counts fit the CPU allocation. It
 transfers a cache separately from code, verifies hashes before publishing its
 content-addressed location, and reuses that location on subsequent launches.
-Only manifest-listed files transfer. The same Jaynes code snapshot, locked uv
-environment, saved scripts and submission-recovery protocol serve rendering and
-training. The receipt stores the actual entry point and arguments, including the
+Only manifest-listed files transfer, with rsync compression. The same Jaynes code
+snapshot, locked uv environment, saved scripts and submission-recovery protocol
+serve rendering and training. The receipt stores the actual entry point and arguments, including the
 result path; no directory name is needed to interpret a run.
 
 The cluster worker stages the cache onto node scratch and calls the ordinary
@@ -244,6 +246,6 @@ signal reaches the checkpoint handler. Retry with `python -m infra resume RECEIP
 after accounting confirms the prior jobs are terminal. Uncertain submissions must
 first be reconciled with `python -m infra reconcile RECEIPT`.
 
-Use [the verification record](VERIFICATION.md) to distinguish local checks from
-cluster execution and policy quality. GPU verification requires an authenticated
-Engaging SSH connection; a dry run only checks source capture and generated scripts.
+Use [the verification record](VERIFICATION.md) for measured MIT training, sampling
+and recovery results. New launches require an authenticated Engaging SSH connection;
+a dry run only checks source capture and generated scripts.
