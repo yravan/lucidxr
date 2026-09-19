@@ -82,6 +82,11 @@ def command_mapping(demo, model):
     recorded = demo.metadata.get("controls")
     if not recorded:
         raise ValueError("Recording has no named control layout; collect a version-2 demo")
+    return control_mapping(recorded, model)
+
+
+def control_mapping(recorded, model):
+    """Map a named command layout to a compiled model, preserving actuator meaning."""
     target = control_layout(model)
     actuators = _mapping(
         [a["name"] for a in recorded["actuators"]], [a["name"] for a in target["actuators"]], "actuators"

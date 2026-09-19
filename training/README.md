@@ -89,3 +89,65 @@ their known [-1,1] domain. Observations and generated actions are not clipped to
 training extrema. The focused policy checks cover native rotation round trips,
 the flow integration direction, tiny-batch learning by all three policies,
 seeded sampling, and one vision evaluation per sampled chunk.
+
+## Data
+
+HDF5 and paired MP4 remain the render output. Training uses an explicit derived
+cache: uint8, resized RGB plus float32 robot state and actions in read-only NumPy
+maps. Preparation verifies completion records, artifact hashes, scene/assets,
+control meaning, video counts and simulation timing. It decodes each video once;
+workers never decode video, compile scenes, write files, or access the network.
+This is a training accelerator, not a new dataset export format.
+
+Write a JSON recipe with explicit source/session groups and splits:
+
+```json
+{
+  "data": {
+    "cameras": ["wrist"],
+    "joints": ["gripper-float-floating-base", "gripper-right_driver_joint", "gripper-left_driver_joint"],
+    "control_period": 0.02,
+    "image_size": 128
+  },
+  "episodes": [
+    {"result": "renders/results/RENDER_ID.json", "group": "collection-session-1", "split": "train"},
+    {"result": "renders/results/OTHER_RENDER_ID.json", "group": "collection-session-2", "split": "validation"}
+  ]
+}
+```
+
+Paths resolve relative to the recipe. Group identity is supplied by the collector;
+neither directory names nor frame-level random splitting infer it. All visual
+variants of a source recording must have the same group and split. Select measured
+robot joints explicitly: object state is never silently included. Joint names and
+types, native controls, camera order and original render resolution become part of
+the portable contract. Rollout must render at that resolution before applying the
+same resize; rendering directly at a square resolution changes the camera geometry.
+
+```sh
+uv run --extra training python -m training.scripts.prepare recipe.json --output /data/cache/run-1
+uv run --extra training python -m training.scripts.benchmark /data/cache/run-1 --workers 2
+```
+
+`--location NAME --infra-config FILE` can replace `--output` at the script boundary.
+Core preparation/loaders accept paths and have no dependency on personal infra.
+Use a new output destination when preparing a changed recipe. Only a completely
+validated directory is published; a manifest binds array hashes to the data contract.
+The caller verifies hashes once before training, not repeatedly in each worker.
+
+An observation ending at frame t targets the command at source frame t+1. The
+declared control period must match every simulation interval; display FPS is never
+used for labels. Earlier history repeats the initial frame with an invalid mask;
+future padding repeats the last target with an invalid mask. Statistics use only
+real training observations and commands. Sampling is uniform over physical anchors,
+then uniform over their visual variants, so extra renders do not change a source's
+weight. Deterministic batch IDs use the consumed step, allowing resume despite
+DataLoader prefetch. Each process has its own bounded read-only map cache.
+
+Measured on the development Mac using the 1,500-frame MIT render, two-frame RGB
+windows and 128×128 training images: random MP4 seeking/resizing averaged 5.07 ms
+per window versus 0.008 ms from a warm NumPy map. Preparing RGB took 1.29 seconds;
+storage grew from 1.34 MB MP4 to 73.7 MB decoded RGB. The complete loader, including
+collation at batch size 32, reached 46.6k windows/s with zero workers and 65.8k with
+two; median batch waits were 0.67 and 0.47 ms respectively. These are warm-cache
+measurements on a small smoke recording, not cold shared-storage or GPU throughput.

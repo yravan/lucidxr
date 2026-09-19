@@ -810,7 +810,9 @@ teleop = [
     { name = "vuer" },
 ]
 training = [
+    { name = "av" },
     { name = "diffusers" },
+    { name = "h5py" },
     { name = "torch" },
     { name = "torchvision" },
 ]
@@ -825,10 +827,12 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "av", marker = "extra == 'rendering'", specifier = ">=18.1.0" },
+    { name = "av", marker = "extra == 'training'", specifier = ">=18.1.0" },
     { name = "diffusers", marker = "extra == 'training'", specifier = ">=0.40.0" },
     { name = "gsplat", marker = "sys_platform == 'linux' and extra == 'splat'", specifier = ">=1.5.3" },
     { name = "gymnasium", specifier = ">=1.3.0" },
     { name = "h5py", marker = "extra == 'rendering'", specifier = ">=3.16.0" },
+    { name = "h5py", marker = "extra == 'training'", specifier = ">=3.16.0" },
     { name = "jaynes", marker = "extra == 'launch'", specifier = "==0.9.14" },
     { name = "lxml", specifier = ">=6.1.3" },
     { name = "mujoco", specifier = ">=3.13.0" },
