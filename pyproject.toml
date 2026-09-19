@@ -32,12 +32,16 @@ rendering = [
 launch = [
     "jaynes==0.9.14",
 ]
+training = [
+    "torch>=2.14.0",
+    "torchvision>=0.29.0",
+]
 
 [dependency-groups]
 dev = ["pytest>=9.1.1", "build>=1.6.1", "ruff>=0.16.7"]
 
 [tool.setuptools.packages.find]
-include = ["lucidxr*", "infra*"]
+include = ["lucidxr*", "infra*", "training*"]
 exclude = ["*.tests*"]
 namespaces = false
 
@@ -46,7 +50,7 @@ namespaces = false
 "lucidxr.sim.assets" = ["**/*"]
 
 [tool.pytest.ini_options]
-testpaths = ["lucidxr/tests"]
+testpaths = ["lucidxr/tests", "training/tests"]
 
 [tool.ruff]
 line-length = 110
