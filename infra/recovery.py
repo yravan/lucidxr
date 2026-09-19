@@ -112,7 +112,7 @@ from pathlib import Path
 folder, code, count = Path(sys.argv[1]), Path(sys.argv[2]), int(sys.argv[3])
 if (code.parent / 'snapshot.sha256').read_text().strip() != sys.argv[4]:
     raise SystemExit('Source snapshot has not been verified')
-if not (code / 'render_inputs/plan.json').is_file():
+if not (code / sys.argv[5]).is_file():
     raise SystemExit('Verified source/input bundle is unavailable; start a new launch')
 rows = []
 for index in range(count):
@@ -133,6 +133,7 @@ print(json.dumps(rows))
                     str(Path(record["remote_run"]) / "code"),
                     str(record["workers"]),
                     record["archive_sha256"],
+                    record.get("input_marker", "render_inputs/plan.json"),
                 ]
             ),
         )

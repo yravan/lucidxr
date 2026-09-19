@@ -1,0 +1,20 @@
+# The cache supplies camera order, image size and state/action dimensions.
+# Choose diffusion, flow or mot; the trainer and data pipeline are shared.
+policy = "flow"
+observation_steps = 2
+horizon = 16
+width = 128
+depth = 4
+heads = 4
+inference_steps = 16
+
+steps = 10000
+batch_size = 32
+learning_rate = 0.0001
+warmup_steps = 500
+checkpoint_every = 1000
+validation_every = 1000
+log_every = 10
+workers = 4
+cpu_threads = 2
+device = "cuda"

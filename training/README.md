@@ -151,3 +151,99 @@ storage grew from 1.34 MB MP4 to 73.7 MB decoded RGB. The complete loader, inclu
 collation at batch size 32, reached 46.6k windows/s with zero workers and 65.8k with
 two; median batch waits were 0.67 and 0.47 ms respectively. These are warm-cache
 measurements on a small smoke recording, not cold shared-storage or GPU throughput.
+
+## Training and resume
+
+Copy `training/configs/default.toml`, choose the policy and resource sizes, then run:
+
+```sh
+uv run --extra training python -m training.scripts.train config.toml \
+  --data /data/cache/run-1 --output /data/training/run-1 --wandb offline
+uv run --extra training python -m training.scripts.train config.toml \
+  --data /data/cache/run-1 --output /data/training/run-1 --resume --wandb offline
+```
+
+The same trainer handles all three policies. It uses AdamW, a warmup/cosine learning
+rate, gradient clipping and an EMA whose decay warms up toward the configured
+maximum. Camera/image/state/action dimensions come from the verified cache, not
+duplicated config. `width` sizes both architectures; `depth` and `heads` configure
+MoT. Unknown TOML keys fail instead of being ignored. CUDA uses fused AdamW and BF16
+autocast when supported, otherwise FP32. Images remain uint8 through pinned-memory
+transfer and are normalized on the device. CPU mode is for local functional checks.
+
+Every run records resolved config, data/code identity and hardware in `run.json`.
+`metrics.jsonl` always records loss, learning rate, gradient norm, batch wait,
+throughput and validation loss when a held-out split exists. CUDA runs also report
+peak allocated GPU memory. These are measured interval metrics, not benchmark
+guarantees. `--wandb offline` stores scalar metrics for later sync; `online` uses
+existing W&B authentication. W&B failure falls back to JSONL. Each resumed process
+is a new W&B attempt grouped under the durable run ID, so prefetched or rolled-back
+steps cannot silently replace checkpoint state. No datasets or checkpoints are
+uploaded as W&B Artifacts, and no model/code watching is enabled.
+
+`last.pt` is atomically replaced after a complete write. It contains policy and EMA
+state dicts, optimizer state, normalization, RNG state, consumed step, representation
+contract and identities. A failed write preserves the previous checkpoint. Resume
+requires matching config, prepared data, implementation/dependency versions and
+precision. The next batches and objective noise resume at the consumed step even
+when workers had prefetched future batches. A file lock prevents concurrent writers.
+There is no AMP scaler state for BF16 or FP32. Reproducibility is checked exactly on
+CPU; identical results across different GPU hardware are not promised.
+
+SIGINT, SIGTERM and SIGUSR1 request a checkpoint after the current update. The
+trainer records `interrupted` or `complete` in `status.json`; successful process
+exit alone does not imply all configured steps completed. Hard kills resume from
+the last periodic checkpoint. A run with an incompatible identity fails clearly;
+it does not quietly start over, alter its split, or overwrite an unrelated run.
+
+## Policy rollout
+
+```sh
+uv run --extra training python -m training.scripts.rollout /data/training/run-1/last.pt \
+  --scene pick_sphere --seed 9 --steps 100 --execute-steps 4 --video rollout.mp4
+```
+
+The controller loads EMA weights and the saved representation, verifies joint and
+control semantics, and executes the first K actions of each predicted chunk. It
+collects observations at every control interval, including while executing a chunk,
+so history spacing matches training. Reset clears both history and pending actions.
+Camera captures and resizing match preparation. Missing cameras, incompatible
+controls/timing, nonfinite commands and unstable physics fail explicitly. Generated
+positions are not silently workspace-clipped. Video captures are reused with the
+environment's existing render cache and flushed even if rollout fails.
+
+The CLI reports execution length, reward, termination, command norm and inference
+latency. `success` is null because the base environment defines no task-success
+criterion. Static/programmatic smoke data checks execution, not learned manipulation
+quality; low denoising loss alone does not establish stable closed-loop behavior.
+
+## MIT launch
+
+```sh
+uv sync --extra training --extra launch
+uv run python -m training.scripts.launch config.toml --data /data/cache/run-1 \
+  --cluster engaging --infra-config ~/.config/lucidxr/infra.toml --dry-run
+# After inspecting the generated receipt/script, omit --dry-run to submit.
+```
+
+Infra owns the SSH alias, allocation, shared storage and scratch. The launcher
+requires a CUDA config whose worker/thread counts fit the CPU allocation. It
+transfers a cache separately from code, verifies hashes before publishing its
+content-addressed location, and reuses that location on subsequent launches.
+Only manifest-listed files transfer. The same Jaynes code snapshot, locked uv
+environment, saved scripts and submission-recovery protocol serve rendering and
+training. The receipt stores the actual entry point and arguments, including the
+result path; no directory name is needed to interpret a run.
+
+The cluster worker stages the cache onto node scratch and calls the ordinary
+trainer. Insufficient scratch produces a logged fallback to verified shared files;
+corruption is an error. The trainer performs the full integrity check before any
+batch is consumed. Checkpoints and metrics stay on shared storage. Slurm sends a
+warning 60 seconds before timeout; the batch shell is replaced by Python so the
+signal reaches the checkpoint handler. Retry with `python -m infra resume RECEIPT`
+after accounting confirms the prior jobs are terminal. Uncertain submissions must
+first be reconciled with `python -m infra reconcile RECEIPT`.
+
+Use [the verification record](VERIFICATION.md) to distinguish local checks from
+cluster execution and policy quality. GPU verification requires an authenticated
+Engaging SSH connection; a dry run only checks source capture and generated scripts.

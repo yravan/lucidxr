@@ -36,6 +36,7 @@ training = [
     "torch>=2.14.0",
     "torchvision>=0.29.0",
     "diffusers>=0.40.0",
+    "wandb>=0.30.0",
     "av>=18.1.0",
     "h5py>=3.16.0",
 ]
@@ -51,6 +52,7 @@ namespaces = false
 [tool.setuptools.package-data]
 "lucidxr.sim.xml_schema" = ["**/*.xml", "**/*.yaml", "**/*.json"]
 "lucidxr.sim.assets" = ["**/*"]
+"training" = ["configs/*.toml"]
 
 [tool.pytest.ini_options]
 testpaths = ["lucidxr/tests", "training/tests"]

@@ -5,6 +5,12 @@ Simulation and recording formats do not import it. Scripts resolve ordinary path
 here and use Jaynes to capture code, transfer it and submit work to MIT Slurm.
 Model, policy and dataloader implementations belong outside infra.
 
+Training uses the same captured-source launcher and recovery receipts as rendering.
+See [training setup](../training/README.md#mit-launch). `infra/training.py` handles
+verified cache transfer and node-local staging; it does not implement a dataset,
+policy, optimizer or training loop. Personal `training_cache` and `training_runs`
+locations can be added alongside `demos`, as shown in `example.toml`.
+
 Copy `infra/example.toml` to `~/.config/lucidxr/infra.toml` and edit the demos path:
 
 ```toml

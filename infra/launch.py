@@ -38,14 +38,58 @@ def remote(cluster, script):
 
 
 def launch_render(cluster, repo, payload, count, *, dryrun=False):
+    from lucidxr.scripts.render_worker import main as worker
+
+    def arguments(index, workers, destination):
+        return [
+            "render_inputs/plan.json",
+            "--output",
+            str(Path(cluster.root) / "renders"),
+            "--workers",
+            str(workers),
+            "--worker-index",
+            str(index),
+        ]
+
+    return launch_jobs(
+        cluster,
+        repo,
+        payload,
+        count,
+        worker=worker,
+        arguments=arguments,
+        extras=("rendering", "launch"),
+        input_directory="render_inputs",
+        marker="plan.json",
+        dryrun=dryrun,
+    )
+
+
+def launch_jobs(
+    cluster,
+    repo,
+    payload,
+    count,
+    *,
+    worker,
+    arguments,
+    extras,
+    input_directory,
+    marker,
+    sbatch_args=(),
+    dryrun=False,
+):
+    """Capture code and explicit inputs once; callers supply their normal CLI arguments."""
     import jaynes
     from jaynes.mounts import SSHCode
-
-    from lucidxr.scripts.render_worker import main as worker
 
     from .jaynes import BatchSlurm
 
     repo, payload = Path(repo).resolve(), Path(payload).resolve()
+    if count < 1 or not re.fullmatch(r"[a-z_]+", input_directory) or Path(marker).name != marker:
+        raise ValueError("Invalid job count or input bundle")
+    if not (payload / marker).is_file():
+        raise ValueError("Input bundle marker is missing")
     # Jaynes mount/runner templates interpolate paths into shell commands.
     for path in (str(repo), str(payload), cluster.root, cluster.uv):
         if not re.fullmatch(r"[A-Za-z0-9_./-]+", path):
@@ -58,6 +102,7 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
     code = destination / "code"
     remote_tar = destination / "snapshot.tar.gz"
     workers = min(count, cluster.concurrency)
+    invocations = [arguments(index, workers, destination) for index in range(workers)]
     record = {
         "version": 2,
         "run_id": run_id,
@@ -67,6 +112,10 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
         "workers": workers,
         "jobs": [],
         "state": "preparing",
+        "input_marker": f"{input_directory}/{marker}",
+        "entrypoint": f"{worker.__module__}:{worker.__qualname__}",
+        "arguments": invocations,
+        "extras": list(extras),
     }
     receipt = local / "launch.json"
 
@@ -85,8 +134,8 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
         source.mkdir()
         with tarfile.open(archive) as tar:
             tar.extractall(source, filter="data")
-        shutil.copytree(payload, source / "render_inputs")
-        (source / "render_inputs/launch.json").write_text(json.dumps(record, indent=2))
+        shutil.copytree(payload, source / input_directory)
+        (source / input_directory / "launch.json").write_text(json.dumps(record, indent=2))
         previous_root = jaynes.RUN.config_root
         try:
             jaynes.RUN.config_root = str(source)
@@ -112,10 +161,7 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
                             cluster.uv,
                             "sync",
                             "--frozen",
-                            "--extra",
-                            "rendering",
-                            "--extra",
-                            "launch",
+                            *[argument for extra in extras for argument in ("--extra", extra)],
                             "--no-dev",
                             "--python",
                             "3.14",
@@ -128,7 +174,8 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
                 mounts=[mount],
                 work_dir=str(code),
                 startup=startup.replace("{", "{{").replace("}", "}}"),
-                entry_script='"$UV_PROJECT_ENVIRONMENT/bin/python" -u -m jaynes.entry',
+                # Replace the batch shell so Slurm B:USR1 reaches the actual worker.
+                entry_script='exec "$UV_PROJECT_ENVIRONMENT/bin/python" -u -m jaynes.entry',
                 partition=cluster.partition,
                 account=cluster.account,
                 name=f"lxr-{run_id}-{index}",
@@ -137,19 +184,11 @@ def launch_render(cluster, repo, payload, count, *, dryrun=False):
                 mem=f"{cluster.memory_gb}G",
                 time_limit=str(cluster.minutes),
                 output=str(destination / f"worker-{index}-%j.log"),
-                args=["parsable"],
+                args=["parsable", *sbatch_args],
             )
             runner.build(
                 worker,
-                argv=[
-                    "render_inputs/plan.json",
-                    "--output",
-                    str(Path(cluster.root) / "renders"),
-                    "--workers",
-                    str(workers),
-                    "--worker-index",
-                    str(index),
-                ],
+                argv=invocations[index],
             )
             script = "set -euo pipefail\n" + runner.run_script
             scripts.append(script)
